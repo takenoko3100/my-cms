@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>たけのこレストラン</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>たけのこレストラン</h1>
+    <p>愛知県知立市のレストラン
+    </p>
+  </header>
+
+  <main>
+
+    <section class="admin">
+      <h2>お知らせを追加</h2>
+
+      <input type="text" id="title" placeholder="タイトル">
+
+      <textarea id="content" placeholder="お知らせの内容"></textarea>
+
+      <button onclick="addNews()">公開する</button>
+    </section>
+
+    <section>
+      <h2>お知らせ</h2>
+      <div id="newsList"></div>
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
