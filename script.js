@@ -238,3 +238,68 @@ async function editNews(id) {
   alert("編集しました！");
   loadNews();
 }
+
+async function loadCompanyInfo() {
+  const { data, error } = await supabaseClient
+    .from("company_info")
+    .select("*")
+    .limit(1)
+    .single();
+
+  if (error) {
+    console.error(error);
+    alert("会社情報の読み込みに失敗しました");
+    return;
+  }
+
+  document.getElementById("companyName").value = data.name ?? "";
+  document.getElementById("companyAddress").value = data.address ?? "";
+  document.getElementById("companyPhone").value = data.phone ?? "";
+  document.getElementById("companyHours").value = data.business_hours ?? "";
+  document.getElementById("companyClosedDays").value = data.closed_days ?? "";
+}
+
+loadCompanyInfo();
+
+document
+  .getElementById("saveCompanyInfo")
+  .addEventListener("click", async () => {
+
+    const name = document.getElementById("companyName").value;
+    const address = document.getElementById("companyAddress").value;
+    const phone = document.getElementById("companyPhone").value;
+    const businessHours = document.getElementById("companyHours").value;
+    const closedDays = document.getElementById("companyClosedDays").value;
+
+    const { data: companyData, error: fetchError } = await supabaseClient
+      .from("company_info")
+      .select("id")
+      .limit(1)
+      .single();
+
+    if (fetchError) {
+      console.error(fetchError);
+      alert("会社情報の取得に失敗しました");
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from("company_info")
+      .update({
+        name: name,
+        address: address,
+        phone: phone,
+        business_hours: businessHours,
+        closed_days: closedDays,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", companyData.id);
+
+    if (error) {
+      console.error(error);
+      alert("会社情報の保存に失敗しました");
+      return;
+    }
+
+    alert("会社情報を保存しました！");
+  });
