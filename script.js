@@ -8,6 +8,17 @@ const supabaseClient = supabase.createClient(
   SUPABASE_PUBLISHABLE_KEY
 );
 
+async function checkLogin() {
+  const {
+    data: { session }
+  } = await supabaseClient.auth.getSession();
+
+  if (!session) {
+    window.location.href = "login.html";
+  }
+}
+
+checkLogin();
 
 async function addNews() {
   const title = document.getElementById("title").value;

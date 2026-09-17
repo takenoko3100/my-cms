@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>たけのこCMS ログイン</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main>
+    <section>
+      <h1>たけのこCMS</h1>
+      <h2>ログイン</h2>
+
+      <input
+        type="email"
+        id="email"
+        placeholder="メールアドレス"
+      >
+
+      <input
+        type="password"
+        id="password"
+        placeholder="パスワード"
+      >
+
+      <button id="loginButton">
+        ログイン
+      </button>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="login.js"></script>
+
+</body>
+</html>
