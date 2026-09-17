@@ -26,10 +26,33 @@ checkLogin();
 async function addNews() {
   const title = document.getElementById("title").value;
   const content = document.getElementById("content").value;
+  const imageFile = document.getElementById("image").files[0];
 
   if (title === "" || content === "") {
     alert("タイトルと本文を入力してください");
     return;
+  }
+
+  let imageUrl = null;
+
+  if (imageFile) {
+    const fileName = `${Date.now()}-${imageFile.name}`;
+
+    const { error: uploadError } = await supabaseClient.storage
+      .from("news-images")
+      .upload(fileName, imageFile);
+
+    if (uploadError) {
+      console.error(uploadError);
+      alert("画像のアップロードに失敗しました");
+      return;
+    }
+
+    const { data: publicUrlData } = supabaseClient.storage
+      .from("news-images")
+      .getPublicUrl(fileName);
+
+    imageUrl = publicUrlData.publicUrl;
   }
 
   const { error } = await supabaseClient
@@ -37,7 +60,8 @@ async function addNews() {
     .insert([
       {
         title: title,
-        content: content
+        content: content,
+        image_url: imageUrl
       }
     ]);
 
@@ -49,6 +73,7 @@ async function addNews() {
 
   document.getElementById("title").value = "";
   document.getElementById("content").value = "";
+  document.getElementById("image").value = "";
 
   alert("公開しました！");
 
@@ -78,7 +103,15 @@ async function loadNews() {
 
   div.innerHTML = `
   <h3>${news.title}</h3>
+
+  ${
+    news.image_url
+      ? `<img src="${news.image_url}" alt="お知らせ画像" style="width:100%; border-radius:8px; margin-bottom:12px;">`
+      : ""
+  }
+
   <p>${news.content}</p>
+
   <button onclick="editNews(${news.id})">編集</button>
   <button onclick="deleteNews(${news.id})">削除</button>
 `;
