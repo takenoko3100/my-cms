@@ -71,18 +71,19 @@ async function loadNews() {
 
   newsList.innerHTML = "";
 
-  data.forEach((news) => {
-    const div = document.createElement("div");
+  ddata.forEach((news) => {
+  const div = document.createElement("div");
 
-    div.className = "news";
+  div.className = "news";
 
-    div.innerHTML = `
-      <h3>${news.title}</h3>
-      <p>${news.content}</p>
-    `;
+  div.innerHTML = `
+    <h3>${news.title}</h3>
+    <p>${news.content}</p>
+    <button onclick="deleteNews(${news.id})">削除</button>
+  `;
 
-    newsList.appendChild(div);
-  });
+  newsList.appendChild(div);
+});
 }
 
 
@@ -102,3 +103,25 @@ document
 
     window.location.href = "login.html";
   });
+
+  async function deleteNews(id) {
+  const ok = confirm("このお知らせを削除しますか？");
+
+  if (!ok) {
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("news")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    alert("削除に失敗しました");
+    return;
+  }
+
+  alert("削除しました！");
+  loadNews();
+}
