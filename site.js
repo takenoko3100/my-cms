@@ -25,6 +25,19 @@ async function loadCompanyInfo() {
   document.getElementById("sitePhone").textContent = data.phone ?? "";
   document.getElementById("siteHours").textContent = data.business_hours ?? "";
   document.getElementById("siteClosedDays").textContent = data.closed_days ?? "";
+if (data.hero_image_url) {
+  const hero = document.querySelector(".hero");
+
+  hero.style.backgroundImage = `
+    linear-gradient(
+      rgba(42, 36, 31, 0.55),
+      rgba(42, 36, 31, 0.55)
+    ),
+    url("${data.hero_image_url}")
+  `;
+
+  hero.style.backgroundSize = "cover";
+  hero.style.backgroundPosition = "center";
 }
 
 async function loadNews() {

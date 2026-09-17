@@ -270,10 +270,11 @@ document
     const phone = document.getElementById("companyPhone").value;
     const businessHours = document.getElementById("companyHours").value;
     const closedDays = document.getElementById("companyClosedDays").value;
+    const heroImageFile = document.getElementById("heroImage").files[0];
 
     const { data: companyData, error: fetchError } = await supabaseClient
       .from("company_info")
-      .select("id")
+      .select("id, hero_image_url")
       .limit(1)
       .single();
 
@@ -281,6 +282,29 @@ document
       console.error(fetchError);
       alert("会社情報の取得に失敗しました");
       return;
+    }
+
+    let heroImageUrl = companyData.hero_image_url;
+
+    if (heroImageFile) {
+      const extension = heroImageFile.name.split(".").pop();
+      const fileName = `hero-${Date.now()}.${extension}`;
+
+      const { error: uploadError } = await supabaseClient.storage
+        .from("news-images")
+        .upload(fileName, heroImageFile);
+
+      if (uploadError) {
+        console.error(uploadError);
+        alert(uploadError.message);
+        return;
+      }
+
+      const { data: publicUrlData } = supabaseClient.storage
+        .from("news-images")
+        .getPublicUrl(fileName);
+
+      heroImageUrl = publicUrlData.publicUrl;
     }
 
     const { error } = await supabaseClient
@@ -291,6 +315,7 @@ document
         phone: phone,
         business_hours: businessHours,
         closed_days: closedDays,
+        hero_image_url: heroImageUrl,
         updated_at: new Date().toISOString()
       })
       .eq("id", companyData.id);
@@ -300,6 +325,8 @@ document
       alert("会社情報の保存に失敗しました");
       return;
     }
+
+    document.getElementById("heroImage").value = "";
 
     alert("会社情報を保存しました！");
   });
