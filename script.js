@@ -77,10 +77,11 @@ async function loadNews() {
   div.className = "news";
 
   div.innerHTML = `
-    <h3>${news.title}</h3>
-    <p>${news.content}</p>
-    <button onclick="deleteNews(${news.id})">削除</button>
-  `;
+  <h3>${news.title}</h3>
+  <p>${news.content}</p>
+  <button onclick="editNews(${news.id})">編集</button>
+  <button onclick="deleteNews(${news.id})">削除</button>
+`;
 
   newsList.appendChild(div);
 });
@@ -123,5 +124,53 @@ document
   }
 
   alert("削除しました！");
+  loadNews();
+}
+
+async function editNews(id) {
+  const { data, error } = await supabaseClient
+    .from("news")
+    .select("title, content")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error(error);
+    alert("お知らせの読み込みに失敗しました");
+    return;
+  }
+
+  const newTitle = prompt("タイトルを編集してください", data.title);
+
+  if (newTitle === null) {
+    return;
+  }
+
+  const newContent = prompt("本文を編集してください", data.content);
+
+  if (newContent === null) {
+    return;
+  }
+
+  if (newTitle.trim() === "" || newContent.trim() === "") {
+    alert("タイトルと本文は空欄にできません");
+    return;
+  }
+
+  const { error: updateError } = await supabaseClient
+    .from("news")
+    .update({
+      title: newTitle,
+      content: newContent
+    })
+    .eq("id", id);
+
+  if (updateError) {
+    console.error(updateError);
+    alert("編集に失敗しました");
+    return;
+  }
+
+  alert("編集しました！");
   loadNews();
 }
