@@ -146,6 +146,36 @@ document
     return;
   }
 
+  const { data: news, error: fetchError } = await supabaseClient
+    .from("news")
+    .select("image_url")
+    .eq("id", id)
+    .single();
+
+  if (fetchError) {
+    console.error(fetchError);
+    alert("お知らせ情報の取得に失敗しました");
+    return;
+  }
+
+  if (news.image_url) {
+    const fileName = decodeURIComponent(
+      news.image_url.split("/news-images/")[1]
+    );
+
+    if (fileName) {
+      const { error: imageDeleteError } = await supabaseClient.storage
+        .from("news-images")
+        .remove([fileName]);
+
+      if (imageDeleteError) {
+        console.error(imageDeleteError);
+        alert("画像の削除に失敗しました");
+        return;
+      }
+    }
+  }
+
   const { error } = await supabaseClient
     .from("news")
     .delete()
@@ -153,7 +183,7 @@ document
 
   if (error) {
     console.error(error);
-    alert("削除に失敗しました");
+    alert("お知らせの削除に失敗しました");
     return;
   }
 
