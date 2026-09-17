@@ -71,7 +71,7 @@ async function loadNews() {
 
   newsList.innerHTML = "";
 
-  ddata.forEach((news) => {
+  data.forEach((news) => {
   const div = document.createElement("div");
 
   div.className = "news";
