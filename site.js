@@ -40,6 +40,8 @@ if (data.hero_image_url) {
   hero.style.backgroundPosition = "center";
 }
 
+}
+
 async function loadNews() {
   const { data, error } = await supabaseClient
     .from("news")
