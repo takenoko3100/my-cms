@@ -36,7 +36,8 @@ async function addNews() {
   let imageUrl = null;
 
   if (imageFile) {
-    const fileName = `${Date.now()}-${imageFile.name}`;
+    const extension = imageFile.name.split(".").pop();
+const fileName = `${Date.now()}.${extension}`;
 
     const { error: uploadError } = await supabaseClient.storage
       .from("news-images")
