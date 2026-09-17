@@ -43,10 +43,10 @@ async function addNews() {
       .upload(fileName, imageFile);
 
     if (uploadError) {
-      console.error(uploadError);
-      alert("画像のアップロードに失敗しました");
-      return;
-    }
+  console.error(uploadError);
+  alert(uploadError.message);
+  return;
+}
 
     const { data: publicUrlData } = supabaseClient.storage
       .from("news-images")
