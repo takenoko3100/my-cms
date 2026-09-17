@@ -14,7 +14,10 @@ async function checkLogin() {
   } = await supabaseClient.auth.getSession();
 
   if (!session) {
+    alert("未ログインです");
     window.location.href = "login.html";
+  } else {
+    alert("ログイン中です");
   }
 }
 
