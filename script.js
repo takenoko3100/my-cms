@@ -87,3 +87,18 @@ async function loadNews() {
 
 
 loadNews();
+
+document
+  .getElementById("logoutButton")
+  .addEventListener("click", async () => {
+
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+      console.error(error);
+      alert("ログアウトに失敗しました");
+      return;
+    }
+
+    window.location.href = "login.html";
+  });
