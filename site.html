@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>たけのこレストラン</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header>
+    <h1 id="siteCompanyName">会社名</h1>
+    <p id="siteAddress">住所</p>
+  </header>
+
+  <main>
+
+    <section>
+      <h2>会社情報</h2>
+
+      <p>
+        <strong>電話番号：</strong>
+        <span id="sitePhone"></span>
+      </p>
+
+      <p>
+        <strong>営業時間：</strong>
+        <span id="siteHours"></span>
+      </p>
+
+      <p>
+        <strong>定休日：</strong>
+        <span id="siteClosedDays"></span>
+      </p>
+    </section>
+
+    <section>
+      <h2>お知らせ</h2>
+      <div id="siteNewsList"></div>
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="site.js"></script>
+
+</body>
+</html>
