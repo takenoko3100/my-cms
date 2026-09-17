@@ -253,8 +253,9 @@ async function loadCompanyInfo() {
   }
 
   document.getElementById("companyName").value = data.name ?? "";
-  document.getElementById("companyAddress").value = data.address ?? "";
-  document.getElementById("companyPhone").value = data.phone ?? "";
+document.getElementById("companyAddress").value = data.address ?? "";
+document.getElementById("companyDescription").value = data.description ?? "";
+document.getElementById("companyPhone").value = data.phone ?? "";
   document.getElementById("companyHours").value = data.business_hours ?? "";
   document.getElementById("companyClosedDays").value = data.closed_days ?? "";
 }
@@ -267,6 +268,7 @@ document
 
     const name = document.getElementById("companyName").value;
     const address = document.getElementById("companyAddress").value;
+    const description = document.getElementById("companyDescription").value;
     const phone = document.getElementById("companyPhone").value;
     const businessHours = document.getElementById("companyHours").value;
     const closedDays = document.getElementById("companyClosedDays").value;
@@ -309,10 +311,11 @@ document
 
     const { error } = await supabaseClient
       .from("company_info")
-      .update({
-        name: name,
-        address: address,
-        phone: phone,
+      ..update({
+  name: name,
+  address: address,
+  description: description,
+  phone: phone,
         business_hours: businessHours,
         closed_days: closedDays,
         hero_image_url: heroImageUrl,

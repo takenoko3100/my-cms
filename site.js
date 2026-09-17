@@ -21,8 +21,9 @@ async function loadCompanyInfo() {
   }
 
   document.getElementById("siteCompanyName").textContent = data.name ?? "";
-  document.getElementById("siteAddress").textContent = data.address ?? "";
-  document.getElementById("sitePhone").textContent = data.phone ?? "";
+document.getElementById("siteAddress").textContent = data.address ?? "";
+document.getElementById("siteDescription").textContent = data.description ?? "";
+document.getElementById("sitePhone").textContent = data.phone ?? "";
   document.getElementById("siteHours").textContent = data.business_hours ?? "";
   document.getElementById("siteClosedDays").textContent = data.closed_days ?? "";
 if (data.hero_image_url) {
