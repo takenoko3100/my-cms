@@ -67,3 +67,36 @@ button {
   margin: 0;
   line-height: 1.7;
 }
+
+.dashboard-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.summary-label {
+  display: block;
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 8px;
+}
+
+.summary-card strong {
+  font-size: 20px;
+  color: #222;
+}
+
+@media (max-width: 600px) {
+  .dashboard-summary {
+    grid-template-columns: 1fr;
+  }
+}

@@ -578,3 +578,47 @@ tabButtons.forEach((button) => {
 });
 
 showTab("news");
+
+async function loadDashboardSummary() {
+  const { count: newsCount, error: newsError } = await supabaseClient
+    .from("news")
+    .select("*", { count: "exact", head: true });
+
+  if (newsError) {
+    console.error(newsError);
+    return;
+  }
+
+  document.getElementById("newsCount").textContent = `${newsCount ?? 0}件`;
+}
+
+const { count: menuCount, error: menuError } = await supabaseClient
+  .from("menu_items")
+  .select("*", { count: "exact", head: true });
+
+if (menuError) {
+  console.error(menuError);
+  return;
+}
+
+document.getElementById("menuCount").textContent = `${menuCount ?? 0}件`;
+
+const { data: companyInfo, error: companyError } = await supabaseClient
+  .from("company_info")
+  .select("updated_at")
+  .limit(1)
+  .single();
+
+if (companyError) {
+  console.error(companyError);
+  return;
+}
+
+if (companyInfo?.updated_at) {
+  const updatedDate = new Date(companyInfo.updated_at);
+
+  document.getElementById("lastUpdated").textContent =
+    updatedDate.toLocaleString("ja-JP");
+}
+
+loadDashboardSummary();
