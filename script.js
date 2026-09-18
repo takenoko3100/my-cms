@@ -432,7 +432,6 @@ document
   <button onclick="editMenuItem(${item.id})">編集</button>
   <button onclick="deleteMenuItem(${item.id})">削除</button>
 `;
-    `;
 
     menuList.appendChild(div);
   });
