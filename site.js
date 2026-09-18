@@ -47,7 +47,30 @@ if (data.instagram_url) {
 
   document.getElementById("siteHours").textContent = data.business_hours ?? "";
   document.getElementById("siteClosedDays").textContent = data.closed_days ?? "";
-if (data.hero_image_url) {
+document.getElementById("footerCompanyName").textContent = data.name ?? "";
+document.getElementById("footerCompanyNameCopy").textContent = data.name ?? "";
+document.getElementById("footerAddress").textContent = data.address ?? "";
+
+document.getElementById("footerHours").textContent = data.business_hours
+  ? `営業時間：${data.business_hours}`
+  : "";
+
+document.getElementById("footerClosedDays").textContent = data.closed_days
+  ? ` / 定休日：${data.closed_days}`
+  : "";
+
+  const footerInstagram = document.getElementById("footerInstagram");
+
+if (data.instagram_url) {
+  footerInstagram.href = data.instagram_url;
+} else {
+  footerInstagram.style.display = "none";
+}
+
+document.getElementById("footerYear").textContent =
+  new Date().getFullYear();
+
+  if (data.hero_image_url) {
   const hero = document.querySelector(".hero");
 
   hero.style.backgroundImage = `

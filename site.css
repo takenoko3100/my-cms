@@ -199,3 +199,46 @@ section h2 {
     width: 100%;
   }
 }
+
+.site-footer {
+  background: #2a241f;
+  color: white;
+  margin-top: 50px;
+  padding: 50px 20px 30px;
+}
+
+.footer-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.site-footer h2 {
+  margin: 0 0 14px;
+  font-size: 28px;
+}
+
+.site-footer p {
+  margin: 8px 0;
+  line-height: 1.7;
+}
+
+.footer-links {
+  margin: 20px 0;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.copyright {
+  margin-top: 28px;
+  font-size: 14px;
+  opacity: 0.7;
+}
