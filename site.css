@@ -281,3 +281,44 @@ section h2 {
     padding: 10px 6px;
   }
 }
+
+.admin-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.preview-button,
+#logoutButton {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.preview-button {
+  background: #ffffff;
+  color: #222;
+  border: 1px solid #ddd;
+}
+
+#logoutButton {
+  background: #222;
+  color: white;
+}
+
+@media (max-width: 600px) {
+  .admin-actions {
+    flex-direction: column;
+  }
+
+  .preview-button,
+  #logoutButton {
+    width: 100%;
+  }
+}
