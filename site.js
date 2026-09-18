@@ -20,7 +20,7 @@ async function loadCompanyInfo() {
     return;
   }
 
-  ddocument.getElementById("siteCompanyName").textContent = data.name ?? "";
+  document.getElementById("siteCompanyName").textContent = data.name ?? "";
 document.getElementById("siteAddress").textContent = data.address ?? "";
 
 const map = document.getElementById("siteMap");
