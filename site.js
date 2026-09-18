@@ -106,7 +106,7 @@ async function loadMenuItems() {
   data.forEach((item) => {
     const div = document.createElement("div");
 
-    div.className = "news";
+    div.className = "menu-card";
 
     div.innerHTML = `
       <h3>${item.name}</h3>
