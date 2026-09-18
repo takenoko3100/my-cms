@@ -311,7 +311,7 @@ document
 
     const { error } = await supabaseClient
       .from("company_info")
-      ..update({
+      .update({
   name: name,
   address: address,
   description: description,
