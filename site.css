@@ -242,3 +242,42 @@ section h2 {
   font-size: 14px;
   opacity: 0.7;
 }
+
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  position: sticky;
+  top: 10px;
+  z-index: 10;
+  background: #f5f5f5;
+  padding: 10px 0;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 12px 10px;
+  border: none;
+  border-radius: 10px;
+  background: #e5e5e5;
+  color: #333;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tab-button.active {
+  background: #222;
+  color: white;
+}
+
+@media (max-width: 600px) {
+  .admin-tabs {
+    gap: 6px;
+  }
+
+  .tab-button {
+    font-size: 13px;
+    padding: 10px 6px;
+  }
+}

@@ -554,3 +554,27 @@ async function editMenuItem(id) {
   alert("メニューを編集しました！");
   loadMenuItems();
 }
+const tabButtons = document.querySelectorAll(".tab-button");
+const tabContents = document.querySelectorAll(".tab-content");
+
+function showTab(tabName) {
+  tabContents.forEach((content) => {
+    content.style.display =
+      content.dataset.tabContent === tabName ? "block" : "none";
+  });
+
+  tabButtons.forEach((button) => {
+    button.classList.toggle(
+      "active",
+      button.dataset.tab === tabName
+    );
+  });
+}
+
+tabButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    showTab(button.dataset.tab);
+  });
+});
+
+showTab("news");

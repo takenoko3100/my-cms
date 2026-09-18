@@ -18,11 +18,17 @@
 
  <main>
 
+  <nav class="admin-tabs">
+  <button class="tab-button active" data-tab="news">お知らせ</button>
+  <button class="tab-button" data-tab="company">会社情報</button>
+  <button class="tab-button" data-tab="menu">メニュー</button>
+</nav>
+
   <section>
     <button id="logoutButton">ログアウト</button>
   </section>
 
-  <section class="admin">
+  <section class="admin tab-content" data-tab-content="news">
     <h2>お知らせを追加</h2>
 
     <input type="text" id="title" placeholder="タイトル">
@@ -34,12 +40,12 @@
 <button onclick="addNews()">公開する</button>
   </section>
 
-  <section>
-    <h2>お知らせ</h2>
+  <section class="tab-content" data-tab-content="news">
+  <h2>お知らせ</h2>
     <div id="newsList"></div>
   </section>
 
-  <section class="company-info">
+  <section class="company-info tab-content" data-tab-content="company">
   <h2>会社情報</h2>
 
   <input type="text" id="companyName" placeholder="会社名・店舗名">
@@ -62,7 +68,7 @@
 <button id="saveCompanyInfo">会社情報を保存</button>
 </section>
 
-<section class="menu-admin">
+<section class="menu-admin tab-content" data-tab-content="menu">
   <h2>メニュー追加</h2>
 
   <input type="text" id="menuName" placeholder="メニュー名">
@@ -76,7 +82,7 @@
   <button id="addMenuButton">メニューを追加</button>
 </section>
 
-<section>
+<section class="tab-content" data-tab-content="menu">
   <h2>登録済みメニュー</h2>
   <div id="menuList"></div>
 </section>
