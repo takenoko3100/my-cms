@@ -31,6 +31,20 @@ if (data.address) {
 
 document.getElementById("siteDescription").textContent = data.description ?? ""; "";
 document.getElementById("sitePhone").textContent = data.phone ?? "";
+const phoneLink = document.getElementById("phoneLink");
+
+if (data.phone) {
+  phoneLink.href = `tel:${data.phone.replace(/-/g, "")}`;
+}
+
+const instagramLink = document.getElementById("instagramLink");
+
+if (data.instagram_url) {
+  instagramLink.href = data.instagram_url;
+} else {
+  instagramLink.style.display = "none";
+}
+
   document.getElementById("siteHours").textContent = data.business_hours ?? "";
   document.getElementById("siteClosedDays").textContent = data.closed_days ?? "";
 if (data.hero_image_url) {

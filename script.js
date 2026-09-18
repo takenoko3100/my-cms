@@ -256,6 +256,7 @@ async function loadCompanyInfo() {
 document.getElementById("companyAddress").value = data.address ?? "";
 document.getElementById("companyDescription").value = data.description ?? "";
 document.getElementById("companyPhone").value = data.phone ?? "";
+document.getElementById("companyInstagram").value = data.instagram_url ?? "";
   document.getElementById("companyHours").value = data.business_hours ?? "";
   document.getElementById("companyClosedDays").value = data.closed_days ?? "";
 }
@@ -270,6 +271,7 @@ document
     const address = document.getElementById("companyAddress").value;
     const description = document.getElementById("companyDescription").value;
     const phone = document.getElementById("companyPhone").value;
+    const instagramUrl = document.getElementById("companyInstagram").value;
     const businessHours = document.getElementById("companyHours").value;
     const closedDays = document.getElementById("companyClosedDays").value;
     const heroImageFile = document.getElementById("heroImage").files[0];
@@ -316,6 +318,7 @@ document
   address: address,
   description: description,
   phone: phone,
+  instagram_url: instagramUrl,
         business_hours: businessHours,
         closed_days: closedDays,
         hero_image_url: heroImageUrl,

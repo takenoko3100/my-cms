@@ -164,3 +164,38 @@ section h2 {
     grid-template-columns: 1fr;
   }
 }
+
+.contact-links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.contact-button {
+  flex: 1;
+  min-width: 180px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 20px;
+  border-radius: 12px;
+  background: #2a241f;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+}
+
+.contact-button:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 600px) {
+  .contact-links {
+    flex-direction: column;
+  }
+
+  .contact-button {
+    width: 100%;
+  }
+}
