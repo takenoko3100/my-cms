@@ -20,9 +20,16 @@ async function loadCompanyInfo() {
     return;
   }
 
-  document.getElementById("siteCompanyName").textContent = data.name ?? "";
+  ddocument.getElementById("siteCompanyName").textContent = data.name ?? "";
 document.getElementById("siteAddress").textContent = data.address ?? "";
-document.getElementById("siteDescription").textContent = data.description ?? "";
+
+const map = document.getElementById("siteMap");
+
+if (data.address) {
+  map.src = `https://www.google.com/maps?q=${encodeURIComponent(data.address)}&output=embed`;
+}
+
+document.getElementById("siteDescription").textContent = data.description ?? ""; "";
 document.getElementById("sitePhone").textContent = data.phone ?? "";
   document.getElementById("siteHours").textContent = data.business_hours ?? "";
   document.getElementById("siteClosedDays").textContent = data.closed_days ?? "";
