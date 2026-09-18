@@ -590,7 +590,6 @@ async function loadDashboardSummary() {
   }
 
   document.getElementById("newsCount").textContent = `${newsCount ?? 0}件`;
-}
 
 const { count: menuCount, error: menuError } = await supabaseClient
   .from("menu_items")
