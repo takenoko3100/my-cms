@@ -88,3 +88,41 @@ async function loadNews() {
 
 loadCompanyInfo();
 loadNews();
+
+async function loadMenuItems() {
+  const { data, error } = await supabaseClient
+    .from("menu_items")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  const menuList = document.getElementById("siteMenuList");
+  menuList.innerHTML = "";
+
+  data.forEach((item) => {
+    const div = document.createElement("div");
+
+    div.className = "news";
+
+    div.innerHTML = `
+      <h3>${item.name}</h3>
+
+      ${
+        item.image_url
+          ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%; border-radius:12px; margin-bottom:12px;">`
+          : ""
+      }
+
+      <p>${item.description ?? ""}</p>
+      <p><strong>¥${Number(item.price).toLocaleString()}</strong></p>
+    `;
+
+    menuList.appendChild(div);
+  });
+}
+
+loadMenuItems();
