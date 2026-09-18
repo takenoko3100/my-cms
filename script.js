@@ -333,3 +333,222 @@ document
 
     alert("会社情報を保存しました！");
   });
+
+  document
+  .getElementById("addMenuButton")
+  .addEventListener("click", async () => {
+
+    const name = document.getElementById("menuName").value;
+    const description = document.getElementById("menuDescription").value;
+    const price = document.getElementById("menuPrice").value;
+    const imageFile = document.getElementById("menuImage").files[0];
+
+    if (name === "" || price === "") {
+      alert("メニュー名と価格を入力してください");
+      return;
+    }
+
+    let imageUrl = null;
+
+    if (imageFile) {
+      const extension = imageFile.name.split(".").pop();
+      const fileName = `menu-${Date.now()}.${extension}`;
+
+      const { error: uploadError } = await supabaseClient.storage
+        .from("news-images")
+        .upload(fileName, imageFile);
+
+      if (uploadError) {
+        console.error(uploadError);
+        alert(uploadError.message);
+        return;
+      }
+
+      const { data: publicUrlData } = supabaseClient.storage
+        .from("news-images")
+        .getPublicUrl(fileName);
+
+      imageUrl = publicUrlData.publicUrl;
+    }
+
+    const { error } = await supabaseClient
+      .from("menu_items")
+      .insert([
+        {
+          name: name,
+          description: description,
+          price: Number(price),
+          image_url: imageUrl
+        }
+      ]);
+
+    if (error) {
+      console.error(error);
+      alert("メニューの保存に失敗しました");
+      return;
+    }
+
+    document.getElementById("menuName").value = "";
+    document.getElementById("menuDescription").value = "";
+    document.getElementById("menuPrice").value = "";
+    document.getElementById("menuImage").value = "";
+
+    alert("メニューを追加しました！");
+    loadMenuItems();
+  });
+
+  async function loadMenuItems() {
+  const { data, error } = await supabaseClient
+    .from("menu_items")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    alert("メニューの読み込みに失敗しました");
+    return;
+  }
+
+  const menuList = document.getElementById("menuList");
+  menuList.innerHTML = "";
+
+  data.forEach((item) => {
+    const div = document.createElement("div");
+
+    div.className = "news";
+
+    div.innerHTML = `
+  <h3>${item.name}</h3>
+
+  ${
+    item.image_url
+      ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%; border-radius:8px; margin-bottom:12px;">`
+      : ""
+  }
+
+  <p>${item.description ?? ""}</p>
+  <p><strong>¥${Number(item.price).toLocaleString()}</strong></p>
+
+  <button onclick="editMenuItem(${item.id})">編集</button>
+  <button onclick="deleteMenuItem(${item.id})">削除</button>
+`;
+    `;
+
+    menuList.appendChild(div);
+  });
+}
+
+loadMenuItems();
+
+async function deleteMenuItem(id) {
+  const ok = confirm("このメニューを削除しますか？");
+
+  if (!ok) {
+    return;
+  }
+
+  const { data: menuItem, error: fetchError } = await supabaseClient
+    .from("menu_items")
+    .select("image_url")
+    .eq("id", id)
+    .single();
+
+  if (fetchError) {
+    console.error(fetchError);
+    alert("メニュー情報の取得に失敗しました");
+    return;
+  }
+
+  if (menuItem.image_url) {
+    const fileName = decodeURIComponent(
+      menuItem.image_url.split("/news-images/")[1]
+    );
+
+    if (fileName) {
+      const { error: imageDeleteError } = await supabaseClient.storage
+        .from("news-images")
+        .remove([fileName]);
+
+      if (imageDeleteError) {
+        console.error(imageDeleteError);
+        alert("画像の削除に失敗しました");
+        return;
+      }
+    }
+  }
+
+  const { error } = await supabaseClient
+    .from("menu_items")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    alert("メニューの削除に失敗しました");
+    return;
+  }
+
+  alert("メニューを削除しました！");
+  loadMenuItems();
+}
+
+async function editMenuItem(id) {
+  const { data: item, error: fetchError } = await supabaseClient
+    .from("menu_items")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (fetchError) {
+    console.error(fetchError);
+    alert("メニュー情報の取得に失敗しました");
+    return;
+  }
+
+  const newName = prompt("メニュー名を編集してください", item.name);
+
+  if (newName === null) {
+    return;
+  }
+
+  const newDescription = prompt(
+    "メニュー説明を編集してください",
+    item.description ?? ""
+  );
+
+  if (newDescription === null) {
+    return;
+  }
+
+  const newPrice = prompt(
+    "価格を編集してください",
+    item.price
+  );
+
+  if (newPrice === null) {
+    return;
+  }
+
+  if (newName.trim() === "" || newPrice.trim() === "") {
+    alert("メニュー名と価格は空欄にできません");
+    return;
+  }
+
+  const { error: updateError } = await supabaseClient
+    .from("menu_items")
+    .update({
+      name: newName,
+      description: newDescription,
+      price: Number(newPrice)
+    })
+    .eq("id", id);
+
+  if (updateError) {
+    console.error(updateError);
+    alert("メニューの編集に失敗しました");
+    return;
+  }
+
+  alert("メニューを編集しました！");
+  loadMenuItems();
+}

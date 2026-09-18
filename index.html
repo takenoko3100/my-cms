@@ -60,6 +60,25 @@
 <button id="saveCompanyInfo">会社情報を保存</button>
 </section>
 
+<section class="menu-admin">
+  <h2>メニュー追加</h2>
+
+  <input type="text" id="menuName" placeholder="メニュー名">
+
+  <textarea id="menuDescription" placeholder="メニュー説明"></textarea>
+
+  <input type="number" id="menuPrice" placeholder="価格">
+
+  <input type="file" id="menuImage" accept="image/*">
+
+  <button id="addMenuButton">メニューを追加</button>
+</section>
+
+<section>
+  <h2>登録済みメニュー</h2>
+  <div id="menuList"></div>
+</section>
+
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
