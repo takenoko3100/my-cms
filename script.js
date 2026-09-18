@@ -620,4 +620,6 @@ if (companyInfo?.updated_at) {
     updatedDate.toLocaleString("ja-JP");
 }
 
+}
+
 loadDashboardSummary();
