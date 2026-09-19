@@ -24,14 +24,23 @@ async function checkLogin() {
 checkLogin();
 
 async function addNews() {
+  const publishButton = document.querySelector('button[onclick="addNews()"]');
+
+publishButton.disabled = true;
+publishButton.textContent = "公開中...";
+
   const title = document.getElementById("title").value;
   const content = document.getElementById("content").value;
   const imageFile = document.getElementById("image").files[0];
 
   if (title === "" || content === "") {
-    alert("タイトルと本文を入力してください");
-    return;
-  }
+  alert("タイトルと本文を入力してください");
+
+  publishButton.disabled = false;
+  publishButton.textContent = "公開する";
+
+  return;
+}
 
   let imageUrl = null;
 
@@ -46,6 +55,10 @@ const fileName = `${Date.now()}.${extension}`;
     if (uploadError) {
   console.error(uploadError);
   alert(uploadError.message);
+
+  publishButton.disabled = false;
+  publishButton.textContent = "公開する";
+
   return;
 }
 
@@ -80,6 +93,9 @@ const fileName = `${Date.now()}.${extension}`;
 
   loadNews();
   loadDashboardSummary();
+
+  publishButton.disabled = false;
+publishButton.textContent = "公開する";
 }
 
 
