@@ -322,3 +322,24 @@ section h2 {
     width: 100%;
   }
 }
+
+.toast-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #222;
+  color: white;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 9999;
+}
+
+.toast-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}

@@ -93,7 +93,7 @@ const fileName = `${Date.now()}.${extension}`;
   document.getElementById("content").value = "";
   document.getElementById("image").value = "";
 
-  alert("公開しました！");
+  showToast("お知らせを公開しました！");
 
   loadNews();
   loadDashboardSummary();
@@ -208,7 +208,7 @@ document
     return;
   }
 
-  alert("削除しました！");
+  showToast("お知らせを削除しました！");
   loadNews();
   loadDashboardSummary();
 }
@@ -257,7 +257,7 @@ async function editNews(id) {
     return;
   }
 
-  alert("編集しました！");
+  showToast("お知らせを編集しました！");
   loadNews();
 }
 
@@ -372,7 +372,7 @@ saveButton.textContent = "会社情報を保存";
 
     document.getElementById("heroImage").value = "";
 
-    alert("会社情報を保存しました！");
+    showToast("会社情報を保存しました！");
 
       loadDashboardSummary();
 
@@ -455,7 +455,7 @@ addMenuButton.textContent = "追加中...";
     document.getElementById("menuPrice").value = "";
     document.getElementById("menuImage").value = "";
 
-    alert("メニューを追加しました！");
+    showToast("メニューを追加しました！");
     loadMenuItems();
     loadDashboardSummary();
 
@@ -553,7 +553,7 @@ async function deleteMenuItem(id) {
     return;
   }
 
-  alert("メニューを削除しました！");
+  showToast("メニューを削除しました！");
   loadMenuItems();
   loadDashboardSummary();
 }
@@ -615,7 +615,7 @@ async function editMenuItem(id) {
     return;
   }
 
-  alert("メニューを編集しました！");
+  showToast("メニューを編集しました！");
   loadMenuItems();
   loadDashboardSummary();ß
 }
@@ -688,3 +688,14 @@ if (companyInfo?.updated_at) {
 }
 
 loadDashboardSummary();
+
+function showToast(message) {
+  const toast = document.getElementById("toastMessage");
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2500);
+}
