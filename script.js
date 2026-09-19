@@ -80,10 +80,14 @@ const fileName = `${Date.now()}.${extension}`;
     ]);
 
   if (error) {
-    console.error(error);
-    alert("保存に失敗しました");
-    return;
-  }
+  console.error(error);
+  alert("保存に失敗しました");
+
+  publishButton.disabled = false;
+  publishButton.textContent = "公開する";
+
+  return;
+}
 
   document.getElementById("title").value = "";
   document.getElementById("content").value = "";
@@ -380,15 +384,23 @@ saveButton.textContent = "会社情報を保存";
   .getElementById("addMenuButton")
   .addEventListener("click", async () => {
 
+    const addMenuButton = document.getElementById("addMenuButton");
+addMenuButton.disabled = true;
+addMenuButton.textContent = "追加中...";
+
     const name = document.getElementById("menuName").value;
     const description = document.getElementById("menuDescription").value;
     const price = document.getElementById("menuPrice").value;
     const imageFile = document.getElementById("menuImage").files[0];
 
     if (name === "" || price === "") {
-      alert("メニュー名と価格を入力してください");
-      return;
-    }
+  alert("メニュー名と価格を入力してください");
+
+  addMenuButton.disabled = false;
+  addMenuButton.textContent = "メニューを追加";
+
+  return;
+}
 
     let imageUrl = null;
 
@@ -401,10 +413,14 @@ saveButton.textContent = "会社情報を保存";
         .upload(fileName, imageFile);
 
       if (uploadError) {
-        console.error(uploadError);
-        alert(uploadError.message);
-        return;
-      }
+  console.error(uploadError);
+  alert(uploadError.message);
+
+  addMenuButton.disabled = false;
+  addMenuButton.textContent = "メニューを追加";
+
+  return;
+}
 
       const { data: publicUrlData } = supabaseClient.storage
         .from("news-images")
@@ -425,10 +441,14 @@ saveButton.textContent = "会社情報を保存";
       ]);
 
     if (error) {
-      console.error(error);
-      alert("メニューの保存に失敗しました");
-      return;
-    }
+  console.error(error);
+  alert("メニューの保存に失敗しました");
+
+  addMenuButton.disabled = false;
+  addMenuButton.textContent = "メニューを追加";
+
+  return;
+}
 
     document.getElementById("menuName").value = "";
     document.getElementById("menuDescription").value = "";
@@ -438,6 +458,9 @@ saveButton.textContent = "会社情報を保存";
     alert("メニューを追加しました！");
     loadMenuItems();
     loadDashboardSummary();
+
+    addMenuButton.disabled = false;
+addMenuButton.textContent = "メニューを追加";
   });
 
   async function loadMenuItems() {
