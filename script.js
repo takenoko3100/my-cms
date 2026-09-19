@@ -353,12 +353,12 @@ saveButton.textContent = "会社情報を保存";
     document.getElementById("heroImage").value = "";
 
     alert("会社情報を保存しました！");
-  });
 
-  loadDashboardSummary();
+      loadDashboardSummary();
 
   saveButton.disabled = false;
 saveButton.textContent = "会社情報を保存";
+  });
 
   document
   .getElementById("addMenuButton")
