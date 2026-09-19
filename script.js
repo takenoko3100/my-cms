@@ -79,6 +79,7 @@ const fileName = `${Date.now()}.${extension}`;
   alert("公開しました！");
 
   loadNews();
+  loadDashboardSummary();
 }
 
 
@@ -189,6 +190,7 @@ document
 
   alert("削除しました！");
   loadNews();
+  loadDashboardSummary();
 }
 
 async function editNews(id) {
@@ -267,6 +269,10 @@ document
   .getElementById("saveCompanyInfo")
   .addEventListener("click", async () => {
 
+    const saveButton = document.getElementById("saveCompanyInfo");
+    saveButton.disabled = true;
+    saveButton.textContent = "保存中...";
+
     const name = document.getElementById("companyName").value;
     const address = document.getElementById("companyAddress").value;
     const description = document.getElementById("companyDescription").value;
@@ -285,6 +291,10 @@ document
     if (fetchError) {
       console.error(fetchError);
       alert("会社情報の取得に失敗しました");
+
+      saveButton.disabled = false;
+saveButton.textContent = "会社情報を保存";
+
       return;
     }
 
@@ -301,6 +311,10 @@ document
       if (uploadError) {
         console.error(uploadError);
         alert(uploadError.message);
+
+        saveButton.disabled = false;
+saveButton.textContent = "会社情報を保存";
+
         return;
       }
 
@@ -329,6 +343,10 @@ document
     if (error) {
       console.error(error);
       alert("会社情報の保存に失敗しました");
+
+      saveButton.disabled = false;
+saveButton.textContent = "会社情報を保存";
+
       return;
     }
 
@@ -336,6 +354,11 @@ document
 
     alert("会社情報を保存しました！");
   });
+
+  loadDashboardSummary();
+
+  saveButton.disabled = false;
+saveButton.textContent = "会社情報を保存";
 
   document
   .getElementById("addMenuButton")
@@ -398,6 +421,7 @@ document
 
     alert("メニューを追加しました！");
     loadMenuItems();
+    loadDashboardSummary();
   });
 
   async function loadMenuItems() {
@@ -492,6 +516,7 @@ async function deleteMenuItem(id) {
 
   alert("メニューを削除しました！");
   loadMenuItems();
+  loadDashboardSummary();
 }
 
 async function editMenuItem(id) {
@@ -553,6 +578,7 @@ async function editMenuItem(id) {
 
   alert("メニューを編集しました！");
   loadMenuItems();
+  loadDashboardSummary();ß
 }
 const tabButtons = document.querySelectorAll(".tab-button");
 const tabContents = document.querySelectorAll(".tab-content");
