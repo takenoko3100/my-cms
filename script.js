@@ -631,6 +631,7 @@ async function deleteMenuItem(id) {
 }
 
 async function editMenuItem(id) {
+  const newImageFile = await selectImageFile();
   const { data: item, error: fetchError } = await supabaseClient
     .from("menu_items")
     .select("*")
@@ -672,7 +673,6 @@ async function editMenuItem(id) {
     return;
   }
 
-  const newImageFile = await selectImageFile();
 
 if (newImageFile && newImageFile.size > 5 * 1024 * 1024) {
   alert("メニュー画像は5MB以下の画像を選んでください");
