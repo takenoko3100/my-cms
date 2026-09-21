@@ -128,9 +128,10 @@ loadNews();
 
 async function loadMenuItems() {
   const { data, error } = await supabaseClient
-    .from("menu_items")
-    .select("*")
-    .order("created_at", { ascending: false });
+  .from("menu_items")
+  .select("*")
+  .order("sort_order", { ascending: true })
+  .order("created_at", { ascending: false });
 
   if (error) {
     console.error(error);

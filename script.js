@@ -443,6 +443,7 @@ addMenuButton.textContent = "追加中...";
     const name = document.getElementById("menuName").value.trim();
 const description = document.getElementById("menuDescription").value.trim();
 const price = document.getElementById("menuPrice").value.trim();
+const sortOrder = document.getElementById("menuSortOrder").value.trim();
     const imageFile = document.getElementById("menuImage").files[0];
 
     if (imageFile && imageFile.size > 5 * 1024 * 1024) {
@@ -467,6 +468,17 @@ const priceNumber = Number(price);
 
 if (!Number.isInteger(priceNumber) || priceNumber <= 0) {
   alert("価格は1円以上の整数で入力してください");
+
+  addMenuButton.disabled = false;
+  addMenuButton.textContent = "メニューを追加";
+
+  return;
+}
+
+const sortOrderNumber = Number(sortOrder || 0);
+
+if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
+  alert("並び順は0以上の整数で入力してください");
 
   addMenuButton.disabled = false;
   addMenuButton.textContent = "メニューを追加";
@@ -508,6 +520,7 @@ if (!Number.isInteger(priceNumber) || priceNumber <= 0) {
           name: name,
           description: description,
           price: Number(price),
+          sort_order: sortOrderNumber,
           image_url: imageUrl
         }
       ]);
@@ -557,6 +570,7 @@ addMenuButton.textContent = "メニューを追加";
 
     div.innerHTML = `
   <h3>${item.name}</h3>
+  <p>並び順：${item.sort_order ?? 0}</p>
 
   ${
     item.image_url
@@ -664,6 +678,22 @@ async function editMenuItem(id) {
     item.price
   );
 
+  const newSortOrder = prompt(
+  "並び順を編集してください",
+  item.sort_order ?? 0
+);
+
+if (newSortOrder === null) {
+  return;
+}
+
+const sortOrderNumber = Number(newSortOrder);
+
+if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
+  alert("並び順は0以上の整数で入力してください");
+  return;
+}
+
   if (newPrice === null) {
     return;
   }
@@ -708,6 +738,7 @@ if (newImageFile) {
   name: newName.trim(),
   description: newDescription.trim(),
   price: Number(newPrice),
+  sort_order: Number(newSortOrder || 0),
   image_url: newImageUrl
 })
     .eq("id", id);
