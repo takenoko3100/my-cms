@@ -29,9 +29,18 @@ async function addNews() {
 publishButton.disabled = true;
 publishButton.textContent = "公開中...";
 
-  const title = document.getElementById("title").value;
-  const content = document.getElementById("content").value;
+  const title = document.getElementById("title").value.trim();
+const content = document.getElementById("content").value.trim();
   const imageFile = document.getElementById("image").files[0];
+
+  if (imageFile && imageFile.size > 5 * 1024 * 1024) {
+  alert("お知らせ画像は5MB以下の画像を選んでください");
+
+  publishButton.disabled = false;
+  publishButton.textContent = "公開する";
+
+  return;
+}
 
   if (title === "" || content === "") {
   alert("タイトルと本文を入力してください");
@@ -293,14 +302,57 @@ document
     saveButton.disabled = true;
     saveButton.textContent = "保存中...";
 
-    const name = document.getElementById("companyName").value;
-    const address = document.getElementById("companyAddress").value;
-    const description = document.getElementById("companyDescription").value;
-    const phone = document.getElementById("companyPhone").value;
-    const instagramUrl = document.getElementById("companyInstagram").value;
-    const businessHours = document.getElementById("companyHours").value;
-    const closedDays = document.getElementById("companyClosedDays").value;
+    const name = document.getElementById("companyName").value.trim();
+const address = document.getElementById("companyAddress").value.trim();
+const description = document.getElementById("companyDescription").value.trim();
+const phone = document.getElementById("companyPhone").value.trim();
+const instagramUrl = document.getElementById("companyInstagram").value.trim();
+const businessHours = document.getElementById("companyHours").value.trim();
+const closedDays = document.getElementById("companyClosedDays").value.trim();
+
+if (
+  instagramUrl !== "" &&
+  !instagramUrl.startsWith("https://www.instagram.com/")
+) {
+  alert("InstagramのURLを正しく入力してください");
+
+  saveButton.disabled = false;
+  saveButton.textContent = "会社情報を保存";
+
+  return;
+}
+
+if (
+  phone !== "" &&
+  !/^[0-9-]+$/.test(phone)
+) {
+  alert("電話番号は数字とハイフンだけで入力してください");
+
+  saveButton.disabled = false;
+  saveButton.textContent = "会社情報を保存";
+
+  return;
+}
+
+if (name === "") {
+  alert("会社名・店舗名を入力してください");
+
+  saveButton.disabled = false;
+  saveButton.textContent = "会社情報を保存";
+
+  return;
+}
+
     const heroImageFile = document.getElementById("heroImage").files[0];
+
+    if (heroImageFile && heroImageFile.size > 5 * 1024 * 1024) {
+  alert("トップ画像は5MB以下の画像を選んでください");
+
+  saveButton.disabled = false;
+  saveButton.textContent = "会社情報を保存";
+
+  return;
+}
 
     const { data: companyData, error: fetchError } = await supabaseClient
       .from("company_info")
@@ -388,13 +440,33 @@ saveButton.textContent = "会社情報を保存";
 addMenuButton.disabled = true;
 addMenuButton.textContent = "追加中...";
 
-    const name = document.getElementById("menuName").value;
-    const description = document.getElementById("menuDescription").value;
-    const price = document.getElementById("menuPrice").value;
+    const name = document.getElementById("menuName").value.trim();
+const description = document.getElementById("menuDescription").value.trim();
+const price = document.getElementById("menuPrice").value.trim();
     const imageFile = document.getElementById("menuImage").files[0];
+
+    if (imageFile && imageFile.size > 5 * 1024 * 1024) {
+  alert("メニュー画像は5MB以下の画像を選んでください");
+
+  addMenuButton.disabled = false;
+  addMenuButton.textContent = "メニューを追加";
+
+  return;
+}
 
     if (name === "" || price === "") {
   alert("メニュー名と価格を入力してください");
+
+  addMenuButton.disabled = false;
+  addMenuButton.textContent = "メニューを追加";
+
+  return;
+}
+
+const priceNumber = Number(price);
+
+if (!Number.isInteger(priceNumber) || priceNumber <= 0) {
+  alert("価格は1円以上の整数で入力してください");
 
   addMenuButton.disabled = false;
   addMenuButton.textContent = "メニューを追加";
