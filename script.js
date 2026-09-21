@@ -312,9 +312,9 @@ const closedDays = document.getElementById("companyClosedDays").value.trim();
 
 if (
   instagramUrl !== "" &&
-  !instagramUrl.startsWith("https://www.instagram.com/")
+  !/^https:\/\/www\.instagram\.com\/[A-Za-z0-9._]+\/?$/.test(instagramUrl)
 ) {
-  alert("InstagramのURLを正しく入力してください");
+  alert("InstagramのプロフィールURLを正しく入力してください");
 
   saveButton.disabled = false;
   saveButton.textContent = "会社情報を保存";
