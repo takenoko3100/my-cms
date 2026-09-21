@@ -672,13 +672,44 @@ async function editMenuItem(id) {
     return;
   }
 
+  const newImageFile = await selectImageFile();
+
+if (newImageFile && newImageFile.size > 5 * 1024 * 1024) {
+  alert("メニュー画像は5MB以下の画像を選んでください");
+  return;
+}
+
+let newImageUrl = item.image_url;
+
+if (newImageFile) {
+  const extension = newImageFile.name.split(".").pop();
+  const fileName = `menu-${Date.now()}.${extension}`;
+
+  const { error: uploadError } = await supabaseClient.storage
+    .from("news-images")
+    .upload(fileName, newImageFile);
+
+  if (uploadError) {
+    console.error(uploadError);
+    alert("画像のアップロードに失敗しました");
+    return;
+  }
+
+  const { data: publicUrlData } = supabaseClient.storage
+    .from("news-images")
+    .getPublicUrl(fileName);
+
+  newImageUrl = publicUrlData.publicUrl;
+}
+
   const { error: updateError } = await supabaseClient
     .from("menu_items")
     .update({
-      name: newName,
-      description: newDescription,
-      price: Number(newPrice)
-    })
+  name: newName.trim(),
+  description: newDescription.trim(),
+  price: Number(newPrice),
+  image_url: newImageUrl
+})
     .eq("id", id);
 
   if (updateError) {
@@ -687,9 +718,25 @@ async function editMenuItem(id) {
     return;
   }
 
+  if (
+  newImageFile &&
+  item.image_url &&
+  item.image_url.includes("/news-images/")
+) {
+  const oldFileName = item.image_url.split("/news-images/").pop();
+
+  const { error: deleteOldImageError } = await supabaseClient.storage
+    .from("news-images")
+    .remove([oldFileName]);
+
+  if (deleteOldImageError) {
+    console.error(deleteOldImageError);
+  }
+}
+
   showToast("メニューを編集しました！");
   loadMenuItems();
-  loadDashboardSummary();ß
+  loadDashboardSummary();
 }
 const tabButtons = document.querySelectorAll(".tab-button");
 const tabContents = document.querySelectorAll(".tab-content");
@@ -770,4 +817,19 @@ function showToast(message) {
   setTimeout(() => {
     toast.classList.remove("show");
   }, 2500);
+}
+
+function selectImageFile() {
+  return new Promise((resolve) => {
+    const input = document.createElement("input");
+
+    input.type = "file";
+    input.accept = "image/*";
+
+    input.addEventListener("change", () => {
+      resolve(input.files[0] ?? null);
+    });
+
+    input.click();
+  });
 }
