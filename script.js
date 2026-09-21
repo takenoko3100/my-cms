@@ -550,9 +550,10 @@ addMenuButton.textContent = "メニューを追加";
 
   async function loadMenuItems() {
   const { data, error } = await supabaseClient
-    .from("menu_items")
-    .select("*")
-    .order("created_at", { ascending: false });
+  .from("menu_items")
+  .select("*")
+  .order("sort_order", { ascending: true })
+  .order("created_at", { ascending: false });
 
   if (error) {
     console.error(error);
@@ -562,6 +563,8 @@ addMenuButton.textContent = "メニューを追加";
 
   const menuList = document.getElementById("menuList");
   menuList.innerHTML = "";
+
+  data.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
   data.forEach((item) => {
     const div = document.createElement("div");
