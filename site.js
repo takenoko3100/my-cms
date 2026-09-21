@@ -141,7 +141,29 @@ async function loadMenuItems() {
   const menuList = document.getElementById("siteMenuList");
   menuList.innerHTML = "";
 
-  data.forEach((item) => {
+  const groupedMenu = {};
+
+data.forEach((item) => {
+  const category = item.category || "その他";
+
+  if (!groupedMenu[category]) {
+    groupedMenu[category] = [];
+  }
+
+  groupedMenu[category].push(item);
+});
+
+  Object.entries(groupedMenu).forEach(([category, items]) => {
+  const categorySection = document.createElement("section");
+  categorySection.className = "menu-category";
+
+  const categoryTitle = document.createElement("h3");
+  categoryTitle.textContent = category;
+
+  const categoryList = document.createElement("div");
+  categoryList.className = "menu-category-list";
+
+  items.forEach((item) => {
     const div = document.createElement("div");
 
     div.className = "menu-card";
@@ -151,7 +173,7 @@ async function loadMenuItems() {
 
       ${
         item.image_url
-          ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%; border-radius:12px; margin-bottom:12px;">`
+          ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%; border-radius:12px;">`
           : ""
       }
 
@@ -159,8 +181,14 @@ async function loadMenuItems() {
       <p><strong>¥${Number(item.price).toLocaleString()}</strong></p>
     `;
 
-    menuList.appendChild(div);
+    categoryList.appendChild(div);
   });
+
+  categorySection.appendChild(categoryTitle);
+  categorySection.appendChild(categoryList);
+
+  menuList.appendChild(categorySection);
+});
 }
 
 loadMenuItems();

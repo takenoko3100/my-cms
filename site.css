@@ -322,3 +322,26 @@ section h2 {
     width: 100%;
   }
 }
+
+.menu-category {
+  margin-bottom: 40px;
+}
+
+.menu-category > h3 {
+  font-size: 24px;
+  margin-bottom: 18px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #d8c7b0;
+}
+
+.menu-category-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 600px) {
+  .menu-category-list {
+    grid-template-columns: 1fr;
+  }
+}

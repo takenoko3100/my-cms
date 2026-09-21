@@ -444,6 +444,7 @@ addMenuButton.textContent = "追加中...";
 const description = document.getElementById("menuDescription").value.trim();
 const price = document.getElementById("menuPrice").value.trim();
 const sortOrder = document.getElementById("menuSortOrder").value.trim();
+const category = document.getElementById("menuCategory").value.trim();
     const imageFile = document.getElementById("menuImage").files[0];
 
     if (imageFile && imageFile.size > 5 * 1024 * 1024) {
@@ -516,14 +517,15 @@ if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
     const { error } = await supabaseClient
       .from("menu_items")
       .insert([
-        {
-          name: name,
-          description: description,
-          price: Number(price),
-          sort_order: sortOrderNumber,
-          image_url: imageUrl
-        }
-      ]);
+  {
+    name: name,
+    description: description,
+    price: Number(price),
+    sort_order: sortOrderNumber,
+    category: category || "その他",
+    image_url: imageUrl
+  }
+]);
 
     if (error) {
   console.error(error);
@@ -573,6 +575,7 @@ addMenuButton.textContent = "メニューを追加";
 
     div.innerHTML = `
   <h3>${item.name}</h3>
+  <p>カテゴリ：${item.category ?? "その他"}</p>
   <p>並び順：${item.sort_order ?? 0}</p>
 
   ${
@@ -690,6 +693,15 @@ if (newSortOrder === null) {
   return;
 }
 
+const newCategory = prompt(
+  "カテゴリを編集してください",
+  item.category ?? "その他"
+);
+
+if (newCategory === null) {
+  return;
+}
+
 const sortOrderNumber = Number(newSortOrder);
 
 if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
@@ -742,6 +754,7 @@ if (newImageFile) {
   description: newDescription.trim(),
   price: Number(newPrice),
   sort_order: Number(newSortOrder || 0),
+  category: newCategory.trim() || "その他",
   image_url: newImageUrl
 })
     .eq("id", id);
