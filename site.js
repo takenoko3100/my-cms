@@ -21,6 +21,7 @@ async function loadCompanyInfo() {
   }
 
   document.getElementById("siteCompanyName").textContent = data.name ?? "";
+  document.getElementById("siteNavCompanyName").textContent = data.name;
 document.getElementById("siteAddress").textContent = data.address ?? "";
 
 const map = document.getElementById("siteMap");
