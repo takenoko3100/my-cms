@@ -130,6 +130,7 @@ async function loadMenuItems() {
   const { data, error } = await supabaseClient
   .from("menu_items")
   .select("*")
+  .eq("is_visible", true)
   .order("sort_order", { ascending: true })
   .order("created_at", { ascending: false });
 
