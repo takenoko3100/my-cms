@@ -449,6 +449,7 @@ const sortOrder = document.getElementById("menuSortOrder").value.trim();
 const category = document.getElementById("menuCategory").value.trim();
 const isRecommended = document.getElementById("menuRecommended").checked;
 const isSoldOut = document.getElementById("menuSoldOut").checked;
+const isVisible = document.getElementById("menuVisible").checked;
     const imageFile = document.getElementById("menuImage").files[0];
 
     if (imageFile && imageFile.size > 5 * 1024 * 1024) {
@@ -529,6 +530,7 @@ if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
     category: category || "その他",
     is_recommended: isRecommended,
     is_sold_out: isSoldOut,
+    is_visible: isVisible,
     image_url: imageUrl
   }
 ]);
@@ -560,6 +562,7 @@ addMenuButton.textContent = "メニューを追加";
   const { data, error } = await supabaseClient
   .from("menu_items")
   .select("*")
+  .eq("is_visible", true)
   .order("sort_order", { ascending: true })
   .order("created_at", { ascending: false });
 
@@ -583,6 +586,7 @@ addMenuButton.textContent = "メニューを追加";
   <h3>${item.name}</h3>
   ${item.is_recommended ? "<p>⭐ おすすめ</p>" : ""}
   ${item.is_sold_out ? "<p>売り切れ</p>" : ""}
+  <p>公開状態：${item.is_visible === false ? "非表示" : "公開中"}</p>
   <p>カテゴリ：${item.category ?? "その他"}</p>
   <p>並び順：${item.sort_order ?? 0}</p>
 
@@ -729,6 +733,16 @@ const newSoldOut = confirm(
     : "売り切れにしますか？"
 );
 
+const newVisible = confirm(
+  item.is_visible === false
+    ? "公開しますか？"
+    : "非表示にしますか？"
+);
+
+const updatedVisible = item.is_visible === false
+  ? newVisible
+  : !newVisible;
+
 const sortOrderNumber = Number(newSortOrder);
 
 if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
@@ -784,6 +798,7 @@ if (newImageFile) {
   category: newCategory.trim() || "その他",
   is_recommended: newRecommended,
   is_sold_out: newSoldOut,
+  is_visible: updatedVisible,
   image_url: newImageUrl
 })
     .eq("id", id);
