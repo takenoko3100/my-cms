@@ -345,3 +345,13 @@ section h2 {
     grid-template-columns: 1fr;
   }
 }
+
+.recommended-badge {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fff3cd;
+  font-size: 14px;
+  font-weight: 700;
+}

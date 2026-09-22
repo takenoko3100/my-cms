@@ -135,6 +135,8 @@ async function loadNews() {
   div.innerHTML = `
   <h3>${news.title}</h3>
 
+  ${item.is_recommended ? '<p class="recommended-badge">⭐ おすすめ</p>' : ""}
+
   ${
     news.image_url
       ? `<img src="${news.image_url}" alt="お知らせ画像" style="width:100%; border-radius:8px; margin-bottom:12px;">`
@@ -445,6 +447,7 @@ const description = document.getElementById("menuDescription").value.trim();
 const price = document.getElementById("menuPrice").value.trim();
 const sortOrder = document.getElementById("menuSortOrder").value.trim();
 const category = document.getElementById("menuCategory").value.trim();
+const isRecommended = document.getElementById("menuRecommended").checked;
     const imageFile = document.getElementById("menuImage").files[0];
 
     if (imageFile && imageFile.size > 5 * 1024 * 1024) {
@@ -516,13 +519,14 @@ if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
 
     const { error } = await supabaseClient
       .from("menu_items")
-      .insert([
+    .insert([
   {
     name: name,
     description: description,
     price: Number(price),
     sort_order: sortOrderNumber,
     category: category || "その他",
+    is_recommended: isRecommended,
     image_url: imageUrl
   }
 ]);
@@ -575,6 +579,7 @@ addMenuButton.textContent = "メニューを追加";
 
     div.innerHTML = `
   <h3>${item.name}</h3>
+  ${item.is_recommended ? "<p>⭐ おすすめ</p>" : ""}
   <p>カテゴリ：${item.category ?? "その他"}</p>
   <p>並び順：${item.sort_order ?? 0}</p>
 
@@ -702,6 +707,12 @@ if (newCategory === null) {
   return;
 }
 
+const newRecommended = confirm(
+  item.is_recommended
+    ? "おすすめを解除しますか？"
+    : "おすすめにしますか？"
+);
+
 const sortOrderNumber = Number(newSortOrder);
 
 if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
@@ -755,6 +766,7 @@ if (newImageFile) {
   price: Number(newPrice),
   sort_order: Number(newSortOrder || 0),
   category: newCategory.trim() || "その他",
+  is_recommended: newRecommended,
   image_url: newImageUrl
 })
     .eq("id", id);
