@@ -439,3 +439,132 @@ html {
 #news {
   scroll-margin-top: 100px;
 }
+
+main section > h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #d8c7b0;
+  letter-spacing: 0.03em;
+}
+
+main section {
+  margin-bottom: 48px;
+  padding: 32px;
+  border-radius: 20px;
+}
+
+@media (max-width: 600px) {
+  main section {
+    margin-bottom: 28px;
+    padding: 22px 18px;
+  }
+}
+
+.hero {
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.38);
+  padding: 28px 36px;
+  border-radius: 18px;
+  text-align: center;
+  color: white;
+  backdrop-filter: blur(2px);
+}
+
+.hero-overlay h1 {
+  margin: 0 0 10px;
+  font-size: clamp(34px, 6vw, 64px);
+  letter-spacing: 0.04em;
+}
+
+.hero-overlay p {
+  margin: 0;
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  .hero {
+    min-height: 360px;
+  }
+
+  .hero-overlay {
+    margin: 0 18px;
+    padding: 22px 20px;
+  }
+}
+
+.contact-links {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.contact-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  padding: 14px 20px;
+  border-radius: 999px;
+  background: #2f2924;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.contact-button:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .contact-links {
+    flex-direction: column;
+  }
+
+  .contact-button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.menu-card {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menu-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.menu-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  margin: 12px 0 16px;
+  border-radius: 14px;
+}
+
+.menu-card h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.menu-card p {
+  line-height: 1.7;
+}
