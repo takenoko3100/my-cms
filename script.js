@@ -135,8 +135,6 @@ async function loadNews() {
   div.innerHTML = `
   <h3>${news.title}</h3>
 
-  ${item.is_recommended ? '<p class="recommended-badge">⭐ おすすめ</p>' : ""}
-
   ${
     news.image_url
       ? `<img src="${news.image_url}" alt="お知らせ画像" style="width:100%; border-radius:8px; margin-bottom:12px;">`
