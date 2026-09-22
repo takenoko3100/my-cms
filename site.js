@@ -171,6 +171,8 @@ data.forEach((item) => {
     div.innerHTML = `
       <h3>${item.name}</h3>
 
+      ${item.is_recommended ? '<p class="recommended-badge">⭐ おすすめ</p>' : ""}
+
       ${
         item.image_url
           ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%; border-radius:12px;">`
