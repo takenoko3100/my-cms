@@ -448,6 +448,7 @@ const price = document.getElementById("menuPrice").value.trim();
 const sortOrder = document.getElementById("menuSortOrder").value.trim();
 const category = document.getElementById("menuCategory").value.trim();
 const isRecommended = document.getElementById("menuRecommended").checked;
+const isSoldOut = document.getElementById("menuSoldOut").checked;
     const imageFile = document.getElementById("menuImage").files[0];
 
     if (imageFile && imageFile.size > 5 * 1024 * 1024) {
@@ -527,6 +528,7 @@ if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
     sort_order: sortOrderNumber,
     category: category || "その他",
     is_recommended: isRecommended,
+    is_sold_out: isSoldOut,
     image_url: imageUrl
   }
 ]);
@@ -580,6 +582,7 @@ addMenuButton.textContent = "メニューを追加";
     div.innerHTML = `
   <h3>${item.name}</h3>
   ${item.is_recommended ? "<p>⭐ おすすめ</p>" : ""}
+  ${item.is_sold_out ? "<p>売り切れ</p>" : ""}
   <p>カテゴリ：${item.category ?? "その他"}</p>
   <p>並び順：${item.sort_order ?? 0}</p>
 
@@ -713,6 +716,12 @@ const newRecommended = confirm(
     : "おすすめにしますか？"
 );
 
+const newSoldOut = confirm(
+  item.is_sold_out
+    ? "売り切れを解除しますか？"
+    : "売り切れにしますか？"
+);
+
 const sortOrderNumber = Number(newSortOrder);
 
 if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
@@ -767,6 +776,7 @@ if (newImageFile) {
   sort_order: Number(newSortOrder || 0),
   category: newCategory.trim() || "その他",
   is_recommended: newRecommended,
+  is_sold_out: newSoldOut,
   image_url: newImageUrl
 })
     .eq("id", id);

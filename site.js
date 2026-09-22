@@ -172,6 +172,7 @@ data.forEach((item) => {
       <h3>${item.name}</h3>
 
       ${item.is_recommended ? '<p class="recommended-badge">⭐ おすすめ</p>' : ""}
+      ${item.is_sold_out ? '<p class="sold-out-badge">売り切れ</p>' : ""}
 
       ${
         item.image_url
