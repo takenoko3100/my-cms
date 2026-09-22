@@ -562,7 +562,6 @@ addMenuButton.textContent = "メニューを追加";
   const { data, error } = await supabaseClient
   .from("menu_items")
   .select("*")
-  .eq("is_visible", true)
   .order("sort_order", { ascending: true })
   .order("created_at", { ascending: false });
 
@@ -571,6 +570,8 @@ addMenuButton.textContent = "メニューを追加";
     alert("メニューの読み込みに失敗しました");
     return;
   }
+
+  console.log("管理画面メニュー:", data);
 
   const menuList = document.getElementById("menuList");
   menuList.innerHTML = "";
