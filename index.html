@@ -96,6 +96,8 @@
 <section class="menu-admin tab-content" data-tab-content="menu">
   <h2>メニュー追加</h2>
 
+  <input type="hidden" id="menuEditId">
+
   <input type="text" id="menuName" placeholder="メニュー名">
 
   <textarea id="menuDescription" placeholder="メニュー説明"></textarea>
@@ -124,6 +126,10 @@
   <input type="file" id="menuImage" accept="image/*">
 
   <button id="addMenuButton">メニューを追加</button>
+
+  <button id="cancelMenuEditButton" type="button" style="display:none;">
+  編集をキャンセル
+</button>
 </section>
 
 <section class="tab-content" data-tab-content="menu">

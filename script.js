@@ -437,8 +437,9 @@ saveButton.textContent = "会社情報を保存";
   .addEventListener("click", async () => {
 
     const addMenuButton = document.getElementById("addMenuButton");
+    const editId = document.getElementById("menuEditId").value;
 addMenuButton.disabled = true;
-addMenuButton.textContent = "追加中...";
+addMenuButton.textContent = editId ? "保存中..." : "追加中...";
 
     const name = document.getElementById("menuName").value.trim();
 const description = document.getElementById("menuDescription").value.trim();
@@ -492,6 +493,26 @@ if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
 
     let imageUrl = null;
 
+    if (editId) {
+  const { data: currentItem, error: currentItemError } = await supabaseClient
+    .from("menu_items")
+    .select("image_url")
+    .eq("id", editId)
+    .single();
+
+  if (currentItemError) {
+    console.error(currentItemError);
+    alert("メニュー情報の取得に失敗しました");
+
+    addMenuButton.disabled = false;
+    addMenuButton.textContent = "変更を保存";
+
+    return;
+  }
+
+  imageUrl = currentItem.image_url;
+}
+
     if (imageFile) {
       const extension = imageFile.name.split(".").pop();
       const fileName = `menu-${Date.now()}.${extension}`;
@@ -517,28 +538,51 @@ if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
       imageUrl = publicUrlData.publicUrl;
     }
 
-    const { error } = await supabaseClient
-      .from("menu_items")
-    .insert([
-  {
-    name: name,
-    description: description,
-    price: Number(price),
-    sort_order: sortOrderNumber,
-    category: category || "その他",
-    is_recommended: isRecommended,
-    is_sold_out: isSoldOut,
-    is_visible: isVisible,
-    image_url: imageUrl
-  }
-]);
+    let saveError = null;
 
-    if (error) {
-  console.error(error);
+if (editId) {
+  const { error } = await supabaseClient
+    .from("menu_items")
+    .update({
+      name: name,
+      description: description,
+      price: Number(price),
+      sort_order: sortOrderNumber,
+      category: category || "その他",
+      is_recommended: isRecommended,
+      is_sold_out: isSoldOut,
+      is_visible: isVisible,
+      image_url: imageUrl
+    })
+    .eq("id", editId);
+
+  saveError = error;
+} else {
+  const { error } = await supabaseClient
+    .from("menu_items")
+    .insert([
+      {
+        name: name,
+        description: description,
+        price: Number(price),
+        sort_order: sortOrderNumber,
+        category: category || "その他",
+        is_recommended: isRecommended,
+        is_sold_out: isSoldOut,
+        is_visible: isVisible,
+        image_url: imageUrl
+      }
+    ]);
+
+  saveError = error;
+}
+
+    if (saveError) {
+  console.error(saveError);
   alert("メニューの保存に失敗しました");
 
   addMenuButton.disabled = false;
-  addMenuButton.textContent = "メニューを追加";
+  addMenuButton.textContent = editId ? "変更を保存" : "メニューを追加";
 
   return;
 }
@@ -548,13 +592,33 @@ if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
     document.getElementById("menuPrice").value = "";
     document.getElementById("menuImage").value = "";
 
-    showToast("メニューを追加しました！");
+    showToast(
+  editId
+    ? "メニューを変更しました！"
+    : "メニューを追加しました！"
+);
     loadMenuItems();
     loadDashboardSummary();
+
+    document.getElementById("menuEditId").value = "";
+document.getElementById("menuName").value = "";
+document.getElementById("menuDescription").value = "";
+document.getElementById("menuPrice").value = "";
+document.getElementById("menuSortOrder").value = "";
+document.getElementById("menuCategory").value = "";
+document.getElementById("menuRecommended").checked = false;
+document.getElementById("menuSoldOut").checked = false;
+document.getElementById("menuVisible").checked = true;
+document.getElementById("menuImage").value = "";
+
+addMenuButton.disabled = false;
+addMenuButton.textContent = "メニューを追加";
 
     addMenuButton.disabled = false;
 addMenuButton.textContent = "メニューを追加";
   });
+
+  document.getElementById("cancelMenuEditButton").style.display = "none";
 
   async function loadMenuItems() {
   const { data, error } = await supabaseClient
@@ -682,152 +746,55 @@ if (changeImage) {
     return;
   }
 
-  const newName = prompt("メニュー名を編集してください", item.name);
-
-  if (newName === null) {
-    return;
-  }
-
-  const newDescription = prompt(
-    "メニュー説明を編集してください",
-    item.description ?? ""
-  );
-
-  if (newDescription === null) {
-    return;
-  }
-
-  const newPrice = prompt(
-    "価格を編集してください",
-    item.price
-  );
-
-  const newSortOrder = prompt(
-  "並び順を編集してください",
-  item.sort_order ?? 0
-);
-
-if (newSortOrder === null) {
+  if (fetchError) {
+  console.error(fetchError);
+  alert("メニュー情報の取得に失敗しました");
   return;
 }
 
-const newCategory = prompt(
-  "カテゴリを編集してください",
-  item.category ?? "その他"
-);
+document.getElementById("menuEditId").value = item.id;
+document.getElementById("menuName").value = item.name ?? "";
+document.getElementById("menuDescription").value = item.description ?? "";
+document.getElementById("menuPrice").value = item.price ?? "";
+document.getElementById("menuSortOrder").value = item.sort_order ?? 0;
+document.getElementById("menuCategory").value = item.category ?? "その他";
+document.getElementById("menuRecommended").checked = item.is_recommended ?? false;
+document.getElementById("menuSoldOut").checked = item.is_sold_out ?? false;
+document.getElementById("menuVisible").checked = item.is_visible ?? true;
 
-if (newCategory === null) {
-  return;
+const addMenuButton = document.getElementById("addMenuButton");
+addMenuButton.textContent = "変更を保存";
+
+const cancelMenuEditButton = document.getElementById("cancelMenuEditButton");
+cancelMenuEditButton.style.display = "block";
+
+document.querySelector('[data-tab="menu"]').click();
+document.getElementById("menuName").scrollIntoView({
+  behavior: "smooth",
+  block: "center"
+});
+
+return;
 }
 
-const newRecommended = confirm(
-  item.is_recommended
-    ? "おすすめを解除しますか？"
-    : "おすすめにしますか？"
-);
+document
+  .getElementById("cancelMenuEditButton")
+  .addEventListener("click", () => {
+    document.getElementById("menuEditId").value = "";
+    document.getElementById("menuName").value = "";
+    document.getElementById("menuDescription").value = "";
+    document.getElementById("menuPrice").value = "";
+    document.getElementById("menuSortOrder").value = "";
+    document.getElementById("menuCategory").value = "";
+    document.getElementById("menuRecommended").checked = false;
+    document.getElementById("menuSoldOut").checked = false;
+    document.getElementById("menuVisible").checked = true;
+    document.getElementById("menuImage").value = "";
 
-const newSoldOut = confirm(
-  item.is_sold_out
-    ? "売り切れを解除しますか？"
-    : "売り切れにしますか？"
-);
+    document.getElementById("addMenuButton").textContent = "メニューを追加";
+    document.getElementById("cancelMenuEditButton").style.display = "none";
+  });
 
-const newVisible = confirm(
-  item.is_visible === false
-    ? "公開しますか？"
-    : "非表示にしますか？"
-);
-
-const updatedVisible = item.is_visible === false
-  ? newVisible
-  : !newVisible;
-
-const sortOrderNumber = Number(newSortOrder);
-
-if (!Number.isInteger(sortOrderNumber) || sortOrderNumber < 0) {
-  alert("並び順は0以上の整数で入力してください");
-  return;
-}
-
-  if (newPrice === null) {
-    return;
-  }
-
-  if (newName.trim() === "" || newPrice.trim() === "") {
-    alert("メニュー名と価格は空欄にできません");
-    return;
-  }
-
-
-if (newImageFile && newImageFile.size > 5 * 1024 * 1024) {
-  alert("メニュー画像は5MB以下の画像を選んでください");
-  return;
-}
-
-let newImageUrl = item.image_url;
-
-if (newImageFile) {
-  const extension = newImageFile.name.split(".").pop();
-  const fileName = `menu-${Date.now()}.${extension}`;
-
-  const { error: uploadError } = await supabaseClient.storage
-    .from("news-images")
-    .upload(fileName, newImageFile);
-
-  if (uploadError) {
-    console.error(uploadError);
-    alert("画像のアップロードに失敗しました");
-    return;
-  }
-
-  const { data: publicUrlData } = supabaseClient.storage
-    .from("news-images")
-    .getPublicUrl(fileName);
-
-  newImageUrl = publicUrlData.publicUrl;
-}
-
-  const { error: updateError } = await supabaseClient
-    .from("menu_items")
-    .update({
-  name: newName.trim(),
-  description: newDescription.trim(),
-  price: Number(newPrice),
-  sort_order: Number(newSortOrder || 0),
-  category: newCategory.trim() || "その他",
-  is_recommended: newRecommended,
-  is_sold_out: newSoldOut,
-  is_visible: updatedVisible,
-  image_url: newImageUrl
-})
-    .eq("id", id);
-
-  if (updateError) {
-    console.error(updateError);
-    alert("メニューの編集に失敗しました");
-    return;
-  }
-
-  if (
-  newImageFile &&
-  item.image_url &&
-  item.image_url.includes("/news-images/")
-) {
-  const oldFileName = item.image_url.split("/news-images/").pop();
-
-  const { error: deleteOldImageError } = await supabaseClient.storage
-    .from("news-images")
-    .remove([oldFileName]);
-
-  if (deleteOldImageError) {
-    console.error(deleteOldImageError);
-  }
-}
-
-  showToast("メニューを編集しました！");
-  loadMenuItems();
-  loadDashboardSummary();
-}
 const tabButtons = document.querySelectorAll(".tab-button");
 const tabContents = document.querySelectorAll(".tab-content");
 
