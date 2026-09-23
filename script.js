@@ -726,13 +726,6 @@ async function deleteMenuItem(id) {
 }
 
 async function editMenuItem(id) {
-  let newImageFile = null;
-
-const changeImage = confirm("画像を変更しますか？");
-
-if (changeImage) {
-  newImageFile = await selectImageFile();
-}
 
   const { data: item, error: fetchError } = await supabaseClient
     .from("menu_items")
