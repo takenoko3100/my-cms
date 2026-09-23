@@ -139,6 +139,9 @@ section h2 {
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   padding: 18px;
+  display: flex;
+flex-direction: column;
+height: 100%;
 }
 
 .menu-card img {
