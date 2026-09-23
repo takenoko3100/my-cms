@@ -684,3 +684,37 @@ main section {
     padding: 32px 16px;
   }
 }
+
+.map-wrap {
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.map-wrap iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+}
+
+#siteDescription {
+  font-size: 17px;
+  line-height: 2;
+  color: #4a4038;
+  max-width: 720px;
+}
+
+body {
+  background: #f7f4ef;
+}
+
+main {
+  max-width: 960px;
+  margin: 40px auto 0;
+}
+
+@media (max-width: 600px) {
+  main {
+    margin-top: 24px;
+  }
+}
