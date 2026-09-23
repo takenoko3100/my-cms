@@ -334,10 +334,14 @@ section h2 {
   border-bottom: 2px solid #d8c7b0;
 }
 
-.menu-category-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+.menu-card {
+  width: 100%;
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 @media (max-width: 600px) {
@@ -716,5 +720,15 @@ main {
 @media (max-width: 600px) {
   main {
     margin-top: 24px;
+  }
+}
+
+.menu-category {
+  padding: 24px;
+}
+
+@media (max-width: 600px) {
+  .menu-category {
+    padding: 18px;
   }
 }
