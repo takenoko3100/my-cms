@@ -145,11 +145,12 @@ height: 100%;
 }
 
 .menu-card img {
+  display: block;
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 14px;
+  margin: 14px 0 18px;
+  border-radius: 14px;
 }
 
 .menu-card h3 {
@@ -331,20 +332,30 @@ height: 100%;
 }
 
 .menu-category > h3 {
-  font-size: 24px;
-  margin-bottom: 18px;
-  padding-bottom: 8px;
+  font-size: 26px;
+  margin: 0 0 22px;
+  padding-bottom: 10px;
   border-bottom: 2px solid #d8c7b0;
+  letter-spacing: 0.04em;
 }
 
 .menu-card {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   background: #fff;
   border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  padding: 18px;
+  padding: 20px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menu-category-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
 }
 
 @media (max-width: 600px) {
@@ -634,7 +645,7 @@ main section {
 }
 
 .site-footer {
-  margin-top: 60px;
+  margin-top: 28px;
   background: #2f2924;
   color: white;
   padding: 40px 20px;
@@ -730,6 +741,7 @@ main {
 
 .menu-category {
   padding: 24px;
+  margin-bottom: 32px;
 }
 
 @media (max-width: 600px) {
@@ -756,4 +768,22 @@ main {
 
 #cancelMenuEditButton:hover {
   background: #d8d8d8;
+}
+
+.menu-card h3 {
+  font-size: 23px;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.menu-card p:last-child {
+  margin-top: auto;
+  padding-top: 16px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.menu-card p:not(:last-child) {
+  color: #5f554d;
+  line-height: 1.8;
 }
