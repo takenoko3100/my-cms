@@ -139,9 +139,10 @@ section h2 {
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   padding: 18px;
+  box-sizing: border-box;
   display: flex;
-flex-direction: column;
-height: 100%;
+  flex-direction: column;
+  height: 100%;
 }
 
 .menu-card img {
@@ -356,6 +357,7 @@ height: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 28px;
+  align-items: start;
 }
 
 @media (max-width: 600px) {
@@ -458,6 +460,24 @@ html {
 #access,
 #news {
   scroll-margin-top: 100px;
+}
+
+#news {
+  padding: 24px;
+}
+
+#company,
+#access,
+#contact,
+#news {
+  padding: 24px;
+}
+
+#company,
+#access,
+#contact,
+#news {
+  margin-bottom: 32px;
 }
 
 main section > h2 {
