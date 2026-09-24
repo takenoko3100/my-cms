@@ -835,3 +835,27 @@ main section:first-of-type {
 #news {
   margin-bottom: 24px;
 }
+
+body {
+  color: #2f2924;
+}
+
+p {
+  color: #4f463f;
+}
+
+.site-nav-links a,
+.site-logo {
+  color: #2f2924;
+}
+
+.site-footer,
+.site-footer a {
+  color: #f7f4ef;
+}
+
+main section > h2,
+.menu-category > h3 {
+  color: #2f2924;
+  font-weight: 700;
+}
