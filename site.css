@@ -614,7 +614,7 @@ main section {
 
 #siteNewsList {
   display: grid;
-  gap: 20px;
+  gap: 16px;
 }
 
 #siteNewsList .news {
@@ -732,6 +732,7 @@ main section {
   overflow: hidden;
   border-radius: 18px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  margin: 8px 0;
 }
 
 .map-wrap iframe {
@@ -826,4 +827,11 @@ main section:first-of-type {
 
 #about #siteDescription {
   margin: 0;
+}
+
+#company,
+#access,
+#contact,
+#news {
+  margin-bottom: 24px;
 }
