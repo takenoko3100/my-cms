@@ -737,3 +737,23 @@ main {
     padding: 18px;
   }
 }
+
+#menuEditNotice {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fff3cd;
+  color: #664d03;
+  font-weight: 700;
+}
+
+#cancelMenuEditButton {
+  margin-top: 10px;
+  background: #e5e5e5;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+#cancelMenuEditButton:hover {
+  background: #d8d8d8;
+}

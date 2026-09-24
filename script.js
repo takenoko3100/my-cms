@@ -761,6 +761,8 @@ addMenuButton.textContent = "変更を保存";
 const cancelMenuEditButton = document.getElementById("cancelMenuEditButton");
 cancelMenuEditButton.style.display = "block";
 
+document.getElementById("menuEditNotice").style.display = "block";
+
 document.querySelector('[data-tab="menu"]').click();
 document.getElementById("menuName").scrollIntoView({
   behavior: "smooth",
@@ -786,6 +788,7 @@ document
 
     document.getElementById("addMenuButton").textContent = "メニューを追加";
     document.getElementById("cancelMenuEditButton").style.display = "none";
+    document.getElementById("menuEditNotice").style.display = "none";
   });
 
 const tabButtons = document.querySelectorAll(".tab-button");
