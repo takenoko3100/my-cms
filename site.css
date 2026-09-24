@@ -511,7 +511,7 @@ main section {
 }
 
 .hero-overlay {
-  background: rgba(0, 0, 0, 0.38);
+  background: rgba(20, 14, 10, 0.5);
   padding: 28px 36px;
   border-radius: 18px;
   text-align: center;
@@ -520,14 +520,17 @@ main section {
 }
 
 .hero-overlay h1 {
-  margin: 0 0 10px;
-  font-size: clamp(34px, 6vw, 64px);
-  letter-spacing: 0.04em;
+  margin: 0 0 12px;
+  font-size: clamp(36px, 6vw, 64px);
+  letter-spacing: 0.06em;
+  line-height: 1.15;
 }
 
 .hero-overlay p {
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
+  opacity: 0.88;
+  letter-spacing: 0.04em;
 }
 
 @media (max-width: 600px) {
@@ -806,4 +809,21 @@ main {
 .menu-card p:not(:last-child) {
   color: #5f554d;
   line-height: 1.8;
+}
+
+#siteDescription {
+  margin: 0;
+}
+
+#company,
+main section:first-of-type {
+  border: 1px solid rgba(216, 199, 176, 0.45);
+}
+
+#about {
+  border: 1px solid rgba(216, 199, 176, 0.45);
+}
+
+#about #siteDescription {
+  margin: 0;
 }
