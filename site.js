@@ -143,56 +143,41 @@ async function loadMenuItems() {
   const menuList = document.getElementById("siteMenuList");
   menuList.innerHTML = "";
 
-  const groupedMenu = {};
+  data.forEach((item) => {
+  const div = document.createElement("div");
+  div.className = "menu-card";
 
-data.forEach((item) => {
-  const category = item.category || "その他";
+  div.innerHTML = `
+    <p class="menu-category-label">${item.category || "その他"}</p>
 
-  if (!groupedMenu[category]) {
-    groupedMenu[category] = [];
-  }
+    <h3>${item.name}</h3>
 
-  groupedMenu[category].push(item);
-});
+    ${
+      item.is_recommended
+        ? '<p class="recommended-badge">⭐ おすすめ</p>'
+        : ""
+    }
 
-  Object.entries(groupedMenu).forEach(([category, items]) => {
-  const categorySection = document.createElement("section");
-  categorySection.className = "menu-category";
+    ${
+      item.is_sold_out
+        ? '<p class="sold-out-badge">売り切れ</p>'
+        : ""
+    }
 
-  const categoryTitle = document.createElement("h3");
-  categoryTitle.textContent = category;
+    ${
+      item.image_url
+        ? `<img src="${item.image_url}" alt="${item.name}">`
+        : ""
+    }
 
-  const categoryList = document.createElement("div");
-  categoryList.className = "menu-category-list";
+    <p>${item.description ?? ""}</p>
 
-  items.forEach((item) => {
-    const div = document.createElement("div");
+    <p>
+      <strong>¥${Number(item.price).toLocaleString()}</strong>
+    </p>
+  `;
 
-    div.className = "menu-card";
-
-    div.innerHTML = `
-      <h3>${item.name}</h3>
-
-      ${item.is_recommended ? '<p class="recommended-badge">⭐ おすすめ</p>' : ""}
-      ${item.is_sold_out ? '<p class="sold-out-badge">売り切れ</p>' : ""}
-
-      ${
-        item.image_url
-          ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%; border-radius:12px;">`
-          : ""
-      }
-
-      <p>${item.description ?? ""}</p>
-      <p><strong>¥${Number(item.price).toLocaleString()}</strong></p>
-    `;
-
-    categoryList.appendChild(div);
-  });
-
-  categorySection.appendChild(categoryTitle);
-  categorySection.appendChild(categoryList);
-
-  menuList.appendChild(categorySection);
+  menuList.appendChild(div);
 });
 }
 
