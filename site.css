@@ -962,8 +962,6 @@ main section > h2,
   background: transparent;
   box-shadow: none;
   border-radius: 0;
-  padding: 24px 0;
-  border-bottom: 1px solid rgba(47, 41, 36, 0.12);
 }
 
 #siteNewsList .news:last-child {
@@ -1098,4 +1096,21 @@ main section > h2,
 
 .menu-card p:last-child {
   margin-top: auto;
+}
+
+main,
+#news,
+#siteNewsList {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+#news {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#siteNewsList {
+  padding: 0;
 }
