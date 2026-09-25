@@ -31,7 +31,7 @@ section {
   background: white;
   padding: 32px;
   margin-bottom: 28px;
-  border-radius: 18px;
+  border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
@@ -148,7 +148,7 @@ section h2 {
 .menu-card img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
   margin: 14px 0 18px;
   border-radius: 14px;
@@ -489,10 +489,10 @@ html {
 
 main section > h2 {
   font-size: 28px;
-  margin-bottom: 24px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #d8c7b0;
-  letter-spacing: 0.03em;
+  margin-bottom: 28px;
+  padding-bottom: 0;
+  border-bottom: none;
+  letter-spacing: 0.04em;
 }
 
 main section {
@@ -502,10 +502,13 @@ main section {
 }
 
 @media (max-width: 600px) {
-  main section {
-    margin-bottom: 28px;
-    padding: 22px 18px;
-  }
+ main section {
+  margin-bottom: 80px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
 }
 
 .hero {
@@ -561,19 +564,24 @@ main section {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 180px;
-  padding: 14px 20px;
-  border-radius: 999px;
-  background: #2f2924;
-  color: white;
+  min-width: 160px;
+  padding: 12px 18px;
+  border: 1px solid #2f2924;
+  border-radius: 0;
+  background: transparent;
+  color: #2f2924;
   text-decoration: none;
-  font-weight: 700;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .contact-button:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
+  background: #2f2924;
+  color: #fff;
+  transform: none;
+  opacity: 1;
 }
 
 @media (max-width: 600px) {
@@ -677,8 +685,8 @@ main section {
 .site-footer {
   margin-top: 28px;
   background: #2f2924;
-  color: white;
-  padding: 40px 20px;
+  color: #f7f4ef;
+  padding: 36px 20px;
 }
 
 .footer-inner {
@@ -931,4 +939,138 @@ main section > h2,
 
 .menu-category + .menu-category {
   margin-top: 48px;
+}
+
+#about {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+#company,
+#access,
+#contact,
+#news {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+#siteNewsList .news {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(47, 41, 36, 0.12);
+}
+
+#siteNewsList .news:last-child {
+  border-bottom: none;
+}
+
+#company p {
+  margin: 0;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(47, 41, 36, 0.1);
+}
+
+#company p:last-child {
+  border-bottom: none;
+}
+
+#company strong {
+  min-width: 110px;
+  font-weight: 600;
+  color: #2f2924;
+}
+
+#access,
+#contact {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.map-wrap {
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.contact-links {
+  margin-top: 18px;
+}
+
+.site-footer {
+  border-top: 1px solid rgba(247, 244, 239, 0.12);
+}
+
+.footer-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+@media (max-width: 600px) {
+  .footer-inner {
+    text-align: center;
+  }
+}
+
+.hero + main {
+  margin-top: 72px;
+}
+
+#about {
+  margin-bottom: 96px;
+}
+
+@media (max-width: 600px) {
+  .hero + main {
+    margin-top: 40px;
+  }
+
+  #about {
+    margin-bottom: 64px;
+  }
+}
+
+#about,
+#menu,
+#company,
+#access,
+#contact,
+#news {
+  margin-bottom: 88px;
+}
+
+@media (max-width: 600px) {
+  #about,
+  #menu,
+  #company,
+  #access,
+  #contact,
+  #news {
+    margin-bottom: 56px;
+  }
+}
+
+#menu {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+#siteMenuList {
+  gap: 56px;
+}
+
+.menu-card {
+  gap: 10px;
+}
+
+.menu-card h3 {
+  margin-top: 0;
+}
+
+.menu-card p {
+  margin-top: 0;
 }
