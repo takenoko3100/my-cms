@@ -1080,3 +1080,16 @@ main,
 .menu-card-head .sold-out-badge {
   margin-top: auto;
 }
+
+@media (max-width: 600px) {
+  .menu-card-head {
+    height: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-overlay h1 {
+    font-size: 30px;
+    white-space: nowrap;
+  }
+}
