@@ -485,12 +485,6 @@ main section > h2 {
   letter-spacing: 0.04em;
 }
 
-main section {
-  margin-bottom: 48px;
-  padding: 32px;
-  border-radius: 20px;
-}
-
 @media (max-width: 600px) {
  main section {
   margin-bottom: 80px;
@@ -894,7 +888,7 @@ main section > h2,
 
 #menu {
   padding-top: 56px;
-  padding-bottom: 56px;
+  padding-bottom: 24px;
 }
 
 .menu-category + .menu-category {
