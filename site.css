@@ -1071,5 +1071,12 @@ main,
 }
 
 .menu-card-head {
-  min-height: 120px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-card-head .recommended-badge,
+.menu-card-head .sold-out-badge {
+  margin-top: auto;
 }
