@@ -148,21 +148,23 @@ async function loadMenuItems() {
   div.className = "menu-card";
 
   div.innerHTML = `
-    <p class="menu-category-label">${item.category || "その他"}</p>
+   <div class="menu-card-head">
+  <p class="menu-category-label">${item.category || "その他"}</p>
 
-    <h3>${item.name}</h3>
+  <h3>${item.name}</h3>
 
-    ${
-      item.is_recommended
-        ? '<p class="recommended-badge">⭐ おすすめ</p>'
-        : ""
-    }
+  ${
+    item.is_recommended
+      ? '<p class="recommended-badge">⭐ おすすめ</p>'
+      : ""
+  }
 
-    ${
-      item.is_sold_out
-        ? '<p class="sold-out-badge">売り切れ</p>'
-        : ""
-    }
+  ${
+    item.is_sold_out
+      ? '<p class="sold-out-badge">売り切れ</p>'
+      : ""
+  }
+</div>
 
     ${
       item.image_url

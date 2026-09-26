@@ -1069,3 +1069,7 @@ main,
 .site-footer span {
   color: rgba(247, 244, 239, 0.82);
 }
+
+.menu-card-head {
+  min-height: 120px;
+}
