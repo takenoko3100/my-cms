@@ -134,18 +134,6 @@ section h2 {
   align-items: start;
 }
 
-.menu-card {
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-  padding: 18px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
 .menu-card img {
   display: block;
   width: 100%;
@@ -597,29 +585,6 @@ main section {
   }
 }
 
-.menu-card {
-  background: #fff;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  padding: 18px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.menu-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-}
-
-.menu-card img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  margin: 0 0 18px;
-  border-radius: 18px;
-}
-
 .menu-card h3 {
   margin: 0 0 8px;
   font-size: 22px;
@@ -632,13 +597,6 @@ main section {
 #siteNewsList {
   display: grid;
   gap: 16px;
-}
-
-#siteNewsList .news {
-  background: #fff;
-  border-radius: 18px;
-  padding: 22px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 #siteNewsList .news h3 {
@@ -1113,4 +1071,17 @@ main,
 
 #siteNewsList {
   padding: 0;
+}
+
+#news {
+  margin-bottom: 48px;
+}
+
+#siteNewsList {
+  min-height: 0;
+}
+
+.site-footer p,
+.site-footer span {
+  color: rgba(247, 244, 239, 0.82);
 }
