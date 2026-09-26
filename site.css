@@ -1042,16 +1042,6 @@ main section > h2,
   text-transform: uppercase;
 }
 
-.menu-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.menu-card img {
-  width: 100%;
-}
-
 .menu-card p:last-child {
   margin-top: auto;
 }
