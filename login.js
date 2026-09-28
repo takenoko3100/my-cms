@@ -51,10 +51,10 @@ forgotPasswordButton.addEventListener("click", async () => {
   });
 
   if (error) {
-    console.error(error);
-    alert("再設定メールの送信に失敗しました。");
-    return;
-  }
+  console.error(error);
+  alert(`再設定メールの送信に失敗しました。\n${error.message}`);
+  return;
+}
 
   alert("パスワード再設定メールを送信しました。");
 });
