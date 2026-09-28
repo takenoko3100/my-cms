@@ -26,10 +26,10 @@ updatePasswordButton.addEventListener("click", async () => {
   });
 
   if (error) {
-    console.error(error);
-    alert("パスワードの変更に失敗しました。");
-    return;
-  }
+  console.error(error);
+  alert(`パスワードの変更に失敗しました。\n${error.message}`);
+  return;
+}
 
   alert("パスワードを変更しました。");
 
