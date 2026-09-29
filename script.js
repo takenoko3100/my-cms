@@ -129,23 +129,37 @@ async function loadNews() {
 
   data.forEach((news) => {
   const div = document.createElement("div");
-
   div.className = "news";
 
-  div.innerHTML = `
-  <h3>${news.title}</h3>
+  const title = document.createElement("h3");
+  title.textContent = news.title || "";
+  div.appendChild(title);
 
-  ${
-    news.image_url
-      ? `<img src="${news.image_url}" alt="お知らせ画像" style="width:100%; border-radius:8px; margin-bottom:12px;">`
-      : ""
+  if (news.image_url) {
+    const img = document.createElement("img");
+    img.src = news.image_url;
+    img.alt = "お知らせ画像";
+    img.style.width = "100%";
+    div.appendChild(img);
   }
 
-  <p>${news.content}</p>
+  const content = document.createElement("p");
+  content.textContent = news.content || "";
+  div.appendChild(content);
 
-  <button onclick="editNews(${news.id})">編集</button>
-  <button onclick="deleteNews(${news.id})">削除</button>
-`;
+  const editButton = document.createElement("button");
+  editButton.textContent = "編集";
+  editButton.addEventListener("click", () => {
+    editNews(news.id);
+  });
+  div.appendChild(editButton);
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "削除";
+  deleteButton.addEventListener("click", () => {
+    deleteNews(news.id);
+  });
+  div.appendChild(deleteButton);
 
   newsList.appendChild(div);
 });
@@ -641,33 +655,72 @@ addMenuButton.textContent = "メニューを追加";
   data.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
 
   data.forEach((item) => {
-    const div = document.createElement("div");
+  const div = document.createElement("div");
+  div.className = "news";
 
-    div.className = "news";
+  const title = document.createElement("h3");
+  title.textContent = item.name || "";
+  div.appendChild(title);
 
-    div.innerHTML = `
-  <h3>${item.name}</h3>
-  ${item.is_recommended ? "<p>⭐ おすすめ</p>" : ""}
-  ${item.is_sold_out ? "<p>売り切れ</p>" : ""}
-  <p>公開状態：${item.is_visible === false ? "非表示" : "公開中"}</p>
-  <p>カテゴリ：${item.category ?? "その他"}</p>
-  <p>並び順：${item.sort_order ?? 0}</p>
-
-  ${
-    item.image_url
-      ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%; border-radius:8px; margin-bottom:12px;">`
-      : ""
+  if (item.is_recommended) {
+    const recommended = document.createElement("p");
+    recommended.textContent = "⭐ おすすめ";
+    div.appendChild(recommended);
   }
 
-  <p>${item.description ?? ""}</p>
-  <p><strong>¥${Number(item.price).toLocaleString()}</strong></p>
+  if (item.is_sold_out) {
+    const soldOut = document.createElement("p");
+    soldOut.textContent = "売り切れ";
+    div.appendChild(soldOut);
+  }
 
-  <button onclick="editMenuItem(${item.id})">編集</button>
-  <button onclick="deleteMenuItem(${item.id})">削除</button>
-`;
+  const status = document.createElement("p");
+  status.textContent =
+    `公開状態：${item.is_visible === false ? "非表示" : "公開中"}`;
+  div.appendChild(status);
 
-    menuList.appendChild(div);
+  const category = document.createElement("p");
+  category.textContent = `カテゴリ：${item.category ?? "その他"}`;
+  div.appendChild(category);
+
+  const order = document.createElement("p");
+  order.textContent = `並び順：${item.sort_order ?? 0}`;
+  div.appendChild(order);
+
+  if (item.image_url) {
+    const img = document.createElement("img");
+    img.src = item.image_url;
+    img.alt = item.name || "";
+    img.style.width = "100%";
+    div.appendChild(img);
+  }
+
+  const description = document.createElement("p");
+  description.textContent = item.description ?? "";
+  div.appendChild(description);
+
+  const priceWrap = document.createElement("p");
+  const price = document.createElement("strong");
+  price.textContent = `¥${Number(item.price).toLocaleString()}`;
+  priceWrap.appendChild(price);
+  div.appendChild(priceWrap);
+
+  const editButton = document.createElement("button");
+  editButton.textContent = "編集";
+  editButton.addEventListener("click", () => {
+    editMenuItem(item.id);
   });
+  div.appendChild(editButton);
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "削除";
+  deleteButton.addEventListener("click", () => {
+    deleteMenuItem(item.id);
+  });
+  div.appendChild(deleteButton);
+
+  menuList.appendChild(div);
+});
 }
 
 loadMenuItems();

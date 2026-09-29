@@ -104,24 +104,26 @@ async function loadNews() {
   newsList.innerHTML = "";
 
   data.forEach((news) => {
-    const div = document.createElement("div");
+  const div = document.createElement("div");
+  div.className = "news";
 
-    div.className = "news";
+  const title = document.createElement("h3");
+  title.textContent = news.title || "";
+  div.appendChild(title);
 
-    div.innerHTML = `
-      <h3>${news.title}</h3>
+  if (news.image_url) {
+    const img = document.createElement("img");
+    img.src = news.image_url;
+    img.alt = "お知らせ画像";
+    div.appendChild(img);
+  }
 
-      ${
-        news.image_url
-          ? `<img src="${news.image_url}" alt="お知らせ画像" style="width:100%; border-radius:8px; margin-bottom:12px;">`
-          : ""
-      }
+  const content = document.createElement("p");
+  content.textContent = news.content || "";
+  div.appendChild(content);
 
-      <p>${news.content}</p>
-    `;
-
-    newsList.appendChild(div);
-  });
+  newsList.appendChild(div);
+});
 }
 
 loadCompanyInfo();
@@ -147,37 +149,50 @@ async function loadMenuItems() {
   const div = document.createElement("div");
   div.className = "menu-card";
 
-  div.innerHTML = `
-   <div class="menu-card-head">
-  <p class="menu-category-label">${item.category || "その他"}</p>
+  const head = document.createElement("div");
+  head.className = "menu-card-head";
 
-  <h3>${item.name}</h3>
+  const category = document.createElement("p");
+  category.className = "menu-category-label";
+  category.textContent = item.category || "その他";
+  head.appendChild(category);
 
-  ${
-    item.is_recommended
-      ? '<p class="recommended-badge">⭐ おすすめ</p>'
-      : ""
+  const title = document.createElement("h3");
+  title.textContent = item.name || "";
+  head.appendChild(title);
+
+  if (item.is_recommended) {
+    const recommended = document.createElement("p");
+    recommended.className = "recommended-badge";
+    recommended.textContent = "⭐ おすすめ";
+    head.appendChild(recommended);
   }
 
-  ${
-    item.is_sold_out
-      ? '<p class="sold-out-badge">売り切れ</p>'
-      : ""
+  if (item.is_sold_out) {
+    const soldOut = document.createElement("p");
+    soldOut.className = "sold-out-badge";
+    soldOut.textContent = "売り切れ";
+    head.appendChild(soldOut);
   }
-</div>
 
-    ${
-      item.image_url
-        ? `<img src="${item.image_url}" alt="${item.name}">`
-        : ""
-    }
+  div.appendChild(head);
 
-    <p>${item.description ?? ""}</p>
+  if (item.image_url) {
+    const img = document.createElement("img");
+    img.src = item.image_url;
+    img.alt = item.name || "";
+    div.appendChild(img);
+  }
 
-    <p>
-      <strong>¥${Number(item.price).toLocaleString()}</strong>
-    </p>
-  `;
+  const description = document.createElement("p");
+  description.textContent = item.description || "";
+  div.appendChild(description);
+
+  const priceWrap = document.createElement("p");
+  const price = document.createElement("strong");
+  price.textContent = `¥${Number(item.price).toLocaleString()}`;
+  priceWrap.appendChild(price);
+  div.appendChild(priceWrap);
 
   menuList.appendChild(div);
 });
