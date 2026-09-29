@@ -3,6 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+  http-equiv="Content-Security-Policy"
+  content="
+    default-src 'self';
+    script-src 'self' https://cdn.jsdelivr.net;
+    connect-src 'self' https://cshieomhxpuaclggicle.supabase.co wss://cshieomhxpuaclggicle.supabase.co;
+    img-src 'self' data: blob: https://cshieomhxpuaclggicle.supabase.co;
+    style-src 'self' 'unsafe-inline';
+    frame-src https://www.google.com https://maps.google.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    upgrade-insecure-requests;
+  "
+>
+
   <title>たけのこレストラン</title>
   <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="site.css">
