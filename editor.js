@@ -223,6 +223,8 @@ function renderCompanyInfo() {
       "linear-gradient(135deg, #86776b, #3c342e)";
   }
 
+  updateBusinessTypeUI();
+
   fillCompanyForm();
 }
 
@@ -1154,4 +1156,52 @@ function escapeCssUrl(value) {
     .replace(/\\/g, "\\\\")
     .replace(/"/g, '\\"')
     .replace(/\n/g, "");
+}
+
+function updateBusinessTypeUI() {
+  const businessType = currentCompany?.business_type || "restaurant";
+
+  const label = document.getElementById("serviceSectionLabel");
+  const title = document.getElementById("serviceSectionTitle");
+  const guide = document.getElementById("serviceSectionGuide");
+
+  const settings = {
+    restaurant: {
+      label: "MENU",
+      title: "メニュー",
+      guide: "料理をタップすると編集できます"
+    },
+
+    video_editing: {
+      label: "SERVICES",
+      title: "サービス",
+      guide: "サービスをタップすると編集できます"
+    },
+
+    hospital: {
+      label: "MEDICAL",
+      title: "診療科",
+      guide: "診療科をタップすると編集できます"
+    },
+
+    auto_repair: {
+      label: "SERVICES",
+      title: "サービス・料金",
+      guide: "サービスをタップすると編集できます"
+    }
+  };
+
+  const current = settings[businessType] || settings.restaurant;
+
+  if (label) {
+    label.textContent = current.label;
+  }
+
+  if (title) {
+    title.textContent = current.title;
+  }
+
+  if (guide) {
+    guide.textContent = current.guide;
+  }
 }
