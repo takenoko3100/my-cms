@@ -3,6 +3,8 @@ const SUPABASE_URL = "https://cshieomhxpuaclggicle.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_6mt_8wZcBX9aKPR04NzNBQ_StAq2Qbe";
 
+  const COMPANY_ID = 1;
+
 const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
@@ -10,10 +12,10 @@ const supabaseClient = supabase.createClient(
 
 async function loadCompanyInfo() {
   const { data, error } = await supabaseClient
-    .from("company_info")
-    .select("*")
-    .limit(1)
-    .single();
+  .from("company_info")
+  .select("*")
+  .eq("id", COMPANY_ID)
+  .single();
 
   if (error) {
     console.error(error);
@@ -91,8 +93,9 @@ document.getElementById("footerYear").textContent =
 async function loadNews() {
   const { data, error } = await supabaseClient
     .from("news")
-    .select("*")
-    .order("created_at", { ascending: false });
+.select("*")
+.eq("company_id", COMPANY_ID)
+.order("created_at", { ascending: false });
 
   if (error) {
     console.error(error);
@@ -132,10 +135,11 @@ loadNews();
 async function loadMenuItems() {
   const { data, error } = await supabaseClient
   .from("menu_items")
-  .select("*")
-  .eq("is_visible", true)
-  .order("sort_order", { ascending: true })
-  .order("created_at", { ascending: false });
+.select("*")
+.eq("company_id", COMPANY_ID)
+.eq("is_visible", true)
+.order("sort_order", { ascending: true })
+.order("created_at", { ascending: false });
 
   if (error) {
     console.error(error);

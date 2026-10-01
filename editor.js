@@ -770,6 +770,11 @@ function renderNews() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "editor-news-card";
+
+    if (!news.image_url) {
+  button.classList.add("no-image");
+}
+
     button.addEventListener("click", () => openNewsModal(news.id));
 
     if (news.image_url) {

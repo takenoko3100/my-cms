@@ -3,148 +3,912 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>たけのこレストラン</title>
-  <link rel="stylesheet" href="style.css">
+
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="
+      default-src 'self';
+      script-src 'self' https://cdn.jsdelivr.net;
+      connect-src 'self' https://cshieomhxpuaclggicle.supabase.co wss://cshieomhxpuaclggicle.supabase.co;
+      img-src 'self' data: blob: https://cshieomhxpuaclggicle.supabase.co;
+      style-src 'self' 'unsafe-inline';
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      upgrade-insecure-requests;
+    "
+  >
+
+  <title>かんたん編集 | たけのこCMS</title>
+
+  <link rel="stylesheet" href="editor.css?v=2">
 </head>
 
 <body>
 
-  <header>
-    <h1>たけのこレストラン</h1>
-    <p>愛知県知立市のレストラン
+  <div
+    id="toastMessage"
+    class="toast-message"
+    aria-live="polite"
+  ></div>
 
-    </p>
+  <header class="editor-topbar">
+
+    <div class="editor-topbar-inner">
+
+      <div>
+        <p class="editor-eyebrow">
+          TAKENOKO CMS
+        </p>
+
+        <h1>
+          かんたん編集
+        </h1>
+
+        <p class="editor-help">
+          変更したい場所をタップしてください
+        </p>
+      </div>
+
+      <div class="topbar-actions">
+
+        <a
+          href="site.html"
+          target="_blank"
+          rel="noopener"
+          class="secondary-action"
+        >
+          公開ページ
+        </a>
+
+        <button
+          id="logoutButton"
+          type="button"
+          class="secondary-action"
+        >
+          ログアウト
+        </button>
+
+      </div>
+
+    </div>
+
   </header>
 
- <main>
+  <main class="editor-page">
 
-  <div id="toastMessage" class="toast-message"></div>
+    <section class="editor-status">
 
-  <nav class="admin-tabs">
-  <button class="tab-button active" data-tab="news">お知らせ</button>
-  <button class="tab-button" data-tab="company">会社情報</button>
-  <button class="tab-button" data-tab="menu">メニュー</button>
-</nav>
+      <div>
 
-<section class="dashboard-summary">
+        <span class="status-dot"></span>
 
-  <div class="summary-card">
-    <span class="summary-label">お知らせ</span>
-    <strong id="newsCount">0件</strong>
+        <strong>
+          編集モード
+        </strong>
+
+      </div>
+
+      <p>
+        タップした場所だけ編集できます
+      </p>
+
+    </section>
+
+
+    <!-- =========================
+         ヒーロー
+    ========================== -->
+
+    <section
+      class="visual-section visual-hero"
+      id="editorHero"
+    >
+
+      <input
+        type="file"
+        id="heroImageInput"
+        accept="image/*"
+        hidden
+      >
+
+      <button
+        type="button"
+        id="editHeroImageButton"
+        class="image-edit-button"
+        aria-label="トップ画像を変更"
+      >
+        📷 画像を変更
+      </button>
+
+      <div class="hero-overlay">
+
+        <button
+          type="button"
+          class="inline-edit-button hero-title-button"
+          data-company-field="name"
+        >
+
+          <span id="editorCompanyName">
+            店舗名
+          </span>
+
+        </button>
+
+        <button
+          type="button"
+          class="inline-edit-button hero-address-button"
+          data-company-field="address"
+        >
+
+          <span id="editorCompanyAddress">
+            住所
+          </span>
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         店舗紹介
+    ========================== -->
+
+    <section class="visual-section content-section">
+
+      <div class="section-heading">
+
+        <div>
+
+          <p class="section-label">
+            INTRODUCTION
+          </p>
+
+          <h2>
+            店舗紹介
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          class="round-edit-button"
+          data-company-field="description"
+          aria-label="店舗紹介を編集"
+        >
+          ✏️
+        </button>
+
+      </div>
+
+      <button
+        type="button"
+        class="editable-block"
+        data-company-field="description"
+      >
+
+        <span id="editorCompanyDescription">
+          店舗紹介文を入力してください
+        </span>
+
+      </button>
+
+    </section>
+
+
+    <!-- =========================
+         メニュー
+    ========================== -->
+
+    <section class="visual-section content-section">
+
+      <div class="section-heading">
+
+        <div>
+
+          <p class="section-label">
+            MENU
+          </p>
+
+          <h2>
+            メニュー
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          id="addMenuQuickButton"
+          class="add-button"
+        >
+          ＋ 追加
+        </button>
+
+      </div>
+
+      <p class="section-guide">
+        料理をタップすると編集できます
+      </p>
+
+      <div
+        id="visualMenuList"
+        class="visual-menu-list"
+      ></div>
+
+    </section>
+
+
+    <!-- =========================
+         店舗情報
+    ========================== -->
+
+    <section class="visual-section content-section">
+
+      <div class="section-heading">
+
+        <div>
+
+          <p class="section-label">
+            INFORMATION
+          </p>
+
+          <h2>
+            店舗情報
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          class="round-edit-button"
+          data-company-field="phone"
+          aria-label="店舗情報を編集"
+        >
+          ✏️
+        </button>
+
+      </div>
+
+      <div class="information-list">
+
+        <button
+          type="button"
+          class="information-row"
+          data-company-field="address"
+        >
+
+          <span>
+            住所
+          </span>
+
+          <strong id="editorInfoAddress">
+            -
+          </strong>
+
+          <span class="row-pencil">
+            ✏️
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="information-row"
+          data-company-field="phone"
+        >
+
+          <span>
+            電話番号
+          </span>
+
+          <strong id="editorInfoPhone">
+            -
+          </strong>
+
+          <span class="row-pencil">
+            ✏️
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="information-row"
+          data-company-field="business_hours"
+        >
+
+          <span>
+            営業時間
+          </span>
+
+          <strong id="editorInfoHours">
+            -
+          </strong>
+
+          <span class="row-pencil">
+            ✏️
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="information-row"
+          data-company-field="closed_days"
+        >
+
+          <span>
+            定休日
+          </span>
+
+          <strong id="editorInfoClosedDays">
+            -
+          </strong>
+
+          <span class="row-pencil">
+            ✏️
+          </span>
+
+        </button>
+
+
+        <button
+          type="button"
+          class="information-row"
+          data-company-field="instagram_url"
+        >
+
+          <span>
+            Instagram
+          </span>
+
+          <strong id="editorInfoInstagram">
+            未設定
+          </strong>
+
+          <span class="row-pencil">
+            ✏️
+          </span>
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         お知らせ
+    ========================== -->
+
+    <section class="visual-section content-section">
+
+      <div class="section-heading">
+
+        <div>
+
+          <p class="section-label">
+            NEWS
+          </p>
+
+          <h2>
+            お知らせ
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          id="addNewsQuickButton"
+          class="add-button"
+        >
+          ＋ 追加
+        </button>
+
+      </div>
+
+      <p class="section-guide">
+        お知らせをタップすると編集できます
+      </p>
+
+      <div
+        id="visualNewsList"
+        class="visual-news-list"
+      ></div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       店舗情報編集モーダル
+  ========================== -->
+
+  <div
+    class="modal"
+    id="companyModal"
+    aria-hidden="true"
+  >
+
+    <div
+      class="modal-backdrop"
+      data-close-modal="companyModal"
+    ></div>
+
+    <section
+      class="modal-sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="companyModalTitle"
+    >
+
+      <div class="modal-header">
+
+        <div>
+
+          <p class="modal-label">
+            店舗情報
+          </p>
+
+          <h2 id="companyModalTitle">
+            店舗情報を編集
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          class="modal-close"
+          data-close-modal="companyModal"
+        >
+          ×
+        </button>
+
+      </div>
+
+      <div class="form-stack">
+
+        <label>
+
+          店舗名
+
+          <input
+            type="text"
+            id="companyName"
+            placeholder="店舗名"
+          >
+
+        </label>
+
+
+        <label>
+
+          住所
+
+          <input
+            type="text"
+            id="companyAddress"
+            placeholder="住所"
+          >
+
+        </label>
+
+
+        <label>
+
+          店舗紹介
+
+          <textarea
+            id="companyDescription"
+            placeholder="店舗紹介文"
+          ></textarea>
+
+        </label>
+
+
+        <label>
+
+          電話番号
+
+          <input
+            type="tel"
+            id="companyPhone"
+            placeholder="0566-00-0000"
+          >
+
+        </label>
+
+
+        <label>
+
+          営業時間
+
+          <input
+            type="text"
+            id="companyHours"
+            placeholder="11:00〜21:00"
+          >
+
+        </label>
+
+
+        <label>
+
+          定休日
+
+          <input
+            type="text"
+            id="companyClosedDays"
+            placeholder="火曜日"
+          >
+
+        </label>
+
+
+        <label>
+
+          Instagram URL
+
+          <input
+            type="url"
+            id="companyInstagram"
+            placeholder="https://www.instagram.com/..."
+          >
+
+        </label>
+
+      </div>
+
+      <button
+        type="button"
+        id="saveCompanyInfo"
+        class="primary-action"
+      >
+        保存する
+      </button>
+
+    </section>
+
   </div>
 
-  <div class="summary-card">
-    <span class="summary-label">メニュー</span>
-    <strong id="menuCount">0件</strong>
+
+  <!-- =========================
+       メニュー編集モーダル
+  ========================== -->
+
+  <div
+    class="modal"
+    id="menuModal"
+    aria-hidden="true"
+  >
+
+    <div
+      class="modal-backdrop"
+      data-close-modal="menuModal"
+    ></div>
+
+    <section
+      class="modal-sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="menuModalTitle"
+    >
+
+      <div class="modal-header">
+
+        <div>
+
+          <p class="modal-label">
+            MENU
+          </p>
+
+          <h2 id="menuModalTitle">
+            メニューを追加
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          class="modal-close"
+          data-close-modal="menuModal"
+        >
+          ×
+        </button>
+
+      </div>
+
+      <input
+        type="hidden"
+        id="menuEditId"
+      >
+
+      <div class="form-stack">
+
+        <label>
+
+          メニュー名
+
+          <input
+            type="text"
+            id="menuName"
+            placeholder="デミグラスオムライス"
+          >
+
+        </label>
+
+
+        <label>
+
+          説明
+
+          <textarea
+            id="menuDescription"
+            placeholder="メニュー説明"
+          ></textarea>
+
+        </label>
+
+
+        <div class="form-grid">
+
+          <label>
+
+            価格
+
+            <input
+              type="number"
+              id="menuPrice"
+              inputmode="numeric"
+              placeholder="1280"
+            >
+
+          </label>
+
+
+          <label>
+
+            並び順
+
+            <input
+              type="number"
+              id="menuSortOrder"
+              inputmode="numeric"
+              placeholder="1"
+            >
+
+          </label>
+
+        </div>
+
+
+        <label>
+
+          カテゴリ
+
+          <input
+            type="text"
+            id="menuCategory"
+            placeholder="メイン"
+          >
+
+        </label>
+
+
+        <label class="file-label">
+
+          写真
+
+          <input
+            type="file"
+            id="menuImage"
+            accept="image/*"
+          >
+
+        </label>
+
+
+        <div class="switch-list">
+
+          <label class="switch-row">
+
+            <span>
+              おすすめにする
+            </span>
+
+            <input
+              type="checkbox"
+              id="menuRecommended"
+            >
+
+          </label>
+
+
+          <label class="switch-row">
+
+            <span>
+              売り切れ
+            </span>
+
+            <input
+              type="checkbox"
+              id="menuSoldOut"
+            >
+
+          </label>
+
+
+          <label class="switch-row">
+
+            <span>
+              公開する
+            </span>
+
+            <input
+              type="checkbox"
+              id="menuVisible"
+              checked
+            >
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          id="deleteMenuButton"
+          class="danger-action"
+          hidden
+        >
+          削除
+        </button>
+
+        <button
+          type="button"
+          id="saveMenuButton"
+          class="primary-action"
+        >
+          保存する
+        </button>
+
+      </div>
+
+    </section>
+
   </div>
 
-  <div class="summary-card">
-    <span class="summary-label">最終更新</span>
-    <strong id="lastUpdated">-</strong>
+
+  <!-- =========================
+       お知らせ編集モーダル
+  ========================== -->
+
+  <div
+    class="modal"
+    id="newsModal"
+    aria-hidden="true"
+  >
+
+    <div
+      class="modal-backdrop"
+      data-close-modal="newsModal"
+    ></div>
+
+    <section
+      class="modal-sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="newsModalTitle"
+    >
+
+      <div class="modal-header">
+
+        <div>
+
+          <p class="modal-label">
+            NEWS
+          </p>
+
+          <h2 id="newsModalTitle">
+            お知らせを追加
+          </h2>
+
+        </div>
+
+        <button
+          type="button"
+          class="modal-close"
+          data-close-modal="newsModal"
+        >
+          ×
+        </button>
+
+      </div>
+
+      <input
+        type="hidden"
+        id="newsEditId"
+      >
+
+      <div class="form-stack">
+
+        <label>
+
+          タイトル
+
+          <input
+            type="text"
+            id="newsTitle"
+            placeholder="お知らせタイトル"
+          >
+
+        </label>
+
+
+        <label>
+
+          内容
+
+          <textarea
+            id="newsContent"
+            placeholder="お知らせの内容"
+          ></textarea>
+
+        </label>
+
+
+        <label class="file-label">
+
+          写真
+
+          <input
+            type="file"
+            id="newsImage"
+            accept="image/*"
+          >
+
+        </label>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          id="deleteNewsButton"
+          class="danger-action"
+          hidden
+        >
+          削除
+        </button>
+
+        <button
+          type="button"
+          id="saveNewsButton"
+          class="primary-action"
+        >
+          公開する
+        </button>
+
+      </div>
+
+    </section>
+
   </div>
 
-</section>
 
-  <section class="admin-actions">
-  <a href="site.html" target="_blank" class="preview-button">
-    公開ページを見る
-  </a>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <button id="logoutButton">ログアウト</button>
-</section>
-
-  <section class="admin tab-content" data-tab-content="news">
-    <h2>お知らせを追加</h2>
-
-    <input type="text" id="title" placeholder="タイトル">
-
-    <textarea id="content" placeholder="お知らせの内容"></textarea>
-
-<input type="file" id="image" accept="image/*">
-
-<button onclick="addNews()">公開する</button>
-  </section>
-
-  <section class="tab-content" data-tab-content="news">
-  <h2>お知らせ</h2>
-    <div id="newsList"></div>
-  </section>
-
-  <section class="company-info tab-content" data-tab-content="company">
-  <h2>会社情報</h2>
-
-  <input type="text" id="companyName" placeholder="会社名・店舗名">
-
-  <input type="text" id="companyAddress" placeholder="住所">
-
-<textarea id="companyDescription" placeholder="店舗紹介文"></textarea>
-
-<input type="text" id="companyPhone" placeholder="電話番号">
-
-<input type="url" id="companyInstagram" placeholder="Instagram URL">
-
-  <input type="text" id="companyHours" placeholder="営業時間">
-
-  <input type="text" id="companyClosedDays" placeholder="定休日">
-
-<label for="heroImage">トップ画像</label>
-<input type="file" id="heroImage" accept="image/*">
-
-<button id="saveCompanyInfo">会社情報を保存</button>
-</section>
-
-<section class="menu-admin tab-content" data-tab-content="menu">
-  <h2>メニュー追加</h2>
-
-  <p id="menuEditNotice" style="display:none;">
-  ✏️ メニューを編集中です
-</p>
-
-  <input type="hidden" id="menuEditId">
-
-  <input type="text" id="menuName" placeholder="メニュー名">
-
-  <textarea id="menuDescription" placeholder="メニュー説明"></textarea>
-
-  <input type="number" id="menuPrice" placeholder="価格">
-
-  <input type="number" id="menuSortOrder" placeholder="並び順">
-
-  <input type="text" id="menuCategory" placeholder="カテゴリ（例：メイン、デザート、ドリンク）">
-
-  <label>
-  <input type="checkbox" id="menuRecommended">
-  おすすめにする
-</label>
-
-<label>
-  <input type="checkbox" id="menuSoldOut">
-  売り切れ
-</label>
-
-<label>
-  <input type="checkbox" id="menuVisible" checked>
-  公開する
-</label>
-
-  <input type="file" id="menuImage" accept="image/*">
-
-  <button id="addMenuButton">メニューを追加</button>
-
-  <button id="cancelMenuEditButton" type="button" style="display:none;">
-  編集をキャンセル
-</button>
-</section>
-
-<section class="tab-content" data-tab-content="menu">
-  <h2>登録済みメニュー</h2>
-  <div id="menuList"></div>
-</section>
-
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
+  <script src="editor.js?v=2"></script>
 
 </body>
 </html>
