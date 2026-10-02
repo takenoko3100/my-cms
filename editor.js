@@ -1166,30 +1166,42 @@ function updateBusinessTypeUI() {
   const guide = document.getElementById("serviceSectionGuide");
 
   const settings = {
-    restaurant: {
-      label: "MENU",
-      title: "メニュー",
-      guide: "料理をタップすると編集できます"
-    },
+  restaurant: {
+    label: "MENU",
+    title: "メニュー",
+    guide: "料理をタップすると編集できます",
+    modalLabel: "MENU",
+    itemNameLabel: "メニュー名",
+    priceLabel: "価格"
+  },
 
-    video_editing: {
-      label: "SERVICES",
-      title: "サービス",
-      guide: "サービスをタップすると編集できます"
-    },
+  video_editing: {
+    label: "SERVICES",
+    title: "サービス",
+    guide: "サービスをタップすると編集できます",
+    modalLabel: "SERVICES",
+    itemNameLabel: "サービス名",
+    priceLabel: "料金"
+  },
 
-    hospital: {
-      label: "MEDICAL",
-      title: "診療科",
-      guide: "診療科をタップすると編集できます"
-    },
+  hospital: {
+    label: "MEDICAL",
+    title: "診療科",
+    guide: "診療科をタップすると編集できます",
+    modalLabel: "MEDICAL",
+    itemNameLabel: "診療科名",
+    priceLabel: "料金"
+  },
 
-    auto_repair: {
-      label: "SERVICES",
-      title: "サービス・料金",
-      guide: "サービスをタップすると編集できます"
-    }
-  };
+  auto_repair: {
+    label: "SERVICES",
+    title: "サービス・料金",
+    guide: "サービスをタップすると編集できます",
+    modalLabel: "SERVICES",
+    itemNameLabel: "サービス名",
+    priceLabel: "料金"
+  }
+};
 
   const current = settings[businessType] || settings.restaurant;
 
@@ -1204,4 +1216,20 @@ function updateBusinessTypeUI() {
   if (guide) {
     guide.textContent = current.guide;
   }
+
+  const modalLabel = document.getElementById("menuModalLabel");
+const nameLabel = document.getElementById("menuNameLabel");
+const priceLabel = document.getElementById("menuPriceLabel");
+
+if (modalLabel) {
+  modalLabel.textContent = current.modalLabel;
+}
+
+if (nameLabel) {
+  nameLabel.textContent = current.itemNameLabel;
+}
+
+if (priceLabel) {
+  priceLabel.textContent = current.priceLabel;
+}
 }
