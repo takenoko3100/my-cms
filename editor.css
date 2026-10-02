@@ -884,3 +884,7 @@ textarea:focus {
   width: 100%;
   padding-right: 56px;
 }
+
+.business-field-hidden {
+  display: none !important;
+}
