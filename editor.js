@@ -1167,22 +1167,26 @@ function updateBusinessTypeUI() {
 
   const settings = {
   restaurant: {
-    label: "MENU",
-    title: "メニュー",
-    guide: "料理をタップすると編集できます",
-    modalLabel: "MENU",
-    itemNameLabel: "メニュー名",
-    priceLabel: "価格"
-  },
+  label: "MENU",
+  title: "メニュー",
+  guide: "料理をタップすると編集できます",
+  modalLabel: "MENU",
+  itemNameLabel: "メニュー名",
+  priceLabel: "価格",
+  addTitle: "メニューを追加",
+  editTitle: "メニューを編集"
+},
 
   video_editing: {
-    label: "SERVICES",
-    title: "サービス",
-    guide: "サービスをタップすると編集できます",
-    modalLabel: "SERVICES",
-    itemNameLabel: "サービス名",
-    priceLabel: "料金"
-  },
+  label: "SERVICES",
+  title: "サービス",
+  guide: "サービスをタップすると編集できます",
+  modalLabel: "SERVICES",
+  itemNameLabel: "サービス名",
+  priceLabel: "料金",
+  addTitle: "サービスを追加",
+  editTitle: "サービスを編集"
+},
 
   hospital: {
     label: "MEDICAL",
