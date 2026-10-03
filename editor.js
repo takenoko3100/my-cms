@@ -619,10 +619,13 @@ if (!name || (!isHospital && !priceText)) {
   isHospital ? 0 : Number(priceText);
   const sortOrder = Number(sortText || 0);
 
-  if (!Number.isInteger(price) || price <= 0) {
-    alert("価格は1円以上の整数で入力してください。");
-    return;
-  }
+  if (
+  !isHospital &&
+  (!Number.isInteger(price) || price <= 0)
+) {
+  alert("価格は1円以上の整数で入力してください。");
+  return;
+}
 
   if (!Number.isInteger(sortOrder) || sortOrder < 0) {
     alert("並び順は0以上の整数で入力してください。");
