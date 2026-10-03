@@ -517,7 +517,8 @@ function openMenuModal(itemId = null) {
   const saveButton = document.getElementById("saveMenuButton");
 
   if (!itemId) {
-    title.textContent = "メニューを追加";
+    title.textContent =
+  getBusinessTypeSettings().addTitle;
     deleteButton.hidden = true;
     saveButton.textContent = "追加する";
     openModal("menuModal");
@@ -548,7 +549,8 @@ function openMenuModal(itemId = null) {
   document.getElementById("menuVisible").checked =
     item.is_visible ?? true;
 
-  title.textContent = "メニューを編集";
+  title.textContent =
+  getBusinessTypeSettings().editTitle;
   deleteButton.hidden = false;
   saveButton.textContent = "変更を保存";
 
@@ -1236,4 +1238,61 @@ if (nameLabel) {
 if (priceLabel) {
   priceLabel.textContent = current.priceLabel;
 }
+
+const categoryField = document.getElementById("menuCategoryField");
+const recommendedField = document.getElementById("menuRecommendedField");
+const soldOutField = document.getElementById("menuSoldOutField");
+
+const hideRestaurantOnlyFields =
+  businessType === "video_editing";
+
+if (categoryField) {
+  categoryField.classList.toggle(
+    "business-field-hidden",
+    hideRestaurantOnlyFields
+  );
+}
+
+if (recommendedField) {
+  recommendedField.classList.toggle(
+    "business-field-hidden",
+    hideRestaurantOnlyFields
+  );
+}
+
+if (soldOutField) {
+  soldOutField.classList.toggle(
+    "business-field-hidden",
+    hideRestaurantOnlyFields
+  );
+}
+}
+
+function getBusinessTypeSettings() {
+  const businessType =
+    currentCompany?.business_type || "restaurant";
+
+  const settings = {
+    restaurant: {
+      addTitle: "メニューを追加",
+      editTitle: "メニューを編集"
+    },
+
+    video_editing: {
+      addTitle: "サービスを追加",
+      editTitle: "サービスを編集"
+    },
+
+    hospital: {
+      addTitle: "診療科を追加",
+      editTitle: "診療科を編集"
+    },
+
+    auto_repair: {
+      addTitle: "サービスを追加",
+      editTitle: "サービスを編集"
+    }
+  };
+
+  return settings[businessType] || settings.restaurant;
 }
