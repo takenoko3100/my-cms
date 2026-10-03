@@ -1176,7 +1176,10 @@ function updateBusinessTypeUI() {
   itemNameLabel: "メニュー名",
   priceLabel: "価格",
   addTitle: "メニューを追加",
-  editTitle: "メニューを編集"
+  editTitle: "メニューを編集",
+  introTitle: "店舗紹介",
+  businessHoursLabel: "営業時間",
+  closedDaysLabel: "定休日"
 },
 
   video_editing: {
