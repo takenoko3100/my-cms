@@ -603,12 +603,20 @@ async function saveMenuItem() {
   const imageFile =
     document.getElementById("menuImage").files?.[0];
 
-  if (!name || !priceText) {
-    alert("メニュー名と価格を入力してください。");
-    return;
-  }
+  const isHospital =
+  currentCompany?.business_type === "hospital";
 
-  const price = Number(priceText);
+if (!name || (!isHospital && !priceText)) {
+  alert(
+    isHospital
+      ? "診療科名を入力してください。"
+      : "メニュー名と価格を入力してください。"
+  );
+  return;
+}
+
+  const price =
+  isHospital ? 0 : Number(priceText);
   const sortOrder = Number(sortText || 0);
 
   if (!Number.isInteger(price) || price <= 0) {
@@ -1179,7 +1187,8 @@ function updateBusinessTypeUI() {
   editTitle: "メニューを編集",
   introTitle: "店舗紹介",
   businessHoursLabel: "営業時間",
-  closedDaysLabel: "定休日"
+  closedDaysLabel: "定休日",
+  companyInfoTitle: "店舗情報",
 },
 
   video_editing: {
@@ -1194,6 +1203,7 @@ function updateBusinessTypeUI() {
 introTitle: "会社紹介",
 businessHoursLabel: "対応時間",
 closedDaysLabel: "休業日",
+companyInfoTitle: "会社情報",
 },
 
   hospital: {
@@ -1207,7 +1217,8 @@ closedDaysLabel: "休業日",
   editTitle: "診療科を編集",
   introTitle: "医院紹介",
   businessHoursLabel: "診療時間",
-  closedDaysLabel: "休診日"
+  closedDaysLabel: "休診日",
+  companyInfoTitle: "医院情報",
 },
 
   auto_repair: {
@@ -1220,6 +1231,7 @@ closedDaysLabel: "休業日",
     introTitle: "会社紹介",
 businessHoursLabel: "営業時間",
 closedDaysLabel: "定休日",
+companyInfoTitle: "店舗情報",
   }
 };
 
@@ -1253,6 +1265,17 @@ if (priceLabel) {
   priceLabel.textContent = current.priceLabel;
 }
 
+const priceField = document
+  .getElementById("menuPrice")
+  ?.closest("label");
+
+if (priceField) {
+  priceField.classList.toggle(
+    "business-field-hidden",
+    businessType === "hospital"
+  );
+}
+
 const introTitle = document.getElementById("companyIntroTitle");
 const businessHoursLabel = document.getElementById("businessHoursLabel");
 const closedDaysLabel = document.getElementById("closedDaysLabel");
@@ -1269,12 +1292,21 @@ if (closedDaysLabel) {
   closedDaysLabel.textContent = current.closedDaysLabel;
 }
 
+const companyInfoTitle =
+  document.getElementById("companyInfoTitle");
+
+if (companyInfoTitle) {
+  companyInfoTitle.textContent =
+    current.companyInfoTitle;
+}
+
 const categoryField = document.getElementById("menuCategoryField");
 const recommendedField = document.getElementById("menuRecommendedField");
 const soldOutField = document.getElementById("menuSoldOutField");
 
 const hideRestaurantOnlyFields =
-  businessType === "video_editing";
+  businessType === "video_editing" ||
+  businessType === "hospital";
 
 if (categoryField) {
   categoryField.classList.toggle(
