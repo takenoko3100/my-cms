@@ -1190,17 +1190,25 @@ function updateBusinessTypeUI() {
   itemNameLabel: "サービス名",
   priceLabel: "料金",
   addTitle: "サービスを追加",
-  editTitle: "サービスを編集"
+  editTitle: "サービスを編集",
+introTitle: "会社紹介",
+businessHoursLabel: "対応時間",
+closedDaysLabel: "休業日",
 },
 
   hospital: {
-    label: "MEDICAL",
-    title: "診療科",
-    guide: "診療科をタップすると編集できます",
-    modalLabel: "MEDICAL",
-    itemNameLabel: "診療科名",
-    priceLabel: "料金"
-  },
+  label: "MEDICAL",
+  title: "診療科",
+  guide: "診療科をタップすると編集できます",
+  modalLabel: "MEDICAL",
+  itemNameLabel: "診療科名",
+  priceLabel: "料金",
+  addTitle: "診療科を追加",
+  editTitle: "診療科を編集",
+  introTitle: "医院紹介",
+  businessHoursLabel: "診療時間",
+  closedDaysLabel: "休診日"
+},
 
   auto_repair: {
     label: "SERVICES",
@@ -1208,7 +1216,10 @@ function updateBusinessTypeUI() {
     guide: "サービスをタップすると編集できます",
     modalLabel: "SERVICES",
     itemNameLabel: "サービス名",
-    priceLabel: "料金"
+    priceLabel: "料金",
+    introTitle: "会社紹介",
+businessHoursLabel: "営業時間",
+closedDaysLabel: "定休日",
   }
 };
 
@@ -1240,6 +1251,22 @@ if (nameLabel) {
 
 if (priceLabel) {
   priceLabel.textContent = current.priceLabel;
+}
+
+const introTitle = document.getElementById("companyIntroTitle");
+const businessHoursLabel = document.getElementById("businessHoursLabel");
+const closedDaysLabel = document.getElementById("closedDaysLabel");
+
+if (introTitle) {
+  introTitle.textContent = current.introTitle;
+}
+
+if (businessHoursLabel) {
+  businessHoursLabel.textContent = current.businessHoursLabel;
+}
+
+if (closedDaysLabel) {
+  closedDaysLabel.textContent = current.closedDaysLabel;
 }
 
 const categoryField = document.getElementById("menuCategoryField");
@@ -1287,14 +1314,14 @@ function getBusinessTypeSettings() {
     },
 
     hospital: {
-      addTitle: "診療科を追加",
-      editTitle: "診療科を編集"
-    },
+  addTitle: "診療科を追加",
+  editTitle: "診療科を編集"
+},
 
-    auto_repair: {
-      addTitle: "サービスを追加",
-      editTitle: "サービスを編集"
-    }
+auto_repair: {
+  addTitle: "サービスを追加",
+  editTitle: "サービスを編集"
+}
   };
 
   return settings[businessType] || settings.restaurant;
