@@ -1196,6 +1196,7 @@ function updateBusinessTypeUI() {
   companyInfoTitle: "店舗情報",
   namePlaceholder: "デミグラスオムライス",
 descriptionPlaceholder: "メニュー説明",
+categoryPlaceholder: "メイン",
 },
 
   video_editing: {
@@ -1213,6 +1214,7 @@ closedDaysLabel: "休業日",
 companyInfoTitle: "会社情報",
 namePlaceholder: "YouTube動画編集",
 descriptionPlaceholder: "サービス内容",
+categoryPlaceholder: "動画編集",
 },
 
   hospital: {
@@ -1229,6 +1231,7 @@ descriptionPlaceholder: "サービス内容",
   closedDaysLabel: "休診日",
   namePlaceholder: "内科",
 descriptionPlaceholder: "診療内容",
+categoryPlaceholder: "",
 },
 
   auto_repair: {
@@ -1244,6 +1247,7 @@ closedDaysLabel: "定休日",
 companyInfoTitle: "店舗情報",
 namePlaceholder: "オイル交換",
 descriptionPlaceholder: "サービス内容",
+categoryPlaceholder: "車検・オイル交換など",
   }
 };
 
@@ -1266,6 +1270,7 @@ const nameLabel = document.getElementById("menuNameLabel");
 const priceLabel = document.getElementById("menuPriceLabel");
 const menuNameInput = document.getElementById("menuName");
 const menuDescriptionInput = document.getElementById("menuDescription");
+const menuCategoryInput = document.getElementById("menuCategory");
 
 if (modalLabel) {
   modalLabel.textContent = current.modalLabel;
@@ -1285,6 +1290,10 @@ if (menuNameInput) {
 
 if (menuDescriptionInput) {
   menuDescriptionInput.placeholder = current.descriptionPlaceholder;
+}
+
+if (menuCategoryInput) {
+  menuCategoryInput.placeholder = current.categoryPlaceholder;
 }
 
 const priceField = document
