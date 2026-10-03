@@ -479,10 +479,12 @@ function renderMenuItems() {
     description.textContent = item.description || "";
     meta.appendChild(description);
 
-    const price = document.createElement("p");
-    price.className = "editor-menu-price";
-    price.textContent = `¥${Number(item.price || 0).toLocaleString()}`;
-    meta.appendChild(price);
+    if (currentCompany?.business_type !== "hospital") {
+  const price = document.createElement("p");
+  price.className = "editor-menu-price";
+  price.textContent = `¥${Number(item.price || 0).toLocaleString()}`;
+  meta.appendChild(price);
+}
 
     const badgeRow = document.createElement("div");
     badgeRow.className = "badge-row";
@@ -1192,6 +1194,8 @@ function updateBusinessTypeUI() {
   businessHoursLabel: "営業時間",
   closedDaysLabel: "定休日",
   companyInfoTitle: "店舗情報",
+  namePlaceholder: "デミグラスオムライス",
+descriptionPlaceholder: "メニュー説明",
 },
 
   video_editing: {
@@ -1207,6 +1211,8 @@ introTitle: "会社紹介",
 businessHoursLabel: "対応時間",
 closedDaysLabel: "休業日",
 companyInfoTitle: "会社情報",
+namePlaceholder: "YouTube動画編集",
+descriptionPlaceholder: "サービス内容",
 },
 
   hospital: {
@@ -1221,7 +1227,8 @@ companyInfoTitle: "会社情報",
   introTitle: "医院紹介",
   businessHoursLabel: "診療時間",
   closedDaysLabel: "休診日",
-  companyInfoTitle: "医院情報",
+  namePlaceholder: "内科",
+descriptionPlaceholder: "診療内容",
 },
 
   auto_repair: {
@@ -1235,6 +1242,8 @@ companyInfoTitle: "会社情報",
 businessHoursLabel: "営業時間",
 closedDaysLabel: "定休日",
 companyInfoTitle: "店舗情報",
+namePlaceholder: "オイル交換",
+descriptionPlaceholder: "サービス内容",
   }
 };
 
@@ -1255,6 +1264,8 @@ companyInfoTitle: "店舗情報",
   const modalLabel = document.getElementById("menuModalLabel");
 const nameLabel = document.getElementById("menuNameLabel");
 const priceLabel = document.getElementById("menuPriceLabel");
+const menuNameInput = document.getElementById("menuName");
+const menuDescriptionInput = document.getElementById("menuDescription");
 
 if (modalLabel) {
   modalLabel.textContent = current.modalLabel;
@@ -1266,6 +1277,14 @@ if (nameLabel) {
 
 if (priceLabel) {
   priceLabel.textContent = current.priceLabel;
+}
+
+if (menuNameInput) {
+  menuNameInput.placeholder = current.namePlaceholder;
+}
+
+if (menuDescriptionInput) {
+  menuDescriptionInput.placeholder = current.descriptionPlaceholder;
 }
 
 const priceField = document
@@ -1321,14 +1340,18 @@ if (categoryField) {
 if (recommendedField) {
   recommendedField.classList.toggle(
     "business-field-hidden",
-    hideRestaurantOnlyFields
+    businessType === "video_editing" ||
+    businessType === "hospital" ||
+    businessType === "auto_repair"
   );
 }
 
 if (soldOutField) {
   soldOutField.classList.toggle(
     "business-field-hidden",
-    hideRestaurantOnlyFields
+    businessType === "video_editing" ||
+    businessType === "hospital" ||
+    businessType === "auto_repair"
   );
 }
 }
