@@ -12,6 +12,80 @@ let currentCompany = null;
 let menuItems = [];
 let newsItems = [];
 
+const BUSINESS_TYPE_SETTINGS = {
+  restaurant: {
+    label: "MENU",
+    title: "メニュー",
+    guide: "料理をタップすると編集できます",
+    modalLabel: "MENU",
+    itemNameLabel: "メニュー名",
+    priceLabel: "価格",
+    addTitle: "メニューを追加",
+    editTitle: "メニューを編集",
+    introTitle: "店舗紹介",
+    companyInfoTitle: "店舗情報",
+    businessHoursLabel: "営業時間",
+    closedDaysLabel: "定休日",
+    namePlaceholder: "デミグラスオムライス",
+    descriptionPlaceholder: "メニュー説明",
+    categoryPlaceholder: "メイン"
+  },
+
+  video_editing: {
+    label: "SERVICES",
+    title: "サービス",
+    guide: "サービスをタップすると編集できます",
+    modalLabel: "SERVICES",
+    itemNameLabel: "サービス名",
+    priceLabel: "料金",
+    addTitle: "サービスを追加",
+    editTitle: "サービスを編集",
+    introTitle: "会社紹介",
+    companyInfoTitle: "会社情報",
+    businessHoursLabel: "対応時間",
+    closedDaysLabel: "休業日",
+    namePlaceholder: "YouTube動画編集",
+    descriptionPlaceholder: "サービス内容",
+    categoryPlaceholder: "動画編集"
+  },
+
+  hospital: {
+    label: "MEDICAL",
+    title: "診療科",
+    guide: "診療科をタップすると編集できます",
+    modalLabel: "MEDICAL",
+    itemNameLabel: "診療科名",
+    priceLabel: "料金",
+    addTitle: "診療科を追加",
+    editTitle: "診療科を編集",
+    introTitle: "医院紹介",
+    companyInfoTitle: "医院情報",
+    businessHoursLabel: "診療時間",
+    closedDaysLabel: "休診日",
+    namePlaceholder: "内科",
+    descriptionPlaceholder: "診療内容",
+    categoryPlaceholder: ""
+  },
+
+  auto_repair: {
+    label: "SERVICES",
+    title: "サービス・料金",
+    guide: "サービスをタップすると編集できます",
+    modalLabel: "SERVICES",
+    itemNameLabel: "サービス名",
+    priceLabel: "料金",
+    addTitle: "サービスを追加",
+    editTitle: "サービスを編集",
+    introTitle: "会社紹介",
+    companyInfoTitle: "店舗情報",
+    businessHoursLabel: "営業時間",
+    closedDaysLabel: "定休日",
+    namePlaceholder: "オイル交換",
+    descriptionPlaceholder: "サービス内容",
+    categoryPlaceholder: "車検・オイル交換など"
+  }
+};
+
 
 /* ========================================
    初期化
@@ -1174,84 +1248,16 @@ function escapeCssUrl(value) {
 }
 
 function updateBusinessTypeUI() {
-  const businessType = currentCompany?.business_type || "restaurant";
+  const businessType =
+    currentCompany?.business_type || "restaurant";
 
   const label = document.getElementById("serviceSectionLabel");
   const title = document.getElementById("serviceSectionTitle");
   const guide = document.getElementById("serviceSectionGuide");
 
-  const settings = {
-  restaurant: {
-  label: "MENU",
-  title: "メニュー",
-  guide: "料理をタップすると編集できます",
-  modalLabel: "MENU",
-  itemNameLabel: "メニュー名",
-  priceLabel: "価格",
-  addTitle: "メニューを追加",
-  editTitle: "メニューを編集",
-  introTitle: "店舗紹介",
-  businessHoursLabel: "営業時間",
-  closedDaysLabel: "定休日",
-  companyInfoTitle: "店舗情報",
-  namePlaceholder: "デミグラスオムライス",
-descriptionPlaceholder: "メニュー説明",
-categoryPlaceholder: "メイン",
-},
-
-  video_editing: {
-  label: "SERVICES",
-  title: "サービス",
-  guide: "サービスをタップすると編集できます",
-  modalLabel: "SERVICES",
-  itemNameLabel: "サービス名",
-  priceLabel: "料金",
-  addTitle: "サービスを追加",
-  editTitle: "サービスを編集",
-introTitle: "会社紹介",
-businessHoursLabel: "対応時間",
-closedDaysLabel: "休業日",
-companyInfoTitle: "会社情報",
-namePlaceholder: "YouTube動画編集",
-descriptionPlaceholder: "サービス内容",
-categoryPlaceholder: "動画編集",
-},
-
-  hospital: {
-  label: "MEDICAL",
-  title: "診療科",
-  guide: "診療科をタップすると編集できます",
-  modalLabel: "MEDICAL",
-  itemNameLabel: "診療科名",
-  priceLabel: "料金",
-  addTitle: "診療科を追加",
-  editTitle: "診療科を編集",
-  introTitle: "医院紹介",
-  businessHoursLabel: "診療時間",
-  closedDaysLabel: "休診日",
-  namePlaceholder: "内科",
-descriptionPlaceholder: "診療内容",
-categoryPlaceholder: "",
-},
-
-  auto_repair: {
-    label: "SERVICES",
-    title: "サービス・料金",
-    guide: "サービスをタップすると編集できます",
-    modalLabel: "SERVICES",
-    itemNameLabel: "サービス名",
-    priceLabel: "料金",
-    introTitle: "会社紹介",
-businessHoursLabel: "営業時間",
-closedDaysLabel: "定休日",
-companyInfoTitle: "店舗情報",
-namePlaceholder: "オイル交換",
-descriptionPlaceholder: "サービス内容",
-categoryPlaceholder: "車検・オイル交換など",
-  }
-};
-
-  const current = settings[businessType] || settings.restaurant;
+  const current =
+    BUSINESS_TYPE_SETTINGS[businessType] ||
+    BUSINESS_TYPE_SETTINGS.restaurant;
 
   if (label) {
     label.textContent = current.label;
@@ -1369,27 +1375,8 @@ function getBusinessTypeSettings() {
   const businessType =
     currentCompany?.business_type || "restaurant";
 
-  const settings = {
-    restaurant: {
-      addTitle: "メニューを追加",
-      editTitle: "メニューを編集"
-    },
-
-    video_editing: {
-      addTitle: "サービスを追加",
-      editTitle: "サービスを編集"
-    },
-
-    hospital: {
-  addTitle: "診療科を追加",
-  editTitle: "診療科を編集"
-},
-
-auto_repair: {
-  addTitle: "サービスを追加",
-  editTitle: "サービスを編集"
-}
-  };
-
-  return settings[businessType] || settings.restaurant;
+  return (
+    BUSINESS_TYPE_SETTINGS[businessType] ||
+    BUSINESS_TYPE_SETTINGS.restaurant
+  );
 }
