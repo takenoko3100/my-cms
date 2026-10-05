@@ -1,205 +1,588 @@
-const SUPABASE_URL = "https://cshieomhxpuaclggicle.supabase.co";
+const SUPABASE_URL =
+  "https://cshieomhxpuaclggicle.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_6mt_8wZcBX9aKPR04NzNBQ_StAq2Qbe";
-
-  const COMPANY_ID = 1;
 
 const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
 
-async function loadCompanyInfo() {
-  const { data, error } = await supabaseClient
-  .from("company_info")
-  .select("*")
-  .eq("id", COMPANY_ID)
-  .single();
 
-  if (error) {
-    console.error(error);
+/* ========================================
+   現在表示している会社
+======================================== */
+
+let currentCompany = null;
+let currentCompanyId = null;
+
+
+/* ========================================
+   初期化
+======================================== */
+
+async function initSite() {
+  const loaded = await loadCompanyInfo();
+
+  if (!loaded) {
     return;
   }
 
-  document.getElementById("siteCompanyName").textContent = data.name ?? "";
-  document.getElementById("siteNavCompanyName").textContent = data.name;
-document.getElementById("siteAddress").textContent = data.address ?? "";
-
-const map = document.getElementById("siteMap");
-
-if (data.address) {
-  map.src = `https://www.google.com/maps?q=${encodeURIComponent(data.address)}&output=embed`;
+  await Promise.all([
+    loadMenuItems(),
+    loadNews()
+  ]);
 }
 
-document.getElementById("siteDescription").textContent = data.description ?? ""; "";
-document.getElementById("sitePhone").textContent = data.phone ?? "";
-const phoneLink = document.getElementById("phoneLink");
+initSite();
 
-if (data.phone) {
-  phoneLink.href = `tel:${data.phone.replace(/-/g, "")}`;
+
+/* ========================================
+   URLから会社slugを取得
+======================================== */
+
+function getCompanySlug() {
+  const params =
+    new URLSearchParams(window.location.search);
+
+  return (
+    params.get("company") ||
+    "takenoko-restaurant"
+  );
 }
 
-const instagramLink = document.getElementById("instagramLink");
 
-if (data.instagram_url) {
-  instagramLink.href = data.instagram_url;
-} else {
-  instagramLink.style.display = "none";
+/* ========================================
+   会社情報
+======================================== */
+
+async function loadCompanyInfo() {
+  const slug = getCompanySlug();
+
+  const { data, error } = await supabaseClient
+    .from("company_info")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !data) {
+    console.error(
+      "会社情報の読み込みに失敗しました",
+      error
+    );
+
+    showCompanyNotFound();
+
+    return false;
+  }
+
+  currentCompany = data;
+  currentCompanyId = data.id;
+
+  renderCompanyInfo(data);
+
+  return true;
 }
 
-  document.getElementById("siteHours").textContent = data.business_hours ?? "";
-  document.getElementById("siteClosedDays").textContent = data.closed_days ?? "";
-document.getElementById("footerCompanyName").textContent = data.name ?? "";
-document.getElementById("footerCompanyNameCopy").textContent = data.name ?? "";
-document.getElementById("footerAddress").textContent = data.address ?? "";
 
-document.getElementById("footerHours").textContent = data.business_hours
-  ? `営業時間：${data.business_hours}`
-  : "";
+/* ========================================
+   会社情報を画面に表示
+======================================== */
 
-document.getElementById("footerClosedDays").textContent = data.closed_days
-  ? ` / 定休日：${data.closed_days}`
-  : "";
+function renderCompanyInfo(data) {
+  setText(
+    "siteCompanyName",
+    data.name ?? ""
+  );
 
-  const footerInstagram = document.getElementById("footerInstagram");
+  setText(
+    "siteNavCompanyName",
+    data.name ?? ""
+  );
 
-if (data.instagram_url) {
-  footerInstagram.href = data.instagram_url;
-} else {
-  footerInstagram.style.display = "none";
+  setText(
+    "siteAddress",
+    data.address ?? ""
+  );
+
+  setText(
+    "siteDescription",
+    data.description ?? ""
+  );
+
+  setText(
+    "sitePhone",
+    data.phone ?? ""
+  );
+
+  setText(
+    "siteHours",
+    data.business_hours ?? ""
+  );
+
+  setText(
+    "siteClosedDays",
+    data.closed_days ?? ""
+  );
+
+
+  /* Google Map */
+
+  const map =
+    document.getElementById("siteMap");
+
+  if (map && data.address) {
+    map.src =
+      `https://www.google.com/maps?q=${encodeURIComponent(
+        data.address
+      )}&output=embed`;
+  }
+
+
+  /* 電話リンク */
+
+  const phoneLink =
+    document.getElementById("phoneLink");
+
+  if (phoneLink) {
+    if (data.phone) {
+      phoneLink.href =
+        `tel:${data.phone.replace(
+          /[^0-9+]/g,
+          ""
+        )}`;
+
+      phoneLink.style.display = "";
+    } else {
+      phoneLink.style.display = "none";
+    }
+  }
+
+
+  /* Instagram */
+
+  const instagramLink =
+    document.getElementById("instagramLink");
+
+  if (instagramLink) {
+    if (data.instagram_url) {
+      instagramLink.href =
+        data.instagram_url;
+
+      instagramLink.style.display = "";
+    } else {
+      instagramLink.style.display = "none";
+    }
+  }
+
+
+  /* フッター */
+
+  setText(
+    "footerCompanyName",
+    data.name ?? ""
+  );
+
+  setText(
+    "footerCompanyNameCopy",
+    data.name ?? ""
+  );
+
+  setText(
+    "footerAddress",
+    data.address ?? ""
+  );
+
+  setText(
+    "footerHours",
+    data.business_hours
+      ? `営業時間：${data.business_hours}`
+      : ""
+  );
+
+  setText(
+    "footerClosedDays",
+    data.closed_days
+      ? ` / 定休日：${data.closed_days}`
+      : ""
+  );
+
+  setText(
+    "footerYear",
+    new Date().getFullYear()
+  );
+
+
+  const footerInstagram =
+    document.getElementById(
+      "footerInstagram"
+    );
+
+  if (footerInstagram) {
+    if (data.instagram_url) {
+      footerInstagram.href =
+        data.instagram_url;
+
+      footerInstagram.style.display = "";
+    } else {
+      footerInstagram.style.display =
+        "none";
+    }
+  }
+
+
+  /* トップ画像 */
+
+  const hero =
+    document.querySelector(".hero");
+
+  if (hero && data.hero_image_url) {
+    hero.style.backgroundImage = `
+      linear-gradient(
+        rgba(42, 36, 31, 0.55),
+        rgba(42, 36, 31, 0.55)
+      ),
+      url("${data.hero_image_url}")
+    `;
+
+    hero.style.backgroundSize =
+      "cover";
+
+    hero.style.backgroundPosition =
+      "center";
+  }
+
+
+  /* ブラウザタイトル */
+
+  if (data.name) {
+    document.title = data.name;
+  }
 }
 
-document.getElementById("footerYear").textContent =
-  new Date().getFullYear();
 
-  if (data.hero_image_url) {
-  const hero = document.querySelector(".hero");
-
-  hero.style.backgroundImage = `
-    linear-gradient(
-      rgba(42, 36, 31, 0.55),
-      rgba(42, 36, 31, 0.55)
-    ),
-    url("${data.hero_image_url}")
-  `;
-
-  hero.style.backgroundSize = "cover";
-  hero.style.backgroundPosition = "center";
-}
-
-}
+/* ========================================
+   お知らせ
+======================================== */
 
 async function loadNews() {
-  const { data, error } = await supabaseClient
-    .from("news")
-.select("*")
-.eq("company_id", COMPANY_ID)
-.order("created_at", { ascending: false });
-
-  if (error) {
-    console.error(error);
+  if (!currentCompanyId) {
     return;
   }
 
-  const newsList = document.getElementById("siteNewsList");
+  const { data, error } =
+    await supabaseClient
+      .from("news")
+      .select("*")
+      .eq(
+        "company_id",
+        currentCompanyId
+      )
+      .order(
+        "created_at",
+        { ascending: false }
+      );
 
-  newsList.innerHTML = "";
+  if (error) {
+    console.error(
+      "お知らせの読み込みに失敗しました",
+      error
+    );
+
+    return;
+  }
+
+  const newsList =
+    document.getElementById(
+      "siteNewsList"
+    );
+
+  if (!newsList) {
+    return;
+  }
+
+  newsList.replaceChildren();
 
   data.forEach((news) => {
-  const div = document.createElement("div");
-  div.className = "news";
+    const div =
+      document.createElement("div");
 
-  const title = document.createElement("h3");
-  title.textContent = news.title || "";
-  div.appendChild(title);
+    div.className = "news";
 
-  if (news.image_url) {
-    const img = document.createElement("img");
-    img.src = news.image_url;
-    img.alt = "お知らせ画像";
-    div.appendChild(img);
-  }
 
-  const content = document.createElement("p");
-  content.textContent = news.content || "";
-  div.appendChild(content);
+    const title =
+      document.createElement("h3");
 
-  newsList.appendChild(div);
-});
+    title.textContent =
+      news.title || "";
+
+    div.appendChild(title);
+
+
+    if (news.image_url) {
+      const img =
+        document.createElement("img");
+
+      img.src =
+        news.image_url;
+
+      img.alt =
+        news.title || "お知らせ画像";
+
+      div.appendChild(img);
+    }
+
+
+    const content =
+      document.createElement("p");
+
+    content.textContent =
+      news.content || "";
+
+    div.appendChild(content);
+
+    newsList.appendChild(div);
+  });
 }
 
-loadCompanyInfo();
-loadNews();
+
+/* ========================================
+   メニュー・サービス
+======================================== */
 
 async function loadMenuItems() {
-  const { data, error } = await supabaseClient
-  .from("menu_items")
-.select("*")
-.eq("company_id", COMPANY_ID)
-.eq("is_visible", true)
-.order("sort_order", { ascending: true })
-.order("created_at", { ascending: false });
-
-  if (error) {
-    console.error(error);
+  if (!currentCompanyId) {
     return;
   }
 
-  const menuList = document.getElementById("siteMenuList");
-  menuList.innerHTML = "";
+  const { data, error } =
+    await supabaseClient
+      .from("menu_items")
+      .select("*")
+      .eq(
+        "company_id",
+        currentCompanyId
+      )
+      .eq(
+        "is_visible",
+        true
+      )
+      .order(
+        "sort_order",
+        { ascending: true }
+      )
+      .order(
+        "created_at",
+        { ascending: false }
+      );
+
+  if (error) {
+    console.error(
+      "メニューの読み込みに失敗しました",
+      error
+    );
+
+    return;
+  }
+
+  const menuList =
+    document.getElementById(
+      "siteMenuList"
+    );
+
+  if (!menuList) {
+    return;
+  }
+
+  menuList.replaceChildren();
 
   data.forEach((item) => {
-  const div = document.createElement("div");
-  div.className = "menu-card";
+    const div =
+      document.createElement("div");
 
-  const head = document.createElement("div");
-  head.className = "menu-card-head";
+    div.className =
+      "menu-card";
 
-  const category = document.createElement("p");
-  category.className = "menu-category-label";
-  category.textContent = item.category || "その他";
-  head.appendChild(category);
 
-  const title = document.createElement("h3");
-  title.textContent = item.name || "";
-  head.appendChild(title);
+    /* 上部 */
 
-  if (item.is_recommended) {
-    const recommended = document.createElement("p");
-    recommended.className = "recommended-badge";
-    recommended.textContent = "⭐ おすすめ";
-    head.appendChild(recommended);
-  }
+    const head =
+      document.createElement("div");
 
-  if (item.is_sold_out) {
-    const soldOut = document.createElement("p");
-    soldOut.className = "sold-out-badge";
-    soldOut.textContent = "売り切れ";
-    head.appendChild(soldOut);
-  }
+    head.className =
+      "menu-card-head";
 
-  div.appendChild(head);
 
-  if (item.image_url) {
-    const img = document.createElement("img");
-    img.src = item.image_url;
-    img.alt = item.name || "";
-    div.appendChild(img);
-  }
+    /* カテゴリ */
 
-  const description = document.createElement("p");
-  description.textContent = item.description || "";
-  div.appendChild(description);
+    if (
+      item.category &&
+      currentCompany?.business_type !==
+        "hospital"
+    ) {
+      const category =
+        document.createElement("p");
 
-  const priceWrap = document.createElement("p");
-  const price = document.createElement("strong");
-  price.textContent = `¥${Number(item.price).toLocaleString()}`;
-  priceWrap.appendChild(price);
-  div.appendChild(priceWrap);
+      category.className =
+        "menu-category-label";
 
-  menuList.appendChild(div);
-});
+      category.textContent =
+        item.category;
+
+      head.appendChild(category);
+    }
+
+
+    /* 名前 */
+
+    const title =
+      document.createElement("h3");
+
+    title.textContent =
+      item.name || "";
+
+    head.appendChild(title);
+
+
+    /* おすすめ */
+
+    if (
+      item.is_recommended &&
+      currentCompany?.business_type ===
+        "restaurant"
+    ) {
+      const recommended =
+        document.createElement("p");
+
+      recommended.className =
+        "recommended-badge";
+
+      recommended.textContent =
+        "⭐ おすすめ";
+
+      head.appendChild(recommended);
+    }
+
+
+    /* 売り切れ */
+
+    if (
+      item.is_sold_out &&
+      currentCompany?.business_type ===
+        "restaurant"
+    ) {
+      const soldOut =
+        document.createElement("p");
+
+      soldOut.className =
+        "sold-out-badge";
+
+      soldOut.textContent =
+        "売り切れ";
+
+      head.appendChild(soldOut);
+    }
+
+    div.appendChild(head);
+
+
+    /* 画像 */
+
+    if (item.image_url) {
+      const img =
+        document.createElement("img");
+
+      img.src =
+        item.image_url;
+
+      img.alt =
+        item.name || "";
+
+      div.appendChild(img);
+    }
+
+
+    /* 説明 */
+
+    const description =
+      document.createElement("p");
+
+    description.textContent =
+      item.description || "";
+
+    div.appendChild(description);
+
+
+    /* 料金
+       病院では表示しない
+    */
+
+    if (
+      currentCompany?.business_type !==
+      "hospital"
+    ) {
+      const priceWrap =
+        document.createElement("p");
+
+      const price =
+        document.createElement("strong");
+
+      price.textContent =
+        `¥${Number(
+          item.price || 0
+        ).toLocaleString()}`;
+
+      priceWrap.appendChild(price);
+
+      div.appendChild(priceWrap);
+    }
+
+
+    menuList.appendChild(div);
+  });
 }
 
-loadMenuItems();
+
+/* ========================================
+   会社が見つからない場合
+======================================== */
+
+function showCompanyNotFound() {
+  const main =
+    document.querySelector("main");
+
+  if (!main) {
+    return;
+  }
+
+  main.replaceChildren();
+
+  const message =
+    document.createElement("p");
+
+  message.textContent =
+    "ページが見つかりませんでした。";
+
+  message.style.textAlign =
+    "center";
+
+  message.style.padding =
+    "80px 20px";
+
+  main.appendChild(message);
+}
+
+
+/* ========================================
+   共通
+======================================== */
+
+function setText(id, value) {
+  const element =
+    document.getElementById(id);
+
+  if (element) {
+    element.textContent = value;
+  }
+}
