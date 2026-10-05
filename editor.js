@@ -139,16 +139,94 @@ async function requireSession() {
 
 
 async function resolveCompanyId(userId) {
-  const { data, error } = await supabaseClient
+  const params =
+    new URLSearchParams(window.location.search);
+
+  const companySlug =
+    params.get("company");
+
+
+  /* URLで会社が指定されている場合 */
+  if (companySlug) {
+    const {
+      data: company,
+      error: companyError
+    } = await supabaseClient
+      .from("company_info")
+      .select("id, slug")
+      .eq("slug", companySlug)
+      .maybeSingle();
+
+    if (companyError) {
+      console.error(
+        "会社情報の取得エラー:",
+        companyError
+      );
+
+      return null;
+    }
+
+    if (!company) {
+      alert("指定された会社が見つかりません。");
+      return null;
+    }
+
+
+    /* ログインユーザーが
+       この会社に所属しているか確認 */
+    const {
+      data: membership,
+      error: membershipError
+    } = await supabaseClient
+      .from("company_members")
+      .select("company_id")
+      .eq("user_id", userId)
+      .eq("company_id", company.id)
+      .maybeSingle();
+
+    if (membershipError) {
+      console.error(
+        "会社所属情報の取得エラー:",
+        membershipError
+      );
+
+      return null;
+    }
+
+    if (!membership) {
+      alert(
+        "この会社を管理する権限がありません。"
+      );
+
+      return null;
+    }
+
+    return company.id;
+  }
+
+
+  /* URL指定がない場合は
+     今まで通り最初の所属会社を開く */
+  const {
+    data,
+    error
+  } = await supabaseClient
     .from("company_members")
     .select("company_id")
     .eq("user_id", userId)
-    .order("created_at", { ascending: true })
+    .order(
+      "created_at",
+      { ascending: true }
+    )
     .limit(1)
     .maybeSingle();
 
   if (error) {
-    console.error("店舗所属情報の取得エラー:", error);
+    console.error(
+      "店舗所属情報の取得エラー:",
+      error
+    );
+
     return null;
   }
 
@@ -299,9 +377,68 @@ function renderCompanyInfo() {
 
   updateBusinessTypeUI();
 
-  fillCompanyForm();
+fillCompanyForm();
+
+syncCompanySlugInUrl();
+
+updatePublicPageLink();
 }
 
+/* ========================================
+   会社URL・公開ページ
+======================================== */
+
+function syncCompanySlugInUrl() {
+  if (!currentCompany?.slug) {
+    return;
+  }
+
+  const url =
+    new URL(window.location.href);
+
+  if (
+    url.searchParams.get("company") ===
+    currentCompany.slug
+  ) {
+    return;
+  }
+
+  url.searchParams.set(
+    "company",
+    currentCompany.slug
+  );
+
+  window.history.replaceState(
+    {},
+    "",
+    url
+  );
+}
+
+
+function updatePublicPageLink() {
+  if (!currentCompany?.slug) {
+    return;
+  }
+
+  const publicPageLink =
+    document.querySelector(
+      'a[href^="site.html"]'
+    );
+
+  if (!publicPageLink) {
+    console.warn(
+      "公開ページリンクが見つかりません"
+    );
+
+    return;
+  }
+
+  publicPageLink.href =
+    `site.html?company=${encodeURIComponent(
+      currentCompany.slug
+    )}`;
+}
 
 function fillCompanyForm() {
   if (!currentCompany) {
