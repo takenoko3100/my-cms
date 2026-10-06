@@ -274,6 +274,144 @@
 
   </main>
 
+  <!-- ================================
+     顧客編集モーダル
+================================= -->
+
+<div
+  id="editClientModal"
+  class="modal"
+  aria-hidden="true"
+>
+
+  <div
+    class="modal-backdrop"
+    data-close-edit-modal
+  ></div>
+
+
+  <div
+    class="modal-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="editClientModalTitle"
+  >
+
+    <div class="modal-header">
+
+      <div>
+
+        <p class="eyebrow">
+          EDIT CLIENT
+        </p>
+
+        <h2 id="editClientModalTitle">
+          顧客情報を編集
+        </h2>
+
+      </div>
+
+
+      <button
+        id="closeEditClientModalButton"
+        class="modal-close"
+        type="button"
+        aria-label="閉じる"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <input
+      id="editClientId"
+      type="hidden"
+    >
+
+
+    <div class="form-group">
+
+      <label for="editCompanyName">
+        会社・店舗名
+      </label>
+
+      <input
+        id="editCompanyName"
+        type="text"
+      >
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="editCompanySlug">
+        slug
+      </label>
+
+      <input
+        id="editCompanySlug"
+        type="text"
+      >
+
+      <p class="help-text">
+        半角英数字とハイフンで入力
+      </p>
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label for="editBusinessType">
+        業種
+      </label>
+
+      <select id="editBusinessType">
+
+        <option value="restaurant">
+          飲食店
+        </option>
+
+        <option value="hospital">
+          病院・クリニック
+        </option>
+
+        <option value="video_editing">
+          動画編集
+        </option>
+
+        <option value="auto_repair">
+          自動車整備
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <button
+      id="saveClientButton"
+      class="primary-button"
+      type="button"
+    >
+      変更を保存
+    </button>
+
+
+    <button
+      id="deleteClientButton"
+      class="danger-button"
+      type="button"
+    >
+      この顧客を削除
+    </button>
+
+  </div>
+
+</div>
+
 
   <div
     id="toastMessage"
