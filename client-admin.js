@@ -4,6 +4,7 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_6mt_8wZcBX9aKPR04NzNBQ_StAq2Qbe";
 
+
 const supabaseClient =
   supabase.createClient(
     SUPABASE_URL,
@@ -32,6 +33,7 @@ async function init() {
 
   const session =
     await requireSession();
+
 
   if (!session) {
     return;
@@ -159,6 +161,62 @@ function bindEvents() {
       "click",
       logout
     );
+
+
+  document
+    .getElementById(
+      "saveClientButton"
+    )
+    .addEventListener(
+      "click",
+      saveClientChanges
+    );
+
+
+  document
+    .getElementById(
+      "deleteClientButton"
+    )
+    .addEventListener(
+      "click",
+      deleteCurrentClient
+    );
+
+
+  document
+    .getElementById(
+      "closeEditClientModalButton"
+    )
+    .addEventListener(
+      "click",
+      closeEditClientModal
+    );
+
+
+  document
+    .querySelector(
+      "[data-close-edit-modal]"
+    )
+    .addEventListener(
+      "click",
+      closeEditClientModal
+    );
+
+
+  document.addEventListener(
+    "keydown",
+    (event) => {
+
+      if (
+        event.key === "Escape"
+      ) {
+
+        closeEditClientModal();
+
+      }
+
+    }
+  );
 }
 
 
@@ -215,7 +273,7 @@ async function createClient() {
 
 
   if (
-    !/^[a-z0-9-]+$/.test(slug)
+    !isValidSlug(slug)
   ) {
 
     alert(
@@ -227,7 +285,9 @@ async function createClient() {
 
 
   if (
-    !isValidUuid(customerUserId)
+    !isValidUuid(
+      customerUserId
+    )
   ) {
 
     alert(
@@ -340,29 +400,9 @@ async function createClient() {
     );
 
 
-    if (
-      error?.code === "23505"
-    ) {
-
-      alert(
-        "このslugはすでに使用されています。"
-      );
-
-    } else if (
-      error?.code === "23503"
-    ) {
-
-      alert(
-        "顧客ユーザーIDが見つかりません。AuthenticationのUser UIDを確認してください。"
-      );
-
-    } else {
-
-      alert(
-        "顧客登録に失敗しました。"
-      );
-
-    }
+    handleDatabaseError(
+      error
+    );
 
   } finally {
 
@@ -392,13 +432,18 @@ async function loadClients() {
 
 
   const loading =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   loading.className =
     "client-loading";
 
+
   loading.textContent =
     "読み込み中...";
+
 
   list.appendChild(
     loading
@@ -416,7 +461,9 @@ async function loadClients() {
       )
       .order(
         "id",
-        { ascending: false }
+        {
+          ascending: false
+        }
       );
 
 
@@ -427,20 +474,28 @@ async function loadClients() {
       error
     );
 
+
     list.replaceChildren();
 
+
     const errorMessage =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     errorMessage.className =
       "client-empty";
 
+
     errorMessage.textContent =
       "顧客一覧を読み込めませんでした";
+
 
     list.appendChild(
       errorMessage
     );
+
 
     return;
   }
@@ -480,17 +535,23 @@ function renderClients() {
   ) {
 
     const empty =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     empty.className =
       "client-empty";
 
+
     empty.textContent =
       "まだ顧客が登録されていません";
+
 
     list.appendChild(
       empty
     );
+
 
     return;
   }
@@ -499,13 +560,10 @@ function renderClients() {
   clients.forEach(
     (client) => {
 
-      const card =
+      list.appendChild(
         createClientCard(
           client
-        );
-
-      list.appendChild(
-        card
+        )
       );
 
     }
@@ -522,23 +580,9 @@ function createClientCard(
       "article"
     );
 
+
   card.className =
     "client-card";
-
-
-  const top =
-    document.createElement(
-      "div"
-    );
-
-  top.className =
-    "client-card-top";
-
-
-  const info =
-    document.createElement(
-      "div"
-    );
 
 
   const name =
@@ -546,8 +590,10 @@ function createClientCard(
       "h3"
     );
 
+
   name.className =
     "client-name";
+
 
   name.textContent =
     client.name ||
@@ -559,8 +605,10 @@ function createClientCard(
       "span"
     );
 
+
   type.className =
     "client-business-type";
+
 
   type.textContent =
     BUSINESS_TYPE_LABELS[
@@ -575,29 +623,13 @@ function createClientCard(
       "p"
     );
 
+
   slug.className =
     "client-slug";
 
+
   slug.textContent =
     `slug：${client.slug || "-"}`;
-
-
-  info.appendChild(
-    name
-  );
-
-  info.appendChild(
-    type
-  );
-
-  info.appendChild(
-    slug
-  );
-
-
-  top.appendChild(
-    info
-  );
 
 
   const actions =
@@ -605,68 +637,90 @@ function createClientCard(
       "div"
     );
 
+
   actions.className =
     "client-actions";
 
 
   const adminLink =
-    document.createElement(
-      "a"
+    createClientLink(
+      "管理画面",
+      "admin",
+      `index.html?company=${encodeURIComponent(
+        client.slug
+      )}`
     );
-
-  adminLink.className =
-    "client-action-link admin";
-
-  adminLink.textContent =
-    "管理画面";
-
-  adminLink.target =
-    "_blank";
-
-  adminLink.rel =
-    "noopener noreferrer";
-
-  adminLink.href =
-    `index.html?company=${encodeURIComponent(
-      client.slug
-    )}`;
 
 
   const publicLink =
-    document.createElement(
-      "a"
+    createClientLink(
+      "公開ページ",
+      "public",
+      `site.html?company=${encodeURIComponent(
+        client.slug
+      )}`
     );
 
-  publicLink.className =
-    "client-action-link public";
 
-  publicLink.textContent =
-    "公開ページ";
+  const editButton =
+    document.createElement(
+      "button"
+    );
 
-  publicLink.target =
-    "_blank";
 
-  publicLink.rel =
-    "noopener noreferrer";
+  editButton.type =
+    "button";
 
-  publicLink.href =
-    `site.html?company=${encodeURIComponent(
-      client.slug
-    )}`;
+
+  editButton.className =
+    "client-action-button";
+
+
+  editButton.textContent =
+    "顧客情報を編集";
+
+
+  editButton.addEventListener(
+    "click",
+    () => {
+
+      openEditClientModal(
+        client.id
+      );
+
+    }
+  );
 
 
   actions.appendChild(
     adminLink
   );
 
+
   actions.appendChild(
     publicLink
   );
 
 
-  card.appendChild(
-    top
+  actions.appendChild(
+    editButton
   );
+
+
+  card.appendChild(
+    name
+  );
+
+
+  card.appendChild(
+    type
+  );
+
+
+  card.appendChild(
+    slug
+  );
+
 
   card.appendChild(
     actions
@@ -677,8 +731,387 @@ function createClientCard(
 }
 
 
+function createClientLink(
+  text,
+  type,
+  href
+) {
+
+  const link =
+    document.createElement(
+      "a"
+    );
+
+
+  link.className =
+    `client-action-link ${type}`;
+
+
+  link.textContent =
+    text;
+
+
+  link.href =
+    href;
+
+
+  link.target =
+    "_blank";
+
+
+  link.rel =
+    "noopener noreferrer";
+
+
+  return link;
+}
+
+
 /* ========================================
-   登録完了表示
+   顧客編集
+======================================== */
+
+function openEditClientModal(
+  clientId
+) {
+
+  const client =
+    clients.find(
+      (item) =>
+        String(item.id) ===
+        String(clientId)
+    );
+
+
+  if (!client) {
+    return;
+  }
+
+
+  document.getElementById(
+    "editClientId"
+  ).value =
+    client.id;
+
+
+  document.getElementById(
+    "editCompanyName"
+  ).value =
+    client.name ?? "";
+
+
+  document.getElementById(
+    "editCompanySlug"
+  ).value =
+    client.slug ?? "";
+
+
+  document.getElementById(
+    "editBusinessType"
+  ).value =
+    client.business_type ||
+    "restaurant";
+
+
+  const modal =
+    document.getElementById(
+      "editClientModal"
+    );
+
+
+  modal.classList.add(
+    "open"
+  );
+
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
+}
+
+
+function closeEditClientModal() {
+
+  const modal =
+    document.getElementById(
+      "editClientModal"
+    );
+
+
+  if (!modal) {
+    return;
+  }
+
+
+  modal.classList.remove(
+    "open"
+  );
+
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  document.body.style.overflow =
+    "";
+}
+
+
+async function saveClientChanges() {
+
+  const button =
+    document.getElementById(
+      "saveClientButton"
+    );
+
+
+  const clientId =
+    document.getElementById(
+      "editClientId"
+    ).value;
+
+
+  const name =
+    document.getElementById(
+      "editCompanyName"
+    ).value.trim();
+
+
+  const slug =
+    document.getElementById(
+      "editCompanySlug"
+    ).value
+      .trim()
+      .toLowerCase();
+
+
+  const businessType =
+    document.getElementById(
+      "editBusinessType"
+    ).value;
+
+
+  if (
+    !clientId ||
+    !name ||
+    !slug
+  ) {
+
+    alert(
+      "会社名とslugを入力してください。"
+    );
+
+    return;
+  }
+
+
+  if (
+    !isValidSlug(slug)
+  ) {
+
+    alert(
+      "slugは半角英数字とハイフンで入力してください。"
+    );
+
+    return;
+  }
+
+
+  setBusy(
+    button,
+    true,
+    "保存中..."
+  );
+
+
+  try {
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("company_info")
+        .update({
+          name,
+          slug,
+          business_type:
+            businessType,
+          updated_at:
+            new Date().toISOString()
+        })
+        .eq(
+          "id",
+          clientId
+        );
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    closeEditClientModal();
+
+
+    showToast(
+      "顧客情報を変更しました"
+    );
+
+
+    await loadClients();
+
+
+  } catch (error) {
+
+    console.error(
+      "顧客編集エラー:",
+      error
+    );
+
+
+    handleDatabaseError(
+      error
+    );
+
+  } finally {
+
+    setBusy(
+      button,
+      false,
+      "変更を保存"
+    );
+
+  }
+}
+
+
+/* ========================================
+   顧客削除
+======================================== */
+
+async function deleteCurrentClient() {
+
+  const clientId =
+    document.getElementById(
+      "editClientId"
+    ).value;
+
+
+  const client =
+    clients.find(
+      (item) =>
+        String(item.id) ===
+        String(clientId)
+    );
+
+
+  if (!client) {
+    return;
+  }
+
+
+  const ok =
+    confirm(
+      `「${client.name}」を削除しますか？\n\nこの操作は元に戻せません。`
+    );
+
+
+  if (!ok) {
+    return;
+  }
+
+
+  const button =
+    document.getElementById(
+      "deleteClientButton"
+    );
+
+
+  setBusy(
+    button,
+    true,
+    "削除中..."
+  );
+
+
+  try {
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .rpc(
+          "delete_client_company",
+          {
+            target_company_id:
+              Number(clientId)
+          }
+        );
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    closeEditClientModal();
+
+
+    showToast(
+      "顧客を削除しました"
+    );
+
+
+    await loadClients();
+
+
+  } catch (error) {
+
+    console.error(
+      "顧客削除エラー:",
+      error
+    );
+
+
+    if (
+      error?.message?.includes(
+        "company_has_content"
+      )
+    ) {
+
+      alert(
+        "この顧客にはトップ画像・メニュー・診療科・お知らせなどのデータがあります。\n\n安全のため、この画面からは削除できません。"
+      );
+
+    } else {
+
+      alert(
+        "顧客の削除に失敗しました。"
+      );
+
+    }
+
+  } finally {
+
+    setBusy(
+      button,
+      false,
+      "この顧客を削除"
+    );
+
+  }
+}
+
+
+/* ========================================
+   登録完了
 ======================================== */
 
 function showResult(slug) {
@@ -688,11 +1121,15 @@ function showResult(slug) {
 
 
   const adminUrl =
-    `${baseUrl}/index.html?company=${encodeURIComponent(slug)}`;
+    `${baseUrl}/index.html?company=${encodeURIComponent(
+      slug
+    )}`;
 
 
   const publicUrl =
-    `${baseUrl}/site.html?company=${encodeURIComponent(slug)}`;
+    `${baseUrl}/site.html?company=${encodeURIComponent(
+      slug
+    )}`;
 
 
   const adminLink =
@@ -710,6 +1147,7 @@ function showResult(slug) {
   adminLink.href =
     adminUrl;
 
+
   adminLink.textContent =
     adminUrl;
 
@@ -717,15 +1155,15 @@ function showResult(slug) {
   publicLink.href =
     publicUrl;
 
+
   publicLink.textContent =
     publicUrl;
 
 
-  document
-    .getElementById(
-      "resultCard"
-    )
-    .hidden = false;
+  document.getElementById(
+    "resultCard"
+  ).hidden =
+    false;
 }
 
 
@@ -737,12 +1175,14 @@ function resetForm() {
 
   document.getElementById(
     "companyName"
-  ).value = "";
+  ).value =
+    "";
 
 
   document.getElementById(
     "companySlug"
-  ).value = "";
+  ).value =
+    "";
 
 
   document.getElementById(
@@ -753,12 +1193,14 @@ function resetForm() {
 
   document.getElementById(
     "customerUserId"
-  ).value = "";
+  ).value =
+    "";
 
 
   document.getElementById(
     "resultCard"
-  ).hidden = true;
+  ).hidden =
+    true;
 
 
   window.scrollTo({
@@ -768,10 +1210,55 @@ function resetForm() {
 }
 
 
+function isValidSlug(value) {
+
+  return /^[a-z0-9-]+$/
+    .test(value);
+}
+
+
 function isValidUuid(value) {
 
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
     .test(value);
+}
+
+
+/* ========================================
+   エラー
+======================================== */
+
+function handleDatabaseError(
+  error
+) {
+
+  if (
+    error?.code === "23505"
+  ) {
+
+    alert(
+      "このslugはすでに使用されています。"
+    );
+
+    return;
+  }
+
+
+  if (
+    error?.code === "23503"
+  ) {
+
+    alert(
+      "顧客ユーザーIDが見つかりません。"
+    );
+
+    return;
+  }
+
+
+  alert(
+    "処理に失敗しました。"
+  );
 }
 
 
@@ -787,6 +1274,7 @@ function setBusy(
 
   button.disabled =
     busy;
+
 
   button.textContent =
     text;
@@ -816,13 +1304,16 @@ function showToast(message) {
 
 
   showToast.timer =
-    setTimeout(() => {
+    setTimeout(
+      () => {
 
-      toast.classList.remove(
-        "show"
-      );
+        toast.classList.remove(
+          "show"
+        );
 
-    }, 2400);
+      },
+      2400
+    );
 }
 
 
@@ -843,9 +1334,11 @@ async function logout() {
 
     console.error(error);
 
+
     showToast(
       "ログアウトに失敗しました"
     );
+
 
     return;
   }
