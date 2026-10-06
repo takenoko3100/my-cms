@@ -11,6 +11,17 @@ const supabaseClient =
   );
 
 
+const BUSINESS_TYPE_LABELS = {
+  restaurant: "飲食店",
+  hospital: "病院・クリニック",
+  video_editing: "動画編集",
+  auto_repair: "自動車整備"
+};
+
+
+let clients = [];
+
+
 document.addEventListener(
   "DOMContentLoaded",
   init
@@ -47,8 +58,14 @@ async function init() {
 
 
   bindEvents();
+
+  await loadClients();
 }
 
+
+/* ========================================
+   ログイン確認
+======================================== */
 
 async function requireSession() {
 
@@ -108,6 +125,10 @@ async function checkCreatorAdmin(
 }
 
 
+/* ========================================
+   イベント
+======================================== */
+
 function bindEvents() {
 
   document
@@ -140,6 +161,10 @@ function bindEvents() {
     );
 }
 
+
+/* ========================================
+   新規顧客登録
+======================================== */
 
 async function createClient() {
 
@@ -304,6 +329,9 @@ async function createClient() {
     );
 
 
+    await loadClients();
+
+
   } catch (error) {
 
     console.error(
@@ -347,6 +375,311 @@ async function createClient() {
   }
 }
 
+
+/* ========================================
+   顧客一覧
+======================================== */
+
+async function loadClients() {
+
+  const list =
+    document.getElementById(
+      "clientList"
+    );
+
+
+  list.replaceChildren();
+
+
+  const loading =
+    document.createElement("div");
+
+  loading.className =
+    "client-loading";
+
+  loading.textContent =
+    "読み込み中...";
+
+  list.appendChild(
+    loading
+  );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("company_info")
+      .select(
+        "id, name, slug, business_type"
+      )
+      .order(
+        "id",
+        { ascending: false }
+      );
+
+
+  if (error) {
+
+    console.error(
+      "顧客一覧取得エラー:",
+      error
+    );
+
+    list.replaceChildren();
+
+    const errorMessage =
+      document.createElement("div");
+
+    errorMessage.className =
+      "client-empty";
+
+    errorMessage.textContent =
+      "顧客一覧を読み込めませんでした";
+
+    list.appendChild(
+      errorMessage
+    );
+
+    return;
+  }
+
+
+  clients =
+    data ?? [];
+
+
+  renderClients();
+}
+
+
+function renderClients() {
+
+  const list =
+    document.getElementById(
+      "clientList"
+    );
+
+
+  const count =
+    document.getElementById(
+      "clientCount"
+    );
+
+
+  list.replaceChildren();
+
+
+  count.textContent =
+    `${clients.length}件`;
+
+
+  if (
+    clients.length === 0
+  ) {
+
+    const empty =
+      document.createElement("div");
+
+    empty.className =
+      "client-empty";
+
+    empty.textContent =
+      "まだ顧客が登録されていません";
+
+    list.appendChild(
+      empty
+    );
+
+    return;
+  }
+
+
+  clients.forEach(
+    (client) => {
+
+      const card =
+        createClientCard(
+          client
+        );
+
+      list.appendChild(
+        card
+      );
+
+    }
+  );
+}
+
+
+function createClientCard(
+  client
+) {
+
+  const card =
+    document.createElement(
+      "article"
+    );
+
+  card.className =
+    "client-card";
+
+
+  const top =
+    document.createElement(
+      "div"
+    );
+
+  top.className =
+    "client-card-top";
+
+
+  const info =
+    document.createElement(
+      "div"
+    );
+
+
+  const name =
+    document.createElement(
+      "h3"
+    );
+
+  name.className =
+    "client-name";
+
+  name.textContent =
+    client.name ||
+    "名称未設定";
+
+
+  const type =
+    document.createElement(
+      "span"
+    );
+
+  type.className =
+    "client-business-type";
+
+  type.textContent =
+    BUSINESS_TYPE_LABELS[
+      client.business_type
+    ] ||
+    client.business_type ||
+    "業種未設定";
+
+
+  const slug =
+    document.createElement(
+      "p"
+    );
+
+  slug.className =
+    "client-slug";
+
+  slug.textContent =
+    `slug：${client.slug || "-"}`;
+
+
+  info.appendChild(
+    name
+  );
+
+  info.appendChild(
+    type
+  );
+
+  info.appendChild(
+    slug
+  );
+
+
+  top.appendChild(
+    info
+  );
+
+
+  const actions =
+    document.createElement(
+      "div"
+    );
+
+  actions.className =
+    "client-actions";
+
+
+  const adminLink =
+    document.createElement(
+      "a"
+    );
+
+  adminLink.className =
+    "client-action-link admin";
+
+  adminLink.textContent =
+    "管理画面";
+
+  adminLink.target =
+    "_blank";
+
+  adminLink.rel =
+    "noopener noreferrer";
+
+  adminLink.href =
+    `index.html?company=${encodeURIComponent(
+      client.slug
+    )}`;
+
+
+  const publicLink =
+    document.createElement(
+      "a"
+    );
+
+  publicLink.className =
+    "client-action-link public";
+
+  publicLink.textContent =
+    "公開ページ";
+
+  publicLink.target =
+    "_blank";
+
+  publicLink.rel =
+    "noopener noreferrer";
+
+  publicLink.href =
+    `site.html?company=${encodeURIComponent(
+      client.slug
+    )}`;
+
+
+  actions.appendChild(
+    adminLink
+  );
+
+  actions.appendChild(
+    publicLink
+  );
+
+
+  card.appendChild(
+    top
+  );
+
+  card.appendChild(
+    actions
+  );
+
+
+  return card;
+}
+
+
+/* ========================================
+   登録完了表示
+======================================== */
 
 function showResult(slug) {
 
@@ -396,6 +729,10 @@ function showResult(slug) {
 }
 
 
+/* ========================================
+   フォーム
+======================================== */
+
 function resetForm() {
 
   document.getElementById(
@@ -437,6 +774,10 @@ function isValidUuid(value) {
     .test(value);
 }
 
+
+/* ========================================
+   UI
+======================================== */
 
 function setBusy(
   button,
@@ -484,6 +825,10 @@ function showToast(message) {
     }, 2400);
 }
 
+
+/* ========================================
+   ログアウト
+======================================== */
 
 async function logout() {
 

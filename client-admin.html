@@ -8,7 +8,7 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>顧客登録 | TAKENOKO CMS</title>
+  <title>顧客管理 | TAKENOKO CMS</title>
 
   <link
     rel="stylesheet"
@@ -45,6 +45,10 @@
 
 
   <main class="container">
+
+    <!-- ================================
+         新規顧客登録
+    ================================= -->
 
     <section class="intro">
 
@@ -162,6 +166,10 @@
     </section>
 
 
+    <!-- ================================
+         登録完了
+    ================================= -->
+
     <section
       id="resultCard"
       class="card result-card"
@@ -175,6 +183,7 @@
       <h2>
         登録完了 🎉
       </h2>
+
 
       <div class="result-item">
 
@@ -215,6 +224,51 @@
       >
         続けて登録する
       </button>
+
+    </section>
+
+
+    <!-- ================================
+         顧客一覧
+    ================================= -->
+
+    <section class="client-section">
+
+      <div class="client-section-header">
+
+        <div>
+
+          <p class="eyebrow">
+            CLIENTS
+          </p>
+
+          <h2>
+            登録済み顧客
+          </h2>
+
+        </div>
+
+
+        <p
+          id="clientCount"
+          class="client-count"
+        >
+          0件
+        </p>
+
+      </div>
+
+
+      <div
+        id="clientList"
+        class="client-list"
+      >
+
+        <div class="client-loading">
+          読み込み中...
+        </div>
+
+      </div>
 
     </section>
 
