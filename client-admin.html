@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>顧客登録 | TAKENOKO CMS</title>
+
+  <link
+    rel="stylesheet"
+    href="client-admin.css"
+  >
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="client-admin.js" defer></script>
+</head>
+
+<body>
+
+  <header class="header">
+
+    <div>
+      <p class="header-label">
+        TAKENOKO CMS
+      </p>
+
+      <h1>
+        顧客管理
+      </h1>
+    </div>
+
+    <button
+      id="logoutButton"
+      class="logout-button"
+      type="button"
+    >
+      ログアウト
+    </button>
+
+  </header>
+
+
+  <main class="container">
+
+    <section class="intro">
+
+      <p class="eyebrow">
+        NEW CLIENT
+      </p>
+
+      <h2>
+        新規顧客登録
+      </h2>
+
+      <p>
+        新しい顧客の会社情報と
+        CMS管理者を登録します。
+      </p>
+
+    </section>
+
+
+    <section class="card">
+
+      <div class="form-group">
+
+        <label for="companyName">
+          会社・店舗名
+        </label>
+
+        <input
+          id="companyName"
+          type="text"
+          placeholder="たけのこクリニック"
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="companySlug">
+          slug
+        </label>
+
+        <input
+          id="companySlug"
+          type="text"
+          placeholder="takenoko-clinic"
+          autocomplete="off"
+        >
+
+        <p class="help-text">
+          半角英数字とハイフンで入力
+        </p>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="businessType">
+          業種
+        </label>
+
+        <select id="businessType">
+
+          <option value="restaurant">
+            飲食店
+          </option>
+
+          <option value="hospital">
+            病院・クリニック
+          </option>
+
+          <option value="video_editing">
+            動画編集
+          </option>
+
+          <option value="auto_repair">
+            自動車整備
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="customerUserId">
+          顧客ユーザーID
+        </label>
+
+        <input
+          id="customerUserId"
+          type="text"
+          placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+          autocomplete="off"
+        >
+
+        <p class="help-text">
+          Supabase Authentication の User UID
+        </p>
+
+      </div>
+
+
+      <button
+        id="createClientButton"
+        class="primary-button"
+        type="button"
+      >
+        顧客を登録する
+      </button>
+
+    </section>
+
+
+    <section
+      id="resultCard"
+      class="card result-card"
+      hidden
+    >
+
+      <p class="eyebrow">
+        COMPLETE
+      </p>
+
+      <h2>
+        登録完了 🎉
+      </h2>
+
+      <div class="result-item">
+
+        <span>
+          管理画面
+        </span>
+
+        <a
+          id="adminUrl"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+        ></a>
+
+      </div>
+
+
+      <div class="result-item">
+
+        <span>
+          公開ページ
+        </span>
+
+        <a
+          id="publicUrl"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+        ></a>
+
+      </div>
+
+
+      <button
+        id="createAnotherButton"
+        class="secondary-button"
+        type="button"
+      >
+        続けて登録する
+      </button>
+
+    </section>
+
+  </main>
+
+
+  <div
+    id="toastMessage"
+    class="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+</body>
+</html>
