@@ -1014,9 +1014,130 @@ async function loadPortfolioItems() {
     ========================== */
 
     if (
-      item.media_type === "video" &&
+  item.media_type === "video" &&
+  item.video_url
+) {
+
+  const directVideoUrl =
+    getDirectVideoUrl(
       item.video_url
-    ) {
+    );
+
+
+  const embedUrl =
+    getSafeVideoEmbedUrl(
+      item.video_url
+    );
+
+
+  /* MP4 / WebMを直接再生 */
+
+  if (directVideoUrl) {
+
+    const video =
+      document.createElement(
+        "video"
+      );
+
+
+    video.src =
+      directVideoUrl;
+
+
+    video.className =
+      "portfolio-video";
+
+
+    video.controls =
+      true;
+
+
+    video.preload =
+      "metadata";
+
+
+    video.playsInline =
+      true;
+
+
+    if (item.image_url) {
+
+      video.poster =
+        item.image_url;
+
+    }
+
+
+    visual.appendChild(
+      video
+    );
+
+
+  /* YouTube / Vimeo */
+
+  } else if (embedUrl) {
+
+    const iframe =
+      document.createElement(
+        "iframe"
+      );
+
+
+    iframe.src =
+      embedUrl;
+
+
+    iframe.title =
+      item.title ||
+      "動画";
+
+
+    iframe.loading =
+      "lazy";
+
+
+    iframe.allow =
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+
+
+    iframe.referrerPolicy =
+      "strict-origin-when-cross-origin";
+
+
+    iframe.allowFullscreen =
+      true;
+
+
+    iframe.className =
+      "portfolio-video";
+
+
+    visual.appendChild(
+      iframe
+    );
+
+
+  } else {
+
+    const placeholder =
+      document.createElement(
+        "div"
+      );
+
+
+    placeholder.className =
+      "portfolio-placeholder";
+
+
+    placeholder.textContent =
+      "VIDEO";
+
+
+    visual.appendChild(
+      placeholder
+    );
+
+  }
 
       const embedUrl =
         getSafeVideoEmbedUrl(
@@ -1249,6 +1370,56 @@ async function loadPortfolioItems() {
 /* ========================================
    YouTube / Vimeo URL
 ======================================== */
+
+function getDirectVideoUrl(
+  videoUrl
+) {
+
+  if (!videoUrl) {
+    return null;
+  }
+
+
+  try {
+
+    const url =
+      new URL(videoUrl);
+
+
+    const isSupabaseVideo =
+      url.hostname ===
+        "cshieomhxpuaclggicle.supabase.co" &&
+      url.pathname.includes(
+        "/portfolio-videos/"
+      );
+
+
+    const isVideoFile =
+      /\.(mp4|webm)$/i.test(
+        url.pathname
+      );
+
+
+    if (
+      isSupabaseVideo &&
+      isVideoFile
+    ) {
+
+      return url.href;
+
+    }
+
+
+  } catch {
+
+    return null;
+
+  }
+
+
+  return null;
+
+}
 
 function getSafeVideoEmbedUrl(
   videoUrl
