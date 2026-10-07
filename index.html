@@ -964,21 +964,21 @@
 
 
       <label
-        id="portfolioVideoUrlField"
-        class="business-field-hidden"
-      >
-        動画URL
+  id="portfolioVideoFileField"
+  class="business-field-hidden"
+>
+  動画ファイル
 
-        <input
-          type="url"
-          id="portfolioVideoUrl"
-          placeholder="https://www.youtube.com/watch?v=..."
-        >
+  <input
+    type="file"
+    id="portfolioVideoFile"
+    accept="video/mp4,video/webm"
+  >
 
-        <span class="form-note">
-          YouTube・Vimeoなどの公開URLを入力
-        </span>
-      </label>
+  <span class="form-note">
+    MP4・WebM、50MB以下
+  </span>
+</label>
 
 
       <div class="switch-list">
@@ -1148,7 +1148,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="editor.js?v=8"></script>
+  <script src="editor.js?v=9"></script>
 
 </body>
 </html>

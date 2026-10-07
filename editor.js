@@ -1372,13 +1372,6 @@ function openPortfolioModal(
     item.media_type ||
     "photo";
 
-
-  document.getElementById(
-    "portfolioVideoUrl"
-  ).value =
-    item.video_url ?? "";
-
-
   document.getElementById(
     "portfolioCategory"
   ).value =
@@ -1442,8 +1435,8 @@ function resetPortfolioForm() {
 
 
   document.getElementById(
-    "portfolioVideoUrl"
-  ).value = "";
+  "portfolioVideoFile"
+).value = "";
 
 
   document.getElementById(
@@ -1479,9 +1472,9 @@ function updatePortfolioMediaFields() {
     )?.value || "photo";
 
 
-  const videoField =
+  const videoFileField =
     document.getElementById(
-      "portfolioVideoUrlField"
+      "portfolioVideoFileField"
     );
 
 
@@ -1491,9 +1484,9 @@ function updatePortfolioMediaFields() {
     );
 
 
-  if (videoField) {
+  if (videoFileField) {
 
-    videoField.classList.toggle(
+    videoFileField.classList.toggle(
       "business-field-hidden",
       mediaType !== "video"
     );
@@ -1509,6 +1502,7 @@ function updatePortfolioMediaFields() {
         : "写真";
 
   }
+
 }
 
 
@@ -1544,12 +1538,6 @@ async function savePortfolioItem() {
     ).value;
 
 
-  const videoUrl =
-    document.getElementById(
-      "portfolioVideoUrl"
-    ).value.trim();
-
-
   const category =
     document.getElementById(
       "portfolioCategory"
@@ -1571,6 +1559,12 @@ async function savePortfolioItem() {
   const imageFile =
     document.getElementById(
       "portfolioImage"
+    ).files?.[0];
+
+
+  const videoFile =
+    document.getElementById(
+      "portfolioVideoFile"
     ).files?.[0];
 
 
@@ -1624,24 +1618,12 @@ async function savePortfolioItem() {
 
   if (
     mediaType === "video" &&
-    !videoUrl
+    !videoFile &&
+    !existingItem?.video_url
   ) {
 
     alert(
-      "動画URLを入力してください。"
-    );
-
-    return;
-  }
-
-
-  if (
-    mediaType === "video" &&
-    !isValidWebUrl(videoUrl)
-  ) {
-
-    alert(
-      "動画URLを確認してください。"
+      "動画ファイルを選択してください。"
     );
 
     return;
@@ -1674,6 +1656,15 @@ async function savePortfolioItem() {
   }
 
 
+  if (
+    videoFile &&
+    !validateVideo(videoFile)
+  ) {
+
+    return;
+  }
+
+
   setBusy(
     button,
     true,
@@ -1688,7 +1679,16 @@ async function savePortfolioItem() {
     null;
 
 
+  let videoUrl =
+    existingItem?.video_url ??
+    null;
+
+
   let newImageUrl =
+    null;
+
+
+  let newVideoUrl =
     null;
 
 
@@ -1709,6 +1709,33 @@ async function savePortfolioItem() {
     }
 
 
+    if (
+      mediaType === "video" &&
+      videoFile
+    ) {
+
+      newVideoUrl =
+        await uploadPortfolioVideo(
+          videoFile
+        );
+
+
+      videoUrl =
+        newVideoUrl;
+
+    }
+
+
+    if (
+      mediaType === "photo"
+    ) {
+
+      videoUrl =
+        null;
+
+    }
+
+
     const values = {
 
       title,
@@ -1722,9 +1749,7 @@ async function savePortfolioItem() {
         imageUrl,
 
       video_url:
-        mediaType === "video"
-          ? videoUrl
-          : null,
+        videoUrl,
 
       category:
         category || null,
@@ -1803,6 +1828,32 @@ async function savePortfolioItem() {
     }
 
 
+    if (
+      videoFile &&
+      existingItem?.video_url &&
+      existingItem.video_url !==
+        newVideoUrl
+    ) {
+
+      await removePortfolioVideoByPublicUrl(
+        existingItem.video_url
+      );
+
+    }
+
+
+    if (
+      mediaType === "photo" &&
+      existingItem?.video_url
+    ) {
+
+      await removePortfolioVideoByPublicUrl(
+        existingItem.video_url
+      );
+
+    }
+
+
     closeModal(
       "portfolioModal"
     );
@@ -1842,6 +1893,7 @@ async function savePortfolioItem() {
     );
 
   }
+
 }
 
 
@@ -1938,6 +1990,13 @@ async function deleteCurrentPortfolioItem() {
 
   }
 
+  if (item?.video_url) {
+
+  await removePortfolioVideoByPublicUrl(
+    item.video_url
+  );
+
+}
 
   setBusy(
     button,
@@ -2234,6 +2293,166 @@ async function deleteCurrentNewsItem() {
 /* ========================================
    Storage
 ======================================== */
+
+function validateVideo(file) {
+
+  const allowedTypes = [
+    "video/mp4",
+    "video/webm"
+  ];
+
+
+  if (
+    !allowedTypes.includes(
+      file.type
+    )
+  ) {
+
+    alert(
+      "MP4またはWebMの動画を選んでください。"
+    );
+
+    return false;
+  }
+
+
+  if (
+    file.size >
+    50 * 1024 * 1024
+  ) {
+
+    alert(
+      "動画は50MB以下のものを選んでください。"
+    );
+
+    return false;
+  }
+
+
+  return true;
+
+}
+
+
+async function uploadPortfolioVideo(
+  file
+) {
+
+  const extension =
+    file.name
+      .split(".")
+      .pop()
+      ?.toLowerCase() ||
+    "mp4";
+
+
+  const fileName =
+    `${currentCompanyId}/portfolio-${Date.now()}-${crypto.randomUUID()}.${extension}`;
+
+
+  const { error } =
+    await supabaseClient.storage
+      .from(
+        "portfolio-videos"
+      )
+      .upload(
+        fileName,
+        file,
+        {
+          cacheControl:
+            "3600",
+
+          upsert:
+            false,
+
+          contentType:
+            file.type
+        }
+      );
+
+
+  if (error) {
+    throw error;
+  }
+
+
+  const { data } =
+    supabaseClient.storage
+      .from(
+        "portfolio-videos"
+      )
+      .getPublicUrl(
+        fileName
+      );
+
+
+  return data.publicUrl;
+
+}
+
+
+async function removePortfolioVideoByPublicUrl(
+  url
+) {
+
+  try {
+
+    if (
+      !url ||
+      !url.includes(
+        "/portfolio-videos/"
+      )
+    ) {
+
+      return;
+    }
+
+
+    const path =
+      decodeURIComponent(
+        url
+          .split(
+            "/portfolio-videos/"
+          )[1]
+          .split("?")[0]
+      );
+
+
+    if (!path) {
+      return;
+    }
+
+
+    const { error } =
+      await supabaseClient.storage
+        .from(
+          "portfolio-videos"
+        )
+        .remove([
+          path
+        ]);
+
+
+    if (error) {
+
+      console.warn(
+        "動画削除:",
+        error
+      );
+
+    }
+
+
+  } catch (error) {
+
+    console.warn(
+      "動画削除処理:",
+      error
+    );
+
+  }
+
+}
 
 function validateImage(file) {
   if (!file.type.startsWith("image/")) {
