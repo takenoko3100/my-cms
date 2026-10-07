@@ -1,0 +1,186 @@
+/* ========================================
+   顧客一覧ボタン
+======================================== */
+
+.client-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  margin-top: 20px !important;
+}
+
+.client-action-link {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  min-height: 44px;
+
+  padding: 10px 14px;
+
+  border-radius: 10px;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.client-action-link.admin {
+  background: #342e2a;
+  color: #fff;
+}
+
+.client-action-link.public {
+  border: 1px solid rgba(47, 41, 37, 0.14);
+
+  background: #fff;
+  color: #342e2a;
+}
+
+.client-action-button {
+  grid-column: 1 / -1 !important;
+
+  width: 100% !important;
+  min-height: 44px;
+
+  padding: 10px 14px;
+
+  border: 1px solid rgba(47, 41, 37, 0.14);
+  border-radius: 10px;
+
+  background: #eee8e2;
+  color: #342e2a;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* ========================================
+   編集モーダル
+======================================== */
+
+.modal {
+  position: fixed !important;
+
+  inset: 0 !important;
+
+  z-index: 1000 !important;
+
+  display: none !important;
+
+  overflow-y: auto !important;
+
+  padding: 24px 16px !important;
+
+  background: rgba(35, 30, 27, 0.55) !important;
+}
+
+.modal.open {
+  display: block !important;
+}
+
+.modal-backdrop {
+  display: none !important;
+}
+
+.modal-panel {
+  position: relative !important;
+
+  width: min(560px, 100%) !important;
+
+  margin: 0 auto !important;
+
+  padding: 28px !important;
+
+  border-radius: 20px !important;
+
+  background: #fff !important;
+
+  box-shadow:
+    0 20px 60px
+    rgba(0, 0, 0, 0.20) !important;
+}
+
+.modal-header {
+  display: flex !important;
+
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+
+  gap: 20px;
+
+  margin-bottom: 26px;
+}
+
+.modal-header h2 {
+  margin: 0;
+
+  font-size: 24px;
+}
+
+.modal-close {
+  flex-shrink: 0;
+
+  width: 42px;
+  height: 42px;
+
+  border: 1px solid rgba(47, 41, 37, 0.12);
+  border-radius: 50%;
+
+  background: #fff;
+  color: #342e2a;
+
+  font-size: 24px;
+  line-height: 1;
+}
+
+.modal-panel .primary-button {
+  margin-top: 8px;
+}
+
+.danger-button {
+  width: 100% !important;
+
+  min-height: 48px;
+
+  margin-top: 12px;
+
+  border: 1px solid #c95e5e;
+  border-radius: 12px;
+
+  background: #fff;
+  color: #a33d3d;
+
+  font-weight: 600;
+}
+
+
+/* ========================================
+   スマホ
+======================================== */
+
+@media (max-width: 600px) {
+
+  .client-actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .client-action-button {
+    grid-column: auto !important;
+  }
+
+  .modal {
+    padding: 12px !important;
+  }
+
+  .modal-panel {
+    width: 100% !important;
+
+    padding: 20px !important;
+
+    border-radius: 18px !important;
+  }
+
+}
