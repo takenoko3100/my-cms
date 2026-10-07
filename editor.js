@@ -10,6 +10,7 @@ const supabaseClient = supabase.createClient(
 let currentCompanyId = null;
 let currentCompany = null;
 let menuItems = [];
+let portfolioItems = [];
 let newsItems = [];
 
 const BUSINESS_TYPE_SETTINGS = {
@@ -112,10 +113,11 @@ async function init() {
   bindEvents();
 
   await Promise.all([
-    loadCompanyInfo(),
-    loadMenuItems(),
-    loadNews()
-  ]);
+  loadCompanyInfo(),
+  loadMenuItems(),
+  loadPortfolioItems(),
+  loadNews()
+]);
 }
 
 
@@ -276,6 +278,22 @@ function bindEvents() {
   document
     .getElementById("deleteMenuButton")
     .addEventListener("click", deleteCurrentMenuItem);
+
+    document
+  .getElementById("addPortfolioQuickButton")
+  .addEventListener("click", () => openPortfolioModal());
+
+document
+  .getElementById("savePortfolioButton")
+  .addEventListener("click", savePortfolioItem);
+
+document
+  .getElementById("deletePortfolioButton")
+  .addEventListener("click", deleteCurrentPortfolioItem);
+
+document
+  .getElementById("portfolioMediaType")
+  .addEventListener("change", updatePortfolioMediaFields);
 
   document
     .getElementById("addNewsQuickButton")
@@ -962,6 +980,1007 @@ async function deleteCurrentMenuItem() {
   await loadMenuItems();
 }
 
+/* ========================================
+   ポートフォリオ
+======================================== */
+
+async function loadPortfolioItems() {
+
+  const { data, error } =
+    await supabaseClient
+      .from("portfolio_items")
+      .select("*")
+      .eq("company_id", currentCompanyId)
+      .order("sort_order", {
+        ascending: true
+      })
+      .order("created_at", {
+        ascending: false
+      });
+
+
+  if (error) {
+
+    console.error(
+      "ポートフォリオ取得エラー:",
+      error
+    );
+
+    showToast(
+      "制作実績を読み込めませんでした"
+    );
+
+    return;
+  }
+
+
+  portfolioItems =
+    data ?? [];
+
+
+  renderPortfolioItems();
+}
+
+
+function renderPortfolioItems() {
+
+  const list =
+    document.getElementById(
+      "visualPortfolioList"
+    );
+
+
+  if (!list) {
+    return;
+  }
+
+
+  list.replaceChildren();
+
+
+  if (
+    portfolioItems.length === 0
+  ) {
+
+    list.appendChild(
+      createEmptyState(
+        "まだ制作実績がありません"
+      )
+    );
+
+    return;
+  }
+
+
+  portfolioItems.forEach(
+    (item) => {
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+
+      button.type =
+        "button";
+
+
+      button.className =
+        "editor-portfolio-card";
+
+
+      button.addEventListener(
+        "click",
+        () =>
+          openPortfolioModal(
+            item.id
+          )
+      );
+
+
+      const media =
+        document.createElement(
+          "div"
+        );
+
+
+      media.className =
+        "editor-portfolio-media";
+
+
+      if (item.image_url) {
+
+        const image =
+          document.createElement(
+            "img"
+          );
+
+
+        image.src =
+          item.image_url;
+
+
+        image.alt =
+          item.title || "";
+
+
+        image.className =
+          "editor-portfolio-image";
+
+
+        media.appendChild(
+          image
+        );
+
+      } else {
+
+        const placeholder =
+          document.createElement(
+            "div"
+          );
+
+
+        placeholder.className =
+          "editor-portfolio-placeholder";
+
+
+        placeholder.textContent =
+          item.media_type === "video"
+            ? "▶ VIDEO"
+            : "PHOTO";
+
+
+        media.appendChild(
+          placeholder
+        );
+
+      }
+
+
+      if (
+        item.media_type === "video"
+      ) {
+
+        const videoBadge =
+          document.createElement(
+            "span"
+          );
+
+
+        videoBadge.className =
+          "portfolio-video-badge";
+
+
+        videoBadge.textContent =
+          "▶";
+
+
+        media.appendChild(
+          videoBadge
+        );
+
+      }
+
+
+      button.appendChild(
+        media
+      );
+
+
+      const meta =
+        document.createElement(
+          "div"
+        );
+
+
+      meta.className =
+        "editor-portfolio-meta";
+
+
+      const category =
+        document.createElement(
+          "p"
+        );
+
+
+      category.className =
+        "editor-portfolio-category";
+
+
+      category.textContent =
+        item.category ||
+        (
+          item.media_type === "video"
+            ? "VIDEO"
+            : "PHOTO"
+        );
+
+
+      meta.appendChild(
+        category
+      );
+
+
+      const title =
+        document.createElement(
+          "h3"
+        );
+
+
+      title.textContent =
+        item.title || "";
+
+
+      meta.appendChild(
+        title
+      );
+
+
+      if (item.description) {
+
+        const description =
+          document.createElement(
+            "p"
+          );
+
+
+        description.className =
+          "editor-portfolio-description";
+
+
+        description.textContent =
+          item.description;
+
+
+        meta.appendChild(
+          description
+        );
+
+      }
+
+
+      if (
+        item.is_visible === false
+      ) {
+
+        const badgeRow =
+          document.createElement(
+            "div"
+          );
+
+
+        badgeRow.className =
+          "badge-row";
+
+
+        badgeRow.appendChild(
+          createBadge(
+            "非公開",
+            "hidden-item"
+          )
+        );
+
+
+        meta.appendChild(
+          badgeRow
+        );
+
+      }
+
+
+      button.appendChild(
+        meta
+      );
+
+
+      list.appendChild(
+        button
+      );
+
+    }
+  );
+}
+
+
+function openPortfolioModal(
+  itemId = null
+) {
+
+  resetPortfolioForm();
+
+
+  const title =
+    document.getElementById(
+      "portfolioModalTitle"
+    );
+
+
+  const deleteButton =
+    document.getElementById(
+      "deletePortfolioButton"
+    );
+
+
+  const saveButton =
+    document.getElementById(
+      "savePortfolioButton"
+    );
+
+
+  if (!itemId) {
+
+    title.textContent =
+      "制作実績を追加";
+
+
+    deleteButton.hidden =
+      true;
+
+
+    saveButton.textContent =
+      "追加する";
+
+
+    updatePortfolioMediaFields();
+
+
+    openModal(
+      "portfolioModal"
+    );
+
+
+    return;
+  }
+
+
+  const item =
+    portfolioItems.find(
+      (portfolioItem) =>
+        String(
+          portfolioItem.id
+        ) ===
+        String(itemId)
+    );
+
+
+  if (!item) {
+    return;
+  }
+
+
+  document.getElementById(
+    "portfolioEditId"
+  ).value =
+    item.id;
+
+
+  document.getElementById(
+    "portfolioTitle"
+  ).value =
+    item.title ?? "";
+
+
+  document.getElementById(
+    "portfolioDescription"
+  ).value =
+    item.description ?? "";
+
+
+  document.getElementById(
+    "portfolioMediaType"
+  ).value =
+    item.media_type ||
+    "photo";
+
+
+  document.getElementById(
+    "portfolioVideoUrl"
+  ).value =
+    item.video_url ?? "";
+
+
+  document.getElementById(
+    "portfolioCategory"
+  ).value =
+    item.category ?? "";
+
+
+  document.getElementById(
+    "portfolioSortOrder"
+  ).value =
+    item.sort_order ?? 0;
+
+
+  document.getElementById(
+    "portfolioVisible"
+  ).checked =
+    item.is_visible ?? true;
+
+
+  title.textContent =
+    "制作実績を編集";
+
+
+  deleteButton.hidden =
+    false;
+
+
+  saveButton.textContent =
+    "変更を保存";
+
+
+  updatePortfolioMediaFields();
+
+
+  openModal(
+    "portfolioModal"
+  );
+}
+
+
+function resetPortfolioForm() {
+
+  document.getElementById(
+    "portfolioEditId"
+  ).value = "";
+
+
+  document.getElementById(
+    "portfolioTitle"
+  ).value = "";
+
+
+  document.getElementById(
+    "portfolioDescription"
+  ).value = "";
+
+
+  document.getElementById(
+    "portfolioMediaType"
+  ).value =
+    "photo";
+
+
+  document.getElementById(
+    "portfolioVideoUrl"
+  ).value = "";
+
+
+  document.getElementById(
+    "portfolioCategory"
+  ).value = "";
+
+
+  document.getElementById(
+    "portfolioSortOrder"
+  ).value = "";
+
+
+  document.getElementById(
+    "portfolioImage"
+  ).value = "";
+
+
+  document.getElementById(
+    "portfolioVisible"
+  ).checked =
+    true;
+
+
+  updatePortfolioMediaFields();
+}
+
+
+function updatePortfolioMediaFields() {
+
+  const mediaType =
+    document.getElementById(
+      "portfolioMediaType"
+    )?.value || "photo";
+
+
+  const videoField =
+    document.getElementById(
+      "portfolioVideoUrlField"
+    );
+
+
+  const imageLabel =
+    document.getElementById(
+      "portfolioImageLabel"
+    );
+
+
+  if (videoField) {
+
+    videoField.classList.toggle(
+      "business-field-hidden",
+      mediaType !== "video"
+    );
+
+  }
+
+
+  if (imageLabel) {
+
+    imageLabel.textContent =
+      mediaType === "video"
+        ? "サムネイル画像"
+        : "写真";
+
+  }
+}
+
+
+async function savePortfolioItem() {
+
+  const button =
+    document.getElementById(
+      "savePortfolioButton"
+    );
+
+
+  const editId =
+    document.getElementById(
+      "portfolioEditId"
+    ).value;
+
+
+  const title =
+    document.getElementById(
+      "portfolioTitle"
+    ).value.trim();
+
+
+  const description =
+    document.getElementById(
+      "portfolioDescription"
+    ).value.trim();
+
+
+  const mediaType =
+    document.getElementById(
+      "portfolioMediaType"
+    ).value;
+
+
+  const videoUrl =
+    document.getElementById(
+      "portfolioVideoUrl"
+    ).value.trim();
+
+
+  const category =
+    document.getElementById(
+      "portfolioCategory"
+    ).value.trim();
+
+
+  const sortText =
+    document.getElementById(
+      "portfolioSortOrder"
+    ).value.trim();
+
+
+  const isVisible =
+    document.getElementById(
+      "portfolioVisible"
+    ).checked;
+
+
+  const imageFile =
+    document.getElementById(
+      "portfolioImage"
+    ).files?.[0];
+
+
+  if (!title) {
+
+    alert(
+      "タイトルを入力してください。"
+    );
+
+    return;
+  }
+
+
+  if (
+    !["photo", "video"].includes(
+      mediaType
+    )
+  ) {
+
+    alert(
+      "作品の種類を確認してください。"
+    );
+
+    return;
+  }
+
+
+  const existingItem =
+    editId
+      ? portfolioItems.find(
+          (item) =>
+            String(item.id) ===
+            String(editId)
+        )
+      : null;
+
+
+  if (
+    mediaType === "photo" &&
+    !imageFile &&
+    !existingItem?.image_url
+  ) {
+
+    alert(
+      "写真を選択してください。"
+    );
+
+    return;
+  }
+
+
+  if (
+    mediaType === "video" &&
+    !videoUrl
+  ) {
+
+    alert(
+      "動画URLを入力してください。"
+    );
+
+    return;
+  }
+
+
+  if (
+    mediaType === "video" &&
+    !isValidWebUrl(videoUrl)
+  ) {
+
+    alert(
+      "動画URLを確認してください。"
+    );
+
+    return;
+  }
+
+
+  const sortOrder =
+    Number(sortText || 0);
+
+
+  if (
+    !Number.isInteger(sortOrder) ||
+    sortOrder < 0
+  ) {
+
+    alert(
+      "並び順は0以上の整数で入力してください。"
+    );
+
+    return;
+  }
+
+
+  if (
+    imageFile &&
+    !validateImage(imageFile)
+  ) {
+
+    return;
+  }
+
+
+  setBusy(
+    button,
+    true,
+    editId
+      ? "保存中..."
+      : "追加中..."
+  );
+
+
+  let imageUrl =
+    existingItem?.image_url ??
+    null;
+
+
+  let newImageUrl =
+    null;
+
+
+  try {
+
+    if (imageFile) {
+
+      newImageUrl =
+        await uploadImage(
+          imageFile,
+          "portfolio"
+        );
+
+
+      imageUrl =
+        newImageUrl;
+
+    }
+
+
+    const values = {
+
+      title,
+
+      description,
+
+      media_type:
+        mediaType,
+
+      image_url:
+        imageUrl,
+
+      video_url:
+        mediaType === "video"
+          ? videoUrl
+          : null,
+
+      category:
+        category || null,
+
+      sort_order:
+        sortOrder,
+
+      is_visible:
+        isVisible,
+
+      company_id:
+        currentCompanyId
+
+    };
+
+
+    let error =
+      null;
+
+
+    if (editId) {
+
+      const result =
+        await supabaseClient
+          .from(
+            "portfolio_items"
+          )
+          .update(values)
+          .eq(
+            "id",
+            editId
+          )
+          .eq(
+            "company_id",
+            currentCompanyId
+          );
+
+
+      error =
+        result.error;
+
+    } else {
+
+      const result =
+        await supabaseClient
+          .from(
+            "portfolio_items"
+          )
+          .insert([
+            values
+          ]);
+
+
+      error =
+        result.error;
+
+    }
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    if (
+      imageFile &&
+      existingItem?.image_url &&
+      existingItem.image_url !==
+        newImageUrl
+    ) {
+
+      await removeStorageFileByPublicUrl(
+        existingItem.image_url
+      );
+
+    }
+
+
+    closeModal(
+      "portfolioModal"
+    );
+
+
+    showToast(
+      editId
+        ? "制作実績を変更しました"
+        : "制作実績を追加しました"
+    );
+
+
+    await loadPortfolioItems();
+
+
+  } catch (error) {
+
+    console.error(
+      "ポートフォリオ保存エラー:",
+      error
+    );
+
+
+    alert(
+      "制作実績の保存に失敗しました。"
+    );
+
+
+  } finally {
+
+    setBusy(
+      button,
+      false,
+      editId
+        ? "変更を保存"
+        : "追加する"
+    );
+
+  }
+}
+
+
+async function deleteCurrentPortfolioItem() {
+
+  const editId =
+    document.getElementById(
+      "portfolioEditId"
+    ).value;
+
+
+  if (!editId) {
+    return;
+  }
+
+
+  const item =
+    portfolioItems.find(
+      (portfolioItem) =>
+        String(
+          portfolioItem.id
+        ) ===
+        String(editId)
+    );
+
+
+  const ok =
+    confirm(
+      `「${item?.title || "この作品"}」を削除しますか？`
+    );
+
+
+  if (!ok) {
+    return;
+  }
+
+
+  const button =
+    document.getElementById(
+      "deletePortfolioButton"
+    );
+
+
+  setBusy(
+    button,
+    true,
+    "削除中..."
+  );
+
+
+  const { error } =
+    await supabaseClient
+      .from("portfolio_items")
+      .delete()
+      .eq(
+        "id",
+        editId
+      )
+      .eq(
+        "company_id",
+        currentCompanyId
+      );
+
+
+  if (error) {
+
+    console.error(
+      "ポートフォリオ削除エラー:",
+      error
+    );
+
+
+    setBusy(
+      button,
+      false,
+      "削除"
+    );
+
+
+    alert(
+      "制作実績の削除に失敗しました。"
+    );
+
+
+    return;
+  }
+
+
+  if (item?.image_url) {
+
+    await removeStorageFileByPublicUrl(
+      item.image_url
+    );
+
+  }
+
+
+  setBusy(
+    button,
+    false,
+    "削除"
+  );
+
+
+  closeModal(
+    "portfolioModal"
+  );
+
+
+  showToast(
+    "制作実績を削除しました"
+  );
+
+
+  await loadPortfolioItems();
+}
+
+
+function isValidWebUrl(
+  value
+) {
+
+  try {
+
+    const url =
+      new URL(value);
+
+
+    return (
+      url.protocol === "https:" ||
+      url.protocol === "http:"
+    );
+
+  } catch {
+
+    return false;
+
+  }
+}
 
 /* ========================================
    お知らせ

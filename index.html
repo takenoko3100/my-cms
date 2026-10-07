@@ -21,7 +21,7 @@
 
   <title>かんたん編集 | たけのこCMS</title>
 
-  <link rel="stylesheet" href="editor.css?v=4">
+  <link rel="stylesheet" href="editor.css?v=5">
 </head>
 
 <body>
@@ -238,6 +238,51 @@
       ></div>
 
     </section>
+
+    <!-- =========================
+     ポートフォリオ
+========================== -->
+
+<section
+  class="visual-section content-section"
+  id="portfolioSection"
+  hidden
+>
+
+  <div class="section-heading">
+
+    <div>
+
+      <p class="section-label">
+        PORTFOLIO
+      </p>
+
+      <h2>
+        制作実績
+      </h2>
+
+    </div>
+
+    <button
+      type="button"
+      id="addPortfolioQuickButton"
+      class="add-button"
+    >
+      ＋ 追加
+    </button>
+
+  </div>
+
+  <p class="section-guide">
+    作品をタップすると編集できます
+  </p>
+
+  <div
+    id="visualPortfolioList"
+    class="visual-portfolio-list"
+  ></div>
+
+</section>
 
 
     <!-- =========================
@@ -781,6 +826,207 @@
 
   </div>
 
+  <!-- =========================
+     ポートフォリオ編集モーダル
+========================== -->
+
+<div
+  class="modal"
+  id="portfolioModal"
+  aria-hidden="true"
+>
+
+  <div
+    class="modal-backdrop"
+    data-close-modal="portfolioModal"
+  ></div>
+
+  <section
+    class="modal-sheet"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="portfolioModalTitle"
+  >
+
+    <div class="modal-header">
+
+      <div>
+
+        <p class="modal-label">
+          PORTFOLIO
+        </p>
+
+        <h2 id="portfolioModalTitle">
+          制作実績を追加
+        </h2>
+
+      </div>
+
+      <button
+        type="button"
+        class="modal-close"
+        data-close-modal="portfolioModal"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <input
+      type="hidden"
+      id="portfolioEditId"
+    >
+
+    <div class="form-stack">
+
+      <label>
+        タイトル
+
+        <input
+          type="text"
+          id="portfolioTitle"
+          placeholder="Wedding Film"
+        >
+      </label>
+
+
+      <label>
+        説明
+
+        <textarea
+          id="portfolioDescription"
+          placeholder="作品について簡単に紹介してください"
+        ></textarea>
+      </label>
+
+
+      <div class="form-grid">
+
+        <label>
+          種類
+
+          <select id="portfolioMediaType">
+            <option value="photo">
+              写真
+            </option>
+
+            <option value="video">
+              動画
+            </option>
+          </select>
+        </label>
+
+
+        <label>
+          並び順
+
+          <input
+            type="number"
+            id="portfolioSortOrder"
+            inputmode="numeric"
+            min="0"
+            placeholder="1"
+          >
+        </label>
+
+      </div>
+
+
+      <label>
+        カテゴリ
+
+        <input
+          type="text"
+          id="portfolioCategory"
+          placeholder="Wedding / Portrait / Movie"
+        >
+      </label>
+
+
+      <label
+        class="file-label"
+        id="portfolioImageField"
+      >
+        <span id="portfolioImageLabel">
+          写真
+        </span>
+
+        <input
+          type="file"
+          id="portfolioImage"
+          accept="image/*"
+        >
+
+        <span class="form-note">
+          動画の場合はサムネイル画像として使用できます
+        </span>
+      </label>
+
+
+      <label
+        id="portfolioVideoUrlField"
+        class="business-field-hidden"
+      >
+        動画URL
+
+        <input
+          type="url"
+          id="portfolioVideoUrl"
+          placeholder="https://www.youtube.com/watch?v=..."
+        >
+
+        <span class="form-note">
+          YouTube・Vimeoなどの公開URLを入力
+        </span>
+      </label>
+
+
+      <div class="switch-list">
+
+        <label class="switch-row">
+
+          <span>
+            公開する
+          </span>
+
+          <input
+            type="checkbox"
+            id="portfolioVisible"
+            checked
+          >
+
+        </label>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-actions">
+
+      <button
+        type="button"
+        id="deletePortfolioButton"
+        class="danger-action"
+        hidden
+      >
+        削除
+      </button>
+
+      <button
+        type="button"
+        id="savePortfolioButton"
+        class="primary-action"
+      >
+        追加する
+      </button>
+
+    </div>
+
+  </section>
+
+</div>
+
 
   <!-- =========================
        お知らせ編集モーダル
@@ -902,7 +1148,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="editor.js?v=6"></script>
-
+  <script src="editor.js?v=7"></script>
+  
 </body>
 </html>

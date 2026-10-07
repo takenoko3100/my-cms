@@ -888,3 +888,215 @@ textarea:focus {
 .business-field-hidden {
   display: none !important;
 }
+
+/* ========================================
+   Portfolio
+======================================== */
+
+.visual-portfolio-list {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 34px 24px;
+}
+
+.editor-portfolio-card {
+  position: relative;
+
+  min-width: 0;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: var(--text);
+
+  text-align: left;
+}
+
+.editor-portfolio-card::after {
+  content: "✏️";
+
+  position: absolute;
+
+  top: 14px;
+  right: 14px;
+
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  border:
+    1px solid
+    rgba(47, 41, 36, 0.12);
+
+  border-radius: 50%;
+
+  background:
+    rgba(255, 253, 249, 0.96);
+
+  box-shadow:
+    0 4px 14px
+    rgba(47, 41, 36, 0.08);
+
+  font-size: 16px;
+}
+
+.editor-portfolio-media {
+  position: relative;
+
+  overflow: hidden;
+
+  aspect-ratio: 4 / 3;
+
+  border-radius: 16px;
+
+  background: #292725;
+}
+
+.editor-portfolio-image {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.editor-portfolio-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  place-items: center;
+
+  color:
+    rgba(255, 255, 255, 0.72);
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.18em;
+}
+
+.portfolio-video-badge {
+  position: absolute;
+
+  left: 14px;
+  bottom: 14px;
+
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255, 255, 255, 0.92);
+
+  color: #211f1d;
+
+  font-size: 14px;
+}
+
+.editor-portfolio-meta {
+  margin-top: 12px;
+}
+
+.editor-portfolio-category {
+  margin: 0 0 6px;
+
+  color: #9a8c80;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+
+  text-transform: uppercase;
+}
+
+.editor-portfolio-card h3 {
+  margin: 0 0 7px;
+
+  font-size: 20px;
+
+  line-height: 1.45;
+}
+
+.editor-portfolio-description {
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 13px;
+
+  line-height: 1.7;
+
+  display: -webkit-box;
+
+  -webkit-box-orient: vertical;
+
+  -webkit-line-clamp: 3;
+
+  overflow: hidden;
+}
+
+.form-note {
+  color: var(--muted);
+
+  font-size: 11px;
+
+  font-weight: 400;
+}
+
+
+/* selectも既存フォームと統一 */
+
+select {
+  width: 100%;
+
+  min-height: 48px;
+
+  padding: 12px 13px;
+
+  border:
+    1px solid #d8d0c8;
+
+  border-radius: 11px;
+
+  outline: none;
+
+  background: white;
+
+  color: var(--text);
+
+  font-size: 16px;
+}
+
+select:focus {
+  border-color: #66594f;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(102, 89, 79, 0.10);
+}
+
+
+@media (max-width: 620px) {
+
+  .visual-portfolio-list {
+    grid-template-columns: 1fr;
+
+    gap: 28px;
+  }
+
+}
