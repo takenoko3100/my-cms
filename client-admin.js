@@ -819,6 +819,10 @@ function openEditClientModal(
     );
 
 
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
+
+
   modal.classList.add(
     "open"
   );
@@ -830,8 +834,7 @@ function openEditClientModal(
   );
 
 
-  document.body.style.overflow =
-    "hidden";
+  modal.scrollTop = 0;
 }
 
 
@@ -859,8 +862,8 @@ function closeEditClientModal() {
   );
 
 
-  document.body.style.overflow =
-    "";
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
 }
 
 
