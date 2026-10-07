@@ -2,153 +2,391 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta
-  http-equiv="Content-Security-Policy"
-  content="
-    default-src 'self';
-    script-src 'self' https://cdn.jsdelivr.net;
-    connect-src 'self' https://cshieomhxpuaclggicle.supabase.co wss://cshieomhxpuaclggicle.supabase.co;
-    img-src 'self' data: blob: https://cshieomhxpuaclggicle.supabase.co;
-    style-src 'self' 'unsafe-inline';
-    frame-src https://www.google.com https://maps.google.com;
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    upgrade-insecure-requests;
-  "
->
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <title>たけのこレストラン</title>
-  <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="site.css">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="
+      default-src 'self';
+      script-src 'self' https://cdn.jsdelivr.net;
+      connect-src 'self' https://cshieomhxpuaclggicle.supabase.co wss://cshieomhxpuaclggicle.supabase.co;
+      img-src 'self' data: blob: https://cshieomhxpuaclggicle.supabase.co;
+      style-src 'self' 'unsafe-inline';
+      frame-src https://www.google.com https://maps.google.com;
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      upgrade-insecure-requests;
+    "
+  >
+
+  <title>TAKENOKO CMS</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="site.css?v=2"
+  >
 </head>
 
 <body>
 
-  <nav class="site-nav">
-  <div class="site-nav-inner">
-    <a href="#" class="site-logo" id="siteNavCompanyName">店舗名</a>
+  <!-- =========================
+       Navigation
+  ========================== -->
 
-    <div class="site-nav-links">
-      <a href="#menu">メニュー</a>
-      <a href="#company">店舗情報</a>
-      <a href="#access">アクセス</a>
-      <a href="#news">お知らせ</a>
+  <nav class="site-nav">
+
+    <div class="site-nav-inner">
+
+      <a
+        href="#"
+        class="site-logo"
+        id="siteNavCompanyName"
+      >
+        COMPANY
+      </a>
+
+      <div class="site-nav-links">
+
+        <a
+          href="#about"
+          id="navAboutLink"
+        >
+          紹介
+        </a>
+
+        <a
+          href="#menu"
+          id="navServiceLink"
+        >
+          サービス
+        </a>
+
+        <a
+          href="#portfolio"
+          id="navPortfolioLink"
+          hidden
+        >
+          実績
+        </a>
+
+        <a
+          href="#company"
+          id="navCompanyLink"
+        >
+          会社情報
+        </a>
+
+        <a href="#news">
+          お知らせ
+        </a>
+
+      </div>
+
     </div>
-  </div>
-</nav>
+
+  </nav>
+
+
+  <!-- =========================
+       Hero
+  ========================== -->
 
   <header class="hero">
-  <div class="hero-overlay">
-    <h1 id="siteCompanyName">会社名</h1>
-    <p id="siteAddress">住所</p>
-  </div>
-</header>
+
+    <div class="hero-overlay">
+
+      <p
+        class="hero-kicker"
+        id="heroKicker"
+      ></p>
+
+      <h1 id="siteCompanyName">
+        会社名
+      </h1>
+
+      <p id="siteAddress">
+        住所
+      </p>
+
+    </div>
+
+  </header>
+
 
   <main>
 
+    <!-- =========================
+         About
+    ========================== -->
+
     <section id="about">
-  <div class="about-heading">
-    <p class="section-label">INTRODUCTION</p>
-    <h2>店舗紹介</h2>
-  </div>
 
-  <div class="about-content">
-    <p id="siteDescription"></p>
-  </div>
-</section>
+      <div class="about-heading">
 
-  <section id="menu">
-  <p class="section-label">MENU</p>
-  <h2>メニュー</h2>
-  <div id="siteMenuList"></div>
-</section>
+        <p
+          class="section-label"
+          id="aboutSectionLabel"
+        >
+          INTRODUCTION
+        </p>
 
-  <section id="company">
-  <p class="section-label">INFORMATION</p>
-  <h2>店舗情報</h2>
+        <h2 id="aboutSectionTitle">
+          会社紹介
+        </h2>
+
+      </div>
+
+      <div class="about-content">
+
+        <p id="siteDescription"></p>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         Services / Menu
+    ========================== -->
+
+    <section id="menu">
+
+      <p
+        class="section-label"
+        id="serviceSectionLabel"
+      >
+        SERVICES
+      </p>
+
+      <h2 id="serviceSectionTitle">
+        サービス
+      </h2>
+
+      <div id="siteMenuList"></div>
+
+    </section>
+
+
+    <!-- =========================
+         Portfolio
+    ========================== -->
+
+    <section
+      id="portfolio"
+      hidden
+    >
+
+      <div class="portfolio-heading">
+
+        <p class="section-label">
+          PORTFOLIO
+        </p>
+
+        <h2>
+          制作実績
+        </h2>
+
+        <p class="portfolio-lead">
+          Photography / Film / Edit
+        </p>
+
+      </div>
+
+      <div id="sitePortfolioList"></div>
+
+    </section>
+
+
+    <!-- =========================
+         Company
+    ========================== -->
+
+    <section id="company">
+
+      <p
+        class="section-label"
+        id="companySectionLabel"
+      >
+        INFORMATION
+      </p>
+
+      <h2 id="companySectionTitle">
+        会社情報
+      </h2>
 
       <p>
-        <strong>電話番号：</strong>
+        <strong id="phoneLabel">
+          電話番号：
+        </strong>
+
         <span id="sitePhone"></span>
       </p>
 
       <p>
-        <strong>営業時間：</strong>
+        <strong id="hoursLabel">
+          営業時間：
+        </strong>
+
         <span id="siteHours"></span>
       </p>
 
       <p>
-        <strong>定休日：</strong>
+        <strong id="closedDaysLabel">
+          定休日：
+        </strong>
+
         <span id="siteClosedDays"></span>
       </p>
+
     </section>
 
-  <section id="access">
-  <p class="section-label">ACCESS</p>
-  <h2>アクセス</h2>
 
-  <div class="map-wrap">
-    <iframe
-      id="siteMap"
-      width="100%"
-      height="350"
-      style="border:0;"
-      loading="lazy"
-      allowfullscreen
-      referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-  </div>
-</section>
+    <!-- =========================
+         Access
+    ========================== -->
 
-<section id="contact">
-  <p class="section-label">CONTACT</p>
-  <h2>お問い合わせ</h2>
+    <section id="access">
 
-  <div class="contact-links">
-    <a id="phoneLink" class="contact-button" href="#">
-      電話する
-    </a>
+      <p class="section-label">
+        ACCESS
+      </p>
 
-    <a id="instagramLink" class="contact-button" href="#" target="_blank">
-      Instagram
-    </a>
-  </div>
-</section>
+      <h2>
+        アクセス
+      </h2>
 
-      <section id="news">
-  <p class="section-label">NEWS</p>
-  <h2>お知らせ</h2>
+      <div class="map-wrap">
+
+        <iframe
+          id="siteMap"
+          width="100%"
+          height="350"
+          style="border:0;"
+          loading="lazy"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         Contact
+    ========================== -->
+
+    <section id="contact">
+
+      <p class="section-label">
+        CONTACT
+      </p>
+
+      <h2>
+        お問い合わせ
+      </h2>
+
+      <div class="contact-links">
+
+        <a
+          id="phoneLink"
+          class="contact-button"
+          href="#"
+        >
+          電話する
+        </a>
+
+        <a
+          id="instagramLink"
+          class="contact-button"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Instagram
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         News
+    ========================== -->
+
+    <section id="news">
+
+      <p class="section-label">
+        NEWS
+      </p>
+
+      <h2>
+        お知らせ
+      </h2>
+
       <div id="siteNewsList"></div>
+
     </section>
 
   </main>
 
+
+  <!-- =========================
+       Footer
+  ========================== -->
+
   <footer class="site-footer">
-  <div class="footer-inner">
-    <h2 id="footerCompanyName">店舗名</h2>
 
-    <p id="footerAddress"></p>
+    <div class="footer-inner">
 
-    <p>
-      <span id="footerHours"></span>
-      <span id="footerClosedDays"></span>
-    </p>
+      <h2 id="footerCompanyName">
+        COMPANY
+      </h2>
 
-    <div class="footer-links">
-      <a id="footerInstagram" href="#" target="_blank">Instagram</a>
+      <p id="footerAddress"></p>
+
+      <p>
+        <span id="footerHours"></span>
+        <span id="footerClosedDays"></span>
+      </p>
+
+      <div class="footer-links">
+
+        <a
+          id="footerInstagram"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Instagram
+        </a>
+
+      </div>
+
+      <p class="copyright">
+        ©
+        <span id="footerYear"></span>
+        <span id="footerCompanyNameCopy"></span>
+      </p>
+
     </div>
 
-    <p class="copyright">
-      © <span id="footerYear"></span> <span id="footerCompanyNameCopy"></span>
-    </p>
-  </div>
-</footer>
+  </footer>
+
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="site.js"></script>
+  <script src="site.js?v=2"></script>
 
 </body>
 </html>
