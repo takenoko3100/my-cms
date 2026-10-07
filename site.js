@@ -1138,13 +1138,7 @@ async function loadPortfolioItems() {
     );
 
   }
-
-      const embedUrl =
-        getSafeVideoEmbedUrl(
-          item.video_url
-        );
-
-
+  
       if (embedUrl) {
 
         const iframe =
