@@ -914,16 +914,13 @@ async function loadPortfolioItems() {
       ?.business_type !==
     "video_editing"
   ) {
-
     return;
   }
 
 
   const { data, error } =
     await supabaseClient
-      .from(
-        "portfolio_items"
-      )
+      .from("portfolio_items")
       .select("*")
       .eq(
         "company_id",
@@ -978,91 +975,122 @@ async function loadPortfolioItems() {
   ) {
 
     const empty =
-      document.createElement(
-        "p"
-      );
-
+      document.createElement("p");
 
     empty.className =
       "public-empty";
 
-
     empty.textContent =
       "制作実績を準備中です。";
 
-
-    list.appendChild(
-      empty
-    );
-
+    list.appendChild(empty);
 
     return;
   }
 
 
-  data.forEach(
-    (item) => {
+  data.forEach((item) => {
 
-      const card =
-        document.createElement(
-          item.media_type ===
-            "video" &&
+    const card =
+      document.createElement(
+        "article"
+      );
+
+    card.className =
+      "portfolio-card";
+
+
+    const visual =
+      document.createElement(
+        "div"
+      );
+
+    visual.className =
+      "portfolio-visual";
+
+
+    /* =========================
+       動画
+    ========================== */
+
+    if (
+      item.media_type === "video" &&
+      item.video_url
+    ) {
+
+      const embedUrl =
+        getSafeVideoEmbedUrl(
           item.video_url
-            ? "a"
-            : "article"
         );
 
 
-      card.className =
-        "portfolio-card";
+      if (embedUrl) {
+
+        const iframe =
+          document.createElement(
+            "iframe"
+          );
+
+        iframe.src =
+          embedUrl;
+
+        iframe.title =
+          item.title ||
+          "動画";
+
+        iframe.loading =
+          "lazy";
+
+        iframe.allow =
+          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+
+        iframe.referrerPolicy =
+          "strict-origin-when-cross-origin";
+
+        iframe.allowFullscreen =
+          true;
+
+        iframe.className =
+          "portfolio-video";
+
+        visual.appendChild(
+          iframe
+        );
 
 
-      if (
-        card.tagName === "A"
+      } else if (
+        item.image_url
       ) {
-
-        card.href =
-          item.video_url;
-
-
-        card.target =
-          "_blank";
-
-
-        card.rel =
-          "noopener noreferrer";
-
-      }
-
-
-      const visual =
-        document.createElement(
-          "div"
-        );
-
-
-      visual.className =
-        "portfolio-visual";
-
-
-      if (item.image_url) {
 
         const img =
           document.createElement(
             "img"
           );
 
-
         img.src =
           item.image_url;
-
 
         img.alt =
           item.title || "";
 
-
         visual.appendChild(
           img
+        );
+
+
+        const label =
+          document.createElement(
+            "span"
+          );
+
+        label.className =
+          "portfolio-video-error";
+
+        label.textContent =
+          "動画を見る";
+
+        visual.appendChild(
+          label
         );
 
       } else {
@@ -1072,17 +1100,11 @@ async function loadPortfolioItems() {
             "div"
           );
 
-
         placeholder.className =
           "portfolio-placeholder";
 
-
         placeholder.textContent =
-          item.media_type ===
-          "video"
-            ? "FILM"
-            : "PHOTO";
-
+          "VIDEO";
 
         visual.appendChild(
           placeholder
@@ -1091,123 +1113,318 @@ async function loadPortfolioItems() {
       }
 
 
-      if (
-        item.media_type ===
-        "video"
-      ) {
+    /* =========================
+       写真
+    ========================== */
 
-        const play =
-          document.createElement(
-            "span"
-          );
+    } else if (
+      item.image_url
+    ) {
 
-
-        play.className =
-          "portfolio-play";
-
-
-        play.textContent =
-          "▶";
-
-
-        visual.appendChild(
-          play
+      const img =
+        document.createElement(
+          "img"
         );
 
-      }
+      img.src =
+        item.image_url;
 
+      img.alt =
+        item.title || "";
 
-      card.appendChild(
-        visual
+      visual.appendChild(
+        img
       );
 
 
-      const meta =
+    } else {
+
+      const placeholder =
         document.createElement(
           "div"
         );
 
+      placeholder.className =
+        "portfolio-placeholder";
 
-      meta.className =
-        "portfolio-meta";
+      placeholder.textContent =
+        "PHOTO";
+
+      visual.appendChild(
+        placeholder
+      );
+
+    }
 
 
-      const category =
+    card.appendChild(
+      visual
+    );
+
+
+    /* =========================
+       作品情報
+    ========================== */
+
+    const meta =
+      document.createElement(
+        "div"
+      );
+
+    meta.className =
+      "portfolio-meta";
+
+
+    const category =
+      document.createElement(
+        "p"
+      );
+
+    category.className =
+      "portfolio-category";
+
+    category.textContent =
+      item.category ||
+      (
+        item.media_type ===
+        "video"
+          ? "FILM"
+          : "PHOTOGRAPHY"
+      );
+
+    meta.appendChild(
+      category
+    );
+
+
+    const title =
+      document.createElement(
+        "h3"
+      );
+
+    title.textContent =
+      item.title || "";
+
+    meta.appendChild(
+      title
+    );
+
+
+    if (
+      item.description
+    ) {
+
+      const description =
         document.createElement(
           "p"
         );
 
+      description.className =
+        "portfolio-description";
 
-      category.className =
-        "portfolio-category";
-
-
-      category.textContent =
-        item.category ||
-        (
-          item.media_type ===
-          "video"
-            ? "FILM"
-            : "PHOTOGRAPHY"
-        );
-
+      description.textContent =
+        item.description;
 
       meta.appendChild(
-        category
-      );
-
-
-      const title =
-        document.createElement(
-          "h3"
-        );
-
-
-      title.textContent =
-        item.title || "";
-
-
-      meta.appendChild(
-        title
-      );
-
-
-      if (item.description) {
-
-        const description =
-          document.createElement(
-            "p"
-          );
-
-
-        description.className =
-          "portfolio-description";
-
-
-        description.textContent =
-          item.description;
-
-
-        meta.appendChild(
-          description
-        );
-
-      }
-
-
-      card.appendChild(
-        meta
-      );
-
-
-      list.appendChild(
-        card
+        description
       );
 
     }
-  );
+
+
+    card.appendChild(
+      meta
+    );
+
+
+    list.appendChild(
+      card
+    );
+
+  });
+
 }
 
+
+/* ========================================
+   YouTube / Vimeo URL
+======================================== */
+
+function getSafeVideoEmbedUrl(
+  videoUrl
+) {
+
+  if (!videoUrl) {
+    return null;
+  }
+
+
+  let url;
+
+
+  try {
+
+    url =
+      new URL(videoUrl);
+
+  } catch {
+
+    return null;
+
+  }
+
+
+  const hostname =
+    url.hostname
+      .toLowerCase()
+      .replace(/^www\./, "");
+
+
+  /* YouTube */
+
+  if (
+    hostname ===
+    "youtube.com" ||
+    hostname ===
+    "m.youtube.com"
+  ) {
+
+    let videoId = null;
+
+
+    if (
+      url.pathname ===
+      "/watch"
+    ) {
+
+      videoId =
+        url.searchParams.get(
+          "v"
+        );
+
+    } else if (
+      url.pathname.startsWith(
+        "/shorts/"
+      )
+    ) {
+
+      videoId =
+        url.pathname
+          .split("/")[2];
+
+    } else if (
+      url.pathname.startsWith(
+        "/embed/"
+      )
+    ) {
+
+      videoId =
+        url.pathname
+          .split("/")[2];
+
+    }
+
+
+    if (
+      isValidYouTubeId(
+        videoId
+      )
+    ) {
+
+      return (
+        "https://www.youtube-nocookie.com/embed/" +
+        videoId
+      );
+
+    }
+
+  }
+
+
+  /* youtu.be */
+
+  if (
+    hostname ===
+    "youtu.be"
+  ) {
+
+    const videoId =
+      url.pathname
+        .replace("/", "")
+        .split("/")[0];
+
+
+    if (
+      isValidYouTubeId(
+        videoId
+      )
+    ) {
+
+      return (
+        "https://www.youtube-nocookie.com/embed/" +
+        videoId
+      );
+
+    }
+
+  }
+
+
+  /* Vimeo */
+
+  if (
+    hostname ===
+      "vimeo.com" ||
+    hostname ===
+      "player.vimeo.com"
+  ) {
+
+    const parts =
+      url.pathname
+        .split("/")
+        .filter(Boolean);
+
+
+    const videoId =
+      parts.find(
+        (part) =>
+          /^\d+$/.test(part)
+      );
+
+
+    if (videoId) {
+
+      return (
+        "https://player.vimeo.com/video/" +
+        videoId
+      );
+
+    }
+
+  }
+
+
+  return null;
+}
+
+
+/* ========================================
+   YouTube ID確認
+======================================== */
+
+function isValidYouTubeId(
+  videoId
+) {
+
+  return (
+    typeof videoId ===
+      "string" &&
+    /^[A-Za-z0-9_-]{11}$/.test(
+      videoId
+    )
+  );
+
+}
 
 /* ========================================
    News
