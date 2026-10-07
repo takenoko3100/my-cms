@@ -43,13 +43,13 @@ const PUBLIC_BUSINESS_SETTINGS = {
     aboutTitle: "クリエイター紹介",
     serviceLabel: "SERVICES",
     serviceTitle: "撮影・編集サービス",
-    companyLabel: "CONTACT",
-    companyTitle: "お問い合わせ",
+    companyLabel: "INFORMATION",
+companyTitle: "ご依頼について",
     hoursLabel: "対応時間：",
     closedDaysLabel: "休業日：",
     navAbout: "ABOUT",
     navService: "SERVICES",
-    navCompany: "CONTACT"
+    navCompany: "INFORMATION"
   },
 
 
@@ -1138,7 +1138,7 @@ async function loadPortfolioItems() {
     );
 
   }
-  
+
       if (embedUrl) {
 
         const iframe =
@@ -1190,22 +1190,6 @@ async function loadPortfolioItems() {
 
         visual.appendChild(
           img
-        );
-
-
-        const label =
-          document.createElement(
-            "span"
-          );
-
-        label.className =
-          "portfolio-video-error";
-
-        label.textContent =
-          "動画を見る";
-
-        visual.appendChild(
-          label
         );
 
       } else {
