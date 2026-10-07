@@ -33,22 +33,22 @@ const BUSINESS_TYPE_SETTINGS = {
   },
 
   video_editing: {
-    label: "SERVICES",
-    title: "サービス",
-    guide: "サービスをタップすると編集できます",
-    modalLabel: "SERVICES",
-    itemNameLabel: "サービス名",
-    priceLabel: "料金",
-    addTitle: "サービスを追加",
-    editTitle: "サービスを編集",
-    introTitle: "会社紹介",
-    companyInfoTitle: "会社情報",
-    businessHoursLabel: "対応時間",
-    closedDaysLabel: "休業日",
-    namePlaceholder: "YouTube動画編集",
-    descriptionPlaceholder: "サービス内容",
-    categoryPlaceholder: "動画編集"
-  },
+  label: "SERVICES",
+  title: "撮影・編集サービス",
+  guide: "サービスをタップすると編集できます",
+  modalLabel: "SERVICES",
+  itemNameLabel: "サービス名",
+  priceLabel: "料金",
+  addTitle: "サービスを追加",
+  editTitle: "サービスを編集",
+  introTitle: "クリエイター紹介",
+  companyInfoTitle: "お問い合わせ",
+  businessHoursLabel: "対応時間",
+  closedDaysLabel: "休業日",
+  namePlaceholder: "写真撮影・動画編集",
+  descriptionPlaceholder: "サービス内容",
+  categoryPlaceholder: "Photography / Movie"
+},
 
   hospital: {
     label: "MEDICAL",
@@ -2525,6 +2525,21 @@ if (soldOutField) {
     businessType === "auto_repair"
   );
 }
+
+const portfolioSection =
+  document.getElementById(
+    "portfolioSection"
+  );
+
+
+if (portfolioSection) {
+
+  portfolioSection.hidden =
+    businessType !==
+    "video_editing";
+
+}
+
 }
 
 function getBusinessTypeSettings() {
