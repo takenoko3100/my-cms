@@ -142,9 +142,10 @@ function renderCompany(
 
 
   setText(
-    "menuCompanyDescription",
-    company.description || ""
-  );
+  "menuCompanyDescription",
+  company.menu_description ||
+    "季節の食材を使った料理を、ゆっくりお楽しみください。"
+);
 
 
   document.title =

@@ -472,6 +472,12 @@ function fillCompanyForm() {
   document.getElementById("companyDescription").value =
     currentCompany.description ?? "";
 
+    document.getElementById(
+  "companyMenuDescription"
+).value =
+  currentCompany.menu_description ??
+  "";
+
   document.getElementById("companyPhone").value =
     currentCompany.phone ?? "";
 
@@ -522,6 +528,11 @@ async function saveCompanyInfo() {
   const description =
     document.getElementById("companyDescription").value.trim();
 
+    const menuDescription =
+  document.getElementById(
+    "companyMenuDescription"
+  ).value.trim();
+
   const phone =
     document.getElementById("companyPhone").value.trim();
 
@@ -558,6 +569,8 @@ async function saveCompanyInfo() {
     name,
     address,
     description,
+    menu_description:
+  menuDescription,
     phone,
     business_hours: businessHours,
     closed_days: closedDays,
