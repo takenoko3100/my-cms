@@ -804,35 +804,6 @@ async function loadMenuItems() {
         title
       );
 
-
-      if (
-        item.is_recommended &&
-        currentCompany
-          ?.business_type ===
-          "restaurant"
-      ) {
-
-        const badge =
-          document.createElement(
-            "p"
-          );
-
-
-        badge.className =
-          "recommended-badge";
-
-
-        badge.textContent =
-          "⭐ おすすめ";
-
-
-        head.appendChild(
-          badge
-        );
-
-      }
-
-
       if (
         item.is_sold_out &&
         currentCompany
