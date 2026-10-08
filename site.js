@@ -723,9 +723,24 @@ async function loadMenuItems() {
     return;
   }
 
+  const itemsToShow =
+  currentCompany?.business_type ===
+  "restaurant"
+    ? [
+        ...data.filter(
+          (item) =>
+            item.is_recommended
+        ),
+        ...data.filter(
+          (item) =>
+            !item.is_recommended
+        )
+      ].slice(0, 3)
+    : data;
 
-  data.forEach(
-    (item) => {
+
+  itemsToShow.forEach(
+  (item) => {
 
       const div =
         document.createElement(

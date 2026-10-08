@@ -314,9 +314,36 @@ function renderMenu(
     );
 
 
-  Object.entries(
-    grouped
-  ).forEach(
+  Object.entries(grouped)
+  .sort(([categoryA], [categoryB]) => {
+
+    const indexA =
+      MENU_CATEGORY_ORDER.indexOf(
+        categoryA
+      );
+
+    const indexB =
+      MENU_CATEGORY_ORDER.indexOf(
+        categoryB
+      );
+
+
+    const orderA =
+      indexA === -1
+        ? 999
+        : indexA;
+
+
+    const orderB =
+      indexB === -1
+        ? 999
+        : indexB;
+
+
+    return orderA - orderB;
+
+  })
+  .forEach(
     (
       [
         category,
@@ -652,6 +679,16 @@ function createMenuCard(
 /* ========================================
    カテゴリ分け
 ======================================== */
+
+const MENU_CATEGORY_ORDER = [
+  "メイン",
+  "パスタ",
+  "ライス",
+  "サイド",
+  "ドリンク",
+  "デザート",
+  "その他"
+];
 
 function groupByCategory(
   items
