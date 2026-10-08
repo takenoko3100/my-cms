@@ -246,14 +246,13 @@ header p {
 }
 
 .menu-card-head {
-  height: 150px;
   display: flex;
   flex-direction: column;
-}
 
-.menu-card-head .recommended-badge,
-.menu-card-head .sold-out-badge {
-  margin-top: auto;
+  min-height: 0;
+  height: auto;
+
+  margin-bottom: 18px;
 }
 
 .menu-category-label {
@@ -276,10 +275,16 @@ header p {
 
 .menu-card img {
   display: block;
+
   width: 100%;
+
   aspect-ratio: 16 / 10;
+
   object-fit: cover;
-  margin: 14px 0 18px;
+
+  margin:
+    0 0 18px;
+
   border-radius: 14px;
 }
 
