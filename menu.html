@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="
+      default-src 'self';
+      script-src 'self' https://cdn.jsdelivr.net;
+      connect-src 'self' https://cshieomhxpuaclggicle.supabase.co wss://cshieomhxpuaclggicle.supabase.co;
+      img-src 'self' data: blob: https://cshieomhxpuaclggicle.supabase.co;
+      style-src 'self' 'unsafe-inline';
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      upgrade-insecure-requests;
+    "
+  >
+
+  <title>MENU</title>
+
+  <link
+    rel="stylesheet"
+    href="menu.css?v=1"
+  >
+
+</head>
+
+
+<body>
+
+  <!-- =========================
+       Header
+  ========================== -->
+
+  <header class="menu-header">
+
+    <div class="menu-header-inner">
+
+      <a
+        href="#"
+        id="menuHomeLink"
+        class="back-home"
+      >
+        ← HOME
+      </a>
+
+
+      <div class="menu-brand">
+
+        <p class="menu-eyebrow">
+          MENU
+        </p>
+
+        <h1 id="menuCompanyName">
+          Restaurant
+        </h1>
+
+        <p id="menuCompanyDescription"></p>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       Category navigation
+  ========================== -->
+
+  <nav
+    id="menuCategoryNav"
+    class="category-nav"
+  ></nav>
+
+
+  <!-- =========================
+       Menu
+  ========================== -->
+
+  <main class="menu-page">
+
+    <div id="fullMenuList"></div>
+
+  </main>
+
+
+  <!-- =========================
+       Footer
+  ========================== -->
+
+  <footer class="menu-footer">
+
+    <p id="menuFooterCompanyName">
+      Restaurant
+    </p>
+
+    <a
+      href="#"
+      id="menuFooterHomeLink"
+    >
+      HOMEへ戻る
+    </a>
+
+  </footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="menu.js?v=1"></script>
+
+</body>
+
+</html>

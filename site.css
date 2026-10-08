@@ -1499,3 +1499,57 @@ body[data-theme="visual-dark"]
 
   letter-spacing: .08em;
 }
+
+/* ========================================
+   Menu more
+======================================== */
+
+.menu-more-wrap {
+  margin-top:
+    54px;
+
+  text-align:
+    center;
+}
+
+.menu-more-link {
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  min-width:
+    180px;
+
+  padding:
+    14px 28px;
+
+  border-bottom:
+    1px solid
+    currentColor;
+
+  color:
+    #2f2924;
+
+  font-size:
+    13px;
+
+  font-weight:
+    600;
+
+  letter-spacing:
+    .12em;
+
+  text-decoration:
+    none;
+}
+
+body[data-theme="visual-dark"]
+.menu-more-wrap {
+  display:
+    none;
+}

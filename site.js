@@ -246,6 +246,46 @@ function renderCompanyInfo(
       "default"
   );
 
+  const menuMoreWrap =
+  document.getElementById(
+    "menuMoreWrap"
+  );
+
+
+const menuMoreLink =
+  document.getElementById(
+    "menuMoreLink"
+  );
+
+
+if (
+  menuMoreWrap &&
+  menuMoreLink
+) {
+
+  if (
+    data.business_type ===
+    "restaurant"
+  ) {
+
+    menuMoreWrap.hidden =
+      false;
+
+
+    menuMoreLink.href =
+      `menu.html?company=${encodeURIComponent(
+        data.slug
+      )}`;
+
+  } else {
+
+    menuMoreWrap.hidden =
+      true;
+
+  }
+
+}
+
 
   /* Google Map */
 
