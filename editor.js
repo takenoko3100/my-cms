@@ -2648,12 +2648,23 @@ function updateBusinessTypeUI() {
     BUSINESS_TYPE_SETTINGS.restaurant;
 
   if (label) {
-    label.textContent = current.label;
-  }
+  label.textContent = current.label;
+}
 
-  if (title) {
-    title.textContent = current.title;
-  }
+const descriptionLabel =
+  document.getElementById(
+    "companyDescriptionLabel"
+  );
+
+if (descriptionLabel) {
+  descriptionLabel.textContent =
+    current.introTitle ||
+    "店舗紹介";
+}
+
+if (title) {
+  title.textContent = current.title;
+}
 
   if (guide) {
     guide.textContent = current.guide;
