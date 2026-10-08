@@ -1553,3 +1553,49 @@ body[data-theme="visual-dark"]
   display:
     none;
 }
+
+/* ========================================
+   Restaurant Hero title
+======================================== */
+
+body:not([data-theme="visual-dark"])
+.hero-overlay {
+  max-width:
+    1000px;
+
+  width:
+    min(92%, 1000px);
+}
+
+body:not([data-theme="visual-dark"])
+.hero-overlay h1 {
+  white-space:
+    nowrap;
+
+  font-size:
+    clamp(
+      38px,
+      5.2vw,
+      70px
+    );
+
+  letter-spacing:
+    .03em;
+}
+
+@media (max-width: 650px) {
+
+  body:not([data-theme="visual-dark"])
+  .hero-overlay h1 {
+    white-space:
+      normal;
+
+    font-size:
+      clamp(
+        34px,
+        10vw,
+        52px
+      );
+  }
+
+}

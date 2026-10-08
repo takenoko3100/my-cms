@@ -527,6 +527,27 @@ function createMenuCard(
       image
     );
 
+    if (
+  item.is_recommended
+) {
+
+  const recommended =
+    document.createElement(
+      "span"
+    );
+
+  recommended.className =
+    "menu-recommended";
+
+  recommended.textContent =
+    "RECOMMENDED";
+
+  imageWrap.appendChild(
+    recommended
+  );
+
+}
+
 
     if (
       item.is_sold_out
@@ -568,32 +589,6 @@ function createMenuCard(
 
   body.className =
     "full-menu-body";
-
-
-  if (
-    item.is_recommended
-  ) {
-
-    const recommended =
-      document.createElement(
-        "p"
-      );
-
-
-    recommended.className =
-      "menu-recommended";
-
-
-    recommended.textContent =
-      "RECOMMENDED";
-
-
-    body.appendChild(
-      recommended
-    );
-
-  }
-
 
   const titleRow =
     document.createElement(
