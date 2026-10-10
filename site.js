@@ -764,6 +764,7 @@ async function loadMenuItems() {
 
       if (
         item.category &&
+        item.category.trim() !== "その他" &&
         currentCompany
           ?.business_type !==
           "hospital"
@@ -1034,6 +1035,11 @@ async function loadPortfolioItems() {
     visual.className =
       "portfolio-visual";
 
+    // 透過サムネイルの背景を固定。画像がない場合は従来の背景を使う。
+    if (item.image_url) {
+      visual.style.backgroundColor = "#e5e7eb";
+    }
+
 
     /* =========================
        動画
@@ -1090,6 +1096,9 @@ async function loadPortfolioItems() {
 
       video.poster =
         item.image_url;
+
+      // 黒い透過画像が動画プレーヤーの背景に溶け込まないようにする。
+      video.style.backgroundColor = "#e5e7eb";
 
     }
 
@@ -1164,79 +1173,6 @@ async function loadPortfolioItems() {
     );
 
   }
-
-      if (embedUrl) {
-
-        const iframe =
-          document.createElement(
-            "iframe"
-          );
-
-        iframe.src =
-          embedUrl;
-
-        iframe.title =
-          item.title ||
-          "動画";
-
-        iframe.loading =
-          "lazy";
-
-        iframe.allow =
-          "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-
-        iframe.referrerPolicy =
-          "strict-origin-when-cross-origin";
-
-        iframe.allowFullscreen =
-          true;
-
-        iframe.className =
-          "portfolio-video";
-
-        visual.appendChild(
-          iframe
-        );
-
-
-      } else if (
-        item.image_url
-      ) {
-
-        const img =
-          document.createElement(
-            "img"
-          );
-
-        img.src =
-          item.image_url;
-
-        img.alt =
-          item.title || "";
-
-        visual.appendChild(
-          img
-        );
-
-      } else {
-
-        const placeholder =
-          document.createElement(
-            "div"
-          );
-
-        placeholder.className =
-          "portfolio-placeholder";
-
-        placeholder.textContent =
-          "VIDEO";
-
-        visual.appendChild(
-          placeholder
-        );
-
-      }
-
 
     /* =========================
        写真

@@ -1,4 +1,3 @@
-
 const SUPABASE_URL = "https://cshieomhxpuaclggicle.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_6mt_8wZcBX9aKPR04NzNBQ_StAq2Qbe";
@@ -563,8 +562,11 @@ function renderMenuItems() {
     meta.className = "editor-menu-meta";
     const category = document.createElement("p");
     category.className = "editor-menu-category";
-    category.textContent = item.category || "その他";
-    meta.appendChild(category);
+    const categoryText = (item.category || "").trim();
+    if (categoryText && categoryText !== "その他") {
+      category.textContent = categoryText;
+      meta.appendChild(category);
+    }
     const title = document.createElement("h3");
     title.textContent = item.name || "";
     meta.appendChild(title);
@@ -623,7 +625,7 @@ function openMenuModal(itemId = null) {
   document.getElementById("menuSortOrder").value =
     item.sort_order ?? 0;
   document.getElementById("menuCategory").value =
-    item.category ?? "その他";
+    item.category === "その他" ? "" : (item.category ?? "");
   document.getElementById("menuRecommended").checked =
     item.is_recommended ?? false;
   document.getElementById("menuSoldOut").checked =
@@ -712,7 +714,9 @@ if (!name || (!isHospital && !priceText)) {
       description,
       price,
       sort_order: sortOrder,
-      category: category || "その他",
+      category: currentCompany?.business_type === "video_editing"
+        ? (category === "その他" ? "" : category)
+        : (category || "その他"),
       is_recommended: isRecommended,
       is_sold_out: isSoldOut,
       is_visible: isVisible,
