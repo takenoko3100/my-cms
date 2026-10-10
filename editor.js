@@ -1,18 +1,16 @@
+
 const SUPABASE_URL = "https://cshieomhxpuaclggicle.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_6mt_8wZcBX9aKPR04NzNBQ_StAq2Qbe";
-
 const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
-
 let currentCompanyId = null;
 let currentCompany = null;
 let menuItems = [];
 let portfolioItems = [];
 let newsItems = [];
-
 const BUSINESS_TYPE_SETTINGS = {
   restaurant: {
     label: "MENU",
@@ -31,25 +29,23 @@ const BUSINESS_TYPE_SETTINGS = {
     descriptionPlaceholder: "メニュー説明",
     categoryPlaceholder: "メイン"
   },
-
   video_editing: {
   label: "SERVICES",
   title: "撮影・編集サービス",
   guide: "サービスをタップすると編集できます",
   modalLabel: "SERVICES",
   itemNameLabel: "サービス名",
-  priceLabel: "料金",
+  priceLabel: "料金（円）",
   addTitle: "サービスを追加",
   editTitle: "サービスを編集",
-  introTitle: "クリエイター紹介",
-  companyInfoTitle: "お問い合わせ",
+  introTitle: "プロフィール",
+  companyInfoTitle: "ご依頼・連絡先",
   businessHoursLabel: "対応時間",
   closedDaysLabel: "休業日",
   namePlaceholder: "写真撮影・動画編集",
   descriptionPlaceholder: "サービス内容",
   categoryPlaceholder: "Photography / Movie"
 },
-
   hospital: {
     label: "MEDICAL",
     title: "診療科",
@@ -67,7 +63,6 @@ const BUSINESS_TYPE_SETTINGS = {
     descriptionPlaceholder: "診療内容",
     categoryPlaceholder: ""
   },
-
   auto_repair: {
     label: "SERVICES",
     title: "サービス・料金",
@@ -86,32 +81,23 @@ const BUSINESS_TYPE_SETTINGS = {
     categoryPlaceholder: "車検・オイル交換など"
   }
 };
-
-
 /* ========================================
    初期化
 ======================================== */
-
 document.addEventListener("DOMContentLoaded", init);
-
 async function init() {
+  editorCopy.apply();
   const session = await requireSession();
-
   if (!session) {
     return;
   }
-
   const companyId = await resolveCompanyId(session.user.id);
-
   if (!companyId) {
     alert("管理できる店舗が設定されていません。");
     return;
   }
-
   currentCompanyId = companyId;
-
   bindEvents();
-
   await Promise.all([
   loadCompanyInfo(),
   loadMenuItems(),
@@ -119,35 +105,25 @@ async function init() {
   loadNews()
 ]);
 }
-
-
 async function requireSession() {
   const {
     data: { session },
     error
   } = await supabaseClient.auth.getSession();
-
   if (error) {
     console.error(error);
   }
-
   if (!session) {
     window.location.href = "login.html";
     return null;
   }
-
   return session;
 }
-
-
 async function resolveCompanyId(userId) {
   const params =
     new URLSearchParams(window.location.search);
-
   const companySlug =
     params.get("company");
-
-
   /* URLで会社が指定されている場合 */
   if (companySlug) {
     const {
@@ -158,22 +134,17 @@ async function resolveCompanyId(userId) {
       .select("id, slug")
       .eq("slug", companySlug)
       .maybeSingle();
-
     if (companyError) {
       console.error(
         "会社情報の取得エラー:",
         companyError
       );
-
       return null;
     }
-
     if (!company) {
       alert("指定された会社が見つかりません。");
       return null;
     }
-
-
     /* ログインユーザーが
        この会社に所属しているか確認 */
     const {
@@ -185,28 +156,21 @@ async function resolveCompanyId(userId) {
       .eq("user_id", userId)
       .eq("company_id", company.id)
       .maybeSingle();
-
     if (membershipError) {
       console.error(
         "会社所属情報の取得エラー:",
         membershipError
       );
-
       return null;
     }
-
     if (!membership) {
       alert(
         "この会社を管理する権限がありません。"
       );
-
       return null;
     }
-
     return company.id;
   }
-
-
   /* URL指定がない場合は
      今まで通り最初の所属会社を開く */
   const {
@@ -222,39 +186,30 @@ async function resolveCompanyId(userId) {
     )
     .limit(1)
     .maybeSingle();
-
   if (error) {
     console.error(
       "店舗所属情報の取得エラー:",
       error
     );
-
     return null;
   }
-
   return data?.company_id ?? null;
 }
-
-
 /* ========================================
    イベント
 ======================================== */
-
 function bindEvents() {
   document
     .getElementById("logoutButton")
     .addEventListener("click", logout);
-
   document
     .getElementById("editHeroImageButton")
     .addEventListener("click", () => {
       document.getElementById("heroImageInput").click();
     });
-
   document
     .getElementById("heroImageInput")
     .addEventListener("change", handleHeroImageChange);
-
   document
     .querySelectorAll("[data-company-field]")
     .forEach((button) => {
@@ -262,51 +217,39 @@ function bindEvents() {
         openCompanyModal(button.dataset.companyField);
       });
     });
-
   document
     .getElementById("saveCompanyInfo")
     .addEventListener("click", saveCompanyInfo);
-
   document
     .getElementById("addMenuQuickButton")
     .addEventListener("click", () => openMenuModal());
-
   document
     .getElementById("saveMenuButton")
     .addEventListener("click", saveMenuItem);
-
   document
     .getElementById("deleteMenuButton")
     .addEventListener("click", deleteCurrentMenuItem);
-
     document
   .getElementById("addPortfolioQuickButton")
   .addEventListener("click", () => openPortfolioModal());
-
 document
   .getElementById("savePortfolioButton")
   .addEventListener("click", savePortfolioItem);
-
 document
   .getElementById("deletePortfolioButton")
   .addEventListener("click", deleteCurrentPortfolioItem);
-
 document
   .getElementById("portfolioMediaType")
   .addEventListener("change", updatePortfolioMediaFields);
-
   document
     .getElementById("addNewsQuickButton")
     .addEventListener("click", () => openNewsModal());
-
   document
     .getElementById("saveNewsButton")
     .addEventListener("click", saveNewsItem);
-
   document
     .getElementById("deleteNewsButton")
     .addEventListener("click", deleteCurrentNewsItem);
-
   document
     .querySelectorAll("[data-close-modal]")
     .forEach((button) => {
@@ -314,7 +257,6 @@ document
         closeModal(button.dataset.closeModal);
       });
     });
-
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       document.querySelectorAll(".modal.open").forEach((modal) => {
@@ -323,55 +265,42 @@ document
     }
   });
 }
-
-
 async function logout() {
   const { error } = await supabaseClient.auth.signOut();
-
   if (error) {
     console.error(error);
     showToast("ログアウトに失敗しました");
     return;
   }
-
   window.location.href = "login.html";
 }
-
-
 /* ========================================
    店舗情報
 ======================================== */
-
 async function loadCompanyInfo() {
   const { data, error } = await supabaseClient
     .from("company_info")
     .select("*")
     .eq("id", currentCompanyId)
     .single();
-
   if (error) {
     console.error(error);
     showToast("店舗情報を読み込めませんでした");
     return;
   }
-
   currentCompany = data;
   renderCompanyInfo();
 }
-
-
 function renderCompanyInfo() {
   if (!currentCompany) {
     return;
   }
-
   setText("editorCompanyName", currentCompany.name || "店舗名");
   setText("editorCompanyAddress", currentCompany.address || "住所");
   setText(
     "editorCompanyDescription",
     currentCompany.description || "店舗紹介文を入力してください"
   );
-
   setText("editorInfoAddress", currentCompany.address || "-");
   setText("editorInfoPhone", currentCompany.phone || "-");
   setText("editorInfoHours", currentCompany.business_hours || "-");
@@ -380,9 +309,7 @@ function renderCompanyInfo() {
     "editorInfoInstagram",
     currentCompany.instagram_url ? "設定済み" : "未設定"
   );
-
   const hero = document.getElementById("editorHero");
-
   if (currentCompany.hero_image_url) {
     hero.style.backgroundImage =
       `linear-gradient(rgba(31,24,19,.40), rgba(31,24,19,.40)), ` +
@@ -392,110 +319,82 @@ function renderCompanyInfo() {
       "linear-gradient(rgba(31,24,19,.40), rgba(31,24,19,.40)), " +
       "linear-gradient(135deg, #86776b, #3c342e)";
   }
-
   updateBusinessTypeUI();
-
 fillCompanyForm();
-
 syncCompanySlugInUrl();
-
 updatePublicPageLink();
 }
-
 /* ========================================
    会社URL・公開ページ
 ======================================== */
-
 function syncCompanySlugInUrl() {
   if (!currentCompany?.slug) {
     return;
   }
-
   const url =
     new URL(window.location.href);
-
   if (
     url.searchParams.get("company") ===
     currentCompany.slug
   ) {
     return;
   }
-
   url.searchParams.set(
     "company",
     currentCompany.slug
   );
-
   window.history.replaceState(
     {},
     "",
     url
   );
 }
-
-
 function updatePublicPageLink() {
   if (!currentCompany?.slug) {
     return;
   }
-
   const publicPageLink =
     document.querySelector(
       'a[href^="site.html"]'
     );
-
   if (!publicPageLink) {
     console.warn(
       "公開ページリンクが見つかりません"
     );
-
     return;
   }
-
   publicPageLink.href =
     `site.html?company=${encodeURIComponent(
       currentCompany.slug
     )}`;
 }
-
 function fillCompanyForm() {
   if (!currentCompany) {
     return;
   }
-
   document.getElementById("companyName").value =
     currentCompany.name ?? "";
-
   document.getElementById("companyAddress").value =
     currentCompany.address ?? "";
-
   document.getElementById("companyDescription").value =
     currentCompany.description ?? "";
-
     document.getElementById(
   "companyMenuDescription"
 ).value =
   currentCompany.menu_description ??
   "";
-
   document.getElementById("companyPhone").value =
     currentCompany.phone ?? "";
-
   document.getElementById("companyHours").value =
     currentCompany.business_hours ?? "";
-
   document.getElementById("companyClosedDays").value =
     currentCompany.closed_days ?? "";
-
   document.getElementById("companyInstagram").value =
     currentCompany.instagram_url ?? "";
 }
-
-
 function openCompanyModal(fieldToFocus = "") {
   fillCompanyForm();
   openModal("companyModal");
-
   const fieldMap = {
     name: "companyName",
     address: "companyAddress",
@@ -505,56 +404,41 @@ function openCompanyModal(fieldToFocus = "") {
     closed_days: "companyClosedDays",
     instagram_url: "companyInstagram"
   };
-
   const elementId = fieldMap[fieldToFocus];
-
   if (elementId) {
     setTimeout(() => {
       document.getElementById(elementId)?.focus();
     }, 150);
   }
 }
-
-
 async function saveCompanyInfo() {
   const button = document.getElementById("saveCompanyInfo");
-
   const name =
     document.getElementById("companyName").value.trim();
-
   const address =
     document.getElementById("companyAddress").value.trim();
-
   const description =
     document.getElementById("companyDescription").value.trim();
-
     const menuDescription =
   document.getElementById(
     "companyMenuDescription"
   ).value.trim();
-
   const phone =
     document.getElementById("companyPhone").value.trim();
-
   const businessHours =
     document.getElementById("companyHours").value.trim();
-
   const closedDays =
     document.getElementById("companyClosedDays").value.trim();
-
   const instagramUrl =
     document.getElementById("companyInstagram").value.trim();
-
   if (!name) {
-    alert("店舗名を入力してください。");
+    alert(`${currentCompany?.business_type === "video_editing" ? "ブランド名" : "名称"}を入力してください。`);
     return;
   }
-
   if (phone && !/^[0-9+\-() ]+$/.test(phone)) {
     alert("電話番号を確認してください。");
     return;
   }
-
   if (
     instagramUrl &&
     !/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._]+\/?$/i.test(instagramUrl)
@@ -562,9 +446,7 @@ async function saveCompanyInfo() {
     alert("InstagramのプロフィールURLを確認してください。");
     return;
   }
-
   setBusy(button, true, "保存中...");
-
   const values = {
     name,
     address,
@@ -577,50 +459,38 @@ async function saveCompanyInfo() {
     instagram_url: instagramUrl,
     updated_at: new Date().toISOString()
   };
-
   const { data, error } = await supabaseClient
     .from("company_info")
     .update(values)
     .eq("id", currentCompanyId)
     .select()
     .single();
-
   setBusy(button, false, "保存する");
-
   if (error) {
     console.error(error);
-    alert("店舗情報の保存に失敗しました。");
+    alert(currentCompany?.business_type === "video_editing" ? "プロフィール情報の保存に失敗しました。" : "基本情報の保存に失敗しました。");
     return;
   }
-
   currentCompany = data;
   renderCompanyInfo();
   closeModal("companyModal");
   showToast("店舗情報を保存しました");
 }
-
-
 async function handleHeroImageChange(event) {
   const input = event.currentTarget;
   const file = input.files?.[0];
-
   if (!file) {
     return;
   }
-
   if (!validateImage(file)) {
     input.value = "";
     return;
   }
-
   const button = document.getElementById("editHeroImageButton");
   setBusy(button, true, "変更中...");
-
   const oldUrl = currentCompany?.hero_image_url || null;
-
   try {
     const imageUrl = await uploadImage(file, "hero");
-
     const { data, error } = await supabaseClient
       .from("company_info")
       .update({
@@ -630,18 +500,14 @@ async function handleHeroImageChange(event) {
       .eq("id", currentCompanyId)
       .select()
       .single();
-
     if (error) {
       throw error;
     }
-
     currentCompany = data;
     renderCompanyInfo();
-
     if (oldUrl && oldUrl !== imageUrl) {
       await removeStorageFileByPublicUrl(oldUrl);
     }
-
     showToast("トップ画像を変更しました");
   } catch (error) {
     console.error(error);
@@ -651,12 +517,9 @@ async function handleHeroImageChange(event) {
     setBusy(button, false, "📷 画像を変更");
   }
 }
-
-
 /* ========================================
    メニュー
 ======================================== */
-
 async function loadMenuItems() {
   const { data, error } = await supabaseClient
     .from("menu_items")
@@ -664,33 +527,26 @@ async function loadMenuItems() {
     .eq("company_id", currentCompanyId)
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
-
   if (error) {
     console.error(error);
     showToast("メニューを読み込めませんでした");
     return;
   }
-
   menuItems = data ?? [];
   renderMenuItems();
 }
-
-
 function renderMenuItems() {
   const list = document.getElementById("visualMenuList");
   list.replaceChildren();
-
   if (menuItems.length === 0) {
-    list.appendChild(createEmptyState("まだメニューがありません"));
+    list.appendChild(createEmptyState(`まだ${getEditorItemNoun()}がありません`));
     return;
   }
-
   menuItems.forEach((item) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "editor-menu-card";
     button.addEventListener("click", () => openMenuModal(item.id));
-
     if (item.image_url) {
       const image = document.createElement("img");
       image.className = "editor-menu-image";
@@ -703,63 +559,48 @@ function renderMenuItems() {
       placeholder.textContent = "写真を追加";
       button.appendChild(placeholder);
     }
-
     const meta = document.createElement("div");
     meta.className = "editor-menu-meta";
-
     const category = document.createElement("p");
     category.className = "editor-menu-category";
     category.textContent = item.category || "その他";
     meta.appendChild(category);
-
     const title = document.createElement("h3");
     title.textContent = item.name || "";
     meta.appendChild(title);
-
     const description = document.createElement("p");
     description.className = "editor-menu-description";
     description.textContent = item.description || "";
     meta.appendChild(description);
-
     if (currentCompany?.business_type !== "hospital") {
   const price = document.createElement("p");
   price.className = "editor-menu-price";
   price.textContent = `¥${Number(item.price || 0).toLocaleString()}`;
   meta.appendChild(price);
 }
-
     const badgeRow = document.createElement("div");
     badgeRow.className = "badge-row";
-
     if (item.is_recommended) {
       badgeRow.appendChild(createBadge("⭐ おすすめ"));
     }
-
     if (item.is_sold_out) {
       badgeRow.appendChild(createBadge("売り切れ", "soldout"));
     }
-
     if (item.is_visible === false) {
       badgeRow.appendChild(createBadge("非公開", "hidden-item"));
     }
-
     if (badgeRow.childElementCount > 0) {
       meta.appendChild(badgeRow);
     }
-
     button.appendChild(meta);
     list.appendChild(button);
   });
 }
-
-
 function openMenuModal(itemId = null) {
   resetMenuForm();
-
   const title = document.getElementById("menuModalTitle");
   const deleteButton = document.getElementById("deleteMenuButton");
   const saveButton = document.getElementById("saveMenuButton");
-
   if (!itemId) {
     title.textContent =
   getBusinessTypeSettings().addTitle;
@@ -768,15 +609,12 @@ function openMenuModal(itemId = null) {
     openModal("menuModal");
     return;
   }
-
   const item = menuItems.find(
     (menuItem) => String(menuItem.id) === String(itemId)
   );
-
   if (!item) {
     return;
   }
-
   document.getElementById("menuEditId").value = item.id;
   document.getElementById("menuName").value = item.name ?? "";
   document.getElementById("menuDescription").value =
@@ -792,16 +630,12 @@ function openMenuModal(itemId = null) {
     item.is_sold_out ?? false;
   document.getElementById("menuVisible").checked =
     item.is_visible ?? true;
-
   title.textContent =
   getBusinessTypeSettings().editTitle;
   deleteButton.hidden = false;
   saveButton.textContent = "変更を保存";
-
   openModal("menuModal");
 }
-
-
 function resetMenuForm() {
   document.getElementById("menuEditId").value = "";
   document.getElementById("menuName").value = "";
@@ -814,87 +648,65 @@ function resetMenuForm() {
   document.getElementById("menuVisible").checked = true;
   document.getElementById("menuImage").value = "";
 }
-
-
 async function saveMenuItem() {
   const button = document.getElementById("saveMenuButton");
   const editId = document.getElementById("menuEditId").value;
-
   const name =
     document.getElementById("menuName").value.trim();
-
   const description =
     document.getElementById("menuDescription").value.trim();
-
   const priceText =
     document.getElementById("menuPrice").value.trim();
-
   const sortText =
     document.getElementById("menuSortOrder").value.trim();
-
   const category =
     document.getElementById("menuCategory").value.trim();
-
   const isRecommended =
     document.getElementById("menuRecommended").checked;
-
   const isSoldOut =
     document.getElementById("menuSoldOut").checked;
-
   const isVisible =
     document.getElementById("menuVisible").checked;
-
   const imageFile =
     document.getElementById("menuImage").files?.[0];
-
   const isHospital =
   currentCompany?.business_type === "hospital";
-
 if (!name || (!isHospital && !priceText)) {
   alert(
     isHospital
       ? "診療科名を入力してください。"
-      : "メニュー名と価格を入力してください。"
+      : `${getBusinessTypeSettings().itemNameLabel}と${getBusinessTypeSettings().priceLabel}を入力してください。`
   );
   return;
 }
-
   const price =
   isHospital ? 0 : Number(priceText);
   const sortOrder = Number(sortText || 0);
-
   if (
   !isHospital &&
   (!Number.isInteger(price) || price <= 0)
 ) {
-  alert("価格は1円以上の整数で入力してください。");
+  alert(`${getBusinessTypeSettings().priceLabel}は1円以上の整数で入力してください。`);
   return;
 }
-
   if (!Number.isInteger(sortOrder) || sortOrder < 0) {
-    alert("並び順は0以上の整数で入力してください。");
+    alert("表示順は0以上の整数で入力してください。");
     return;
   }
-
   if (imageFile && !validateImage(imageFile)) {
     return;
   }
-
   setBusy(button, true, editId ? "保存中..." : "追加中...");
-
   const existingItem = editId
     ? menuItems.find((item) => String(item.id) === String(editId))
     : null;
-
   let imageUrl = existingItem?.image_url ?? null;
   let newImageUrl = null;
-
   try {
     if (imageFile) {
       newImageUrl = await uploadImage(imageFile, "menu");
       imageUrl = newImageUrl;
     }
-
     const values = {
       name,
       description,
@@ -907,29 +719,23 @@ if (!name || (!isHospital && !priceText)) {
       image_url: imageUrl,
       company_id: currentCompanyId
     };
-
     let error = null;
-
     if (editId) {
       const result = await supabaseClient
         .from("menu_items")
         .update(values)
         .eq("id", editId)
         .eq("company_id", currentCompanyId);
-
       error = result.error;
     } else {
       const result = await supabaseClient
         .from("menu_items")
         .insert([values]);
-
       error = result.error;
     }
-
     if (error) {
       throw error;
     }
-
     if (
       imageFile &&
       existingItem?.image_url &&
@@ -937,68 +743,53 @@ if (!name || (!isHospital && !priceText)) {
     ) {
       await removeStorageFileByPublicUrl(existingItem.image_url);
     }
-
     closeModal("menuModal");
     showToast(editId ? "メニューを変更しました" : "メニューを追加しました");
     await loadMenuItems();
   } catch (error) {
     console.error(error);
-    alert("メニューの保存に失敗しました。");
+    alert(`${getEditorItemNoun()}の保存に失敗しました。`);
   } finally {
     setBusy(button, false, editId ? "変更を保存" : "追加する");
   }
 }
-
-
 async function deleteCurrentMenuItem() {
   const editId = document.getElementById("menuEditId").value;
-
   if (!editId) {
     return;
   }
-
   const item = menuItems.find(
     (menuItem) => String(menuItem.id) === String(editId)
   );
-
   const ok = confirm(`「${item?.name || "このメニュー"}」を削除しますか？`);
-
   if (!ok) {
     return;
   }
-
   const button = document.getElementById("deleteMenuButton");
   setBusy(button, true, "削除中...");
-
   const { error } = await supabaseClient
     .from("menu_items")
     .delete()
     .eq("id", editId)
     .eq("company_id", currentCompanyId);
-
   if (error) {
     console.error(error);
     setBusy(button, false, "削除");
-    alert("メニューの削除に失敗しました。");
+    alert(`${getEditorItemNoun()}の削除に失敗しました。`);
     return;
   }
-
   if (item?.image_url) {
     await removeStorageFileByPublicUrl(item.image_url);
   }
-
   setBusy(button, false, "削除");
   closeModal("menuModal");
   showToast("メニューを削除しました");
   await loadMenuItems();
 }
-
 /* ========================================
    ポートフォリオ
 ======================================== */
-
 async function loadPortfolioItems() {
-
   const { data, error } =
     await supabaseClient
       .from("portfolio_items")
@@ -1010,78 +801,49 @@ async function loadPortfolioItems() {
       .order("created_at", {
         ascending: false
       });
-
-
   if (error) {
-
     console.error(
       "ポートフォリオ取得エラー:",
       error
     );
-
     showToast(
       "制作実績を読み込めませんでした"
     );
-
     return;
   }
-
-
   portfolioItems =
     data ?? [];
-
-
   renderPortfolioItems();
 }
-
-
 function renderPortfolioItems() {
-
   const list =
     document.getElementById(
       "visualPortfolioList"
     );
-
-
   if (!list) {
     return;
   }
-
-
   list.replaceChildren();
-
-
   if (
     portfolioItems.length === 0
   ) {
-
     list.appendChild(
       createEmptyState(
         "まだ制作実績がありません"
       )
     );
-
     return;
   }
-
-
   portfolioItems.forEach(
     (item) => {
-
       const button =
         document.createElement(
           "button"
         );
-
-
       button.type =
         "button";
-
-
       button.className =
         "editor-portfolio-card";
-
-
       button.addEventListener(
         "click",
         () =>
@@ -1089,117 +851,71 @@ function renderPortfolioItems() {
             item.id
           )
       );
-
-
       const media =
         document.createElement(
           "div"
         );
-
-
       media.className =
         "editor-portfolio-media";
-
-
       if (item.image_url) {
-
         const image =
           document.createElement(
             "img"
           );
-
-
         image.src =
           item.image_url;
-
-
         image.alt =
           item.title || "";
-
-
         image.className =
           "editor-portfolio-image";
-
-
         media.appendChild(
           image
         );
-
       } else {
-
         const placeholder =
           document.createElement(
             "div"
           );
-
-
         placeholder.className =
           "editor-portfolio-placeholder";
-
-
         placeholder.textContent =
           item.media_type === "video"
             ? "▶ VIDEO"
             : "PHOTO";
-
-
         media.appendChild(
           placeholder
         );
-
       }
-
-
       if (
         item.media_type === "video"
       ) {
-
         const videoBadge =
           document.createElement(
             "span"
           );
-
-
         videoBadge.className =
           "portfolio-video-badge";
-
-
         videoBadge.textContent =
           "▶";
-
-
         media.appendChild(
           videoBadge
         );
-
       }
-
-
       button.appendChild(
         media
       );
-
-
       const meta =
         document.createElement(
           "div"
         );
-
-
       meta.className =
         "editor-portfolio-meta";
-
-
       const category =
         document.createElement(
           "p"
         );
-
-
       category.className =
         "editor-portfolio-category";
-
-
       category.textContent =
         item.category ||
         (
@@ -1207,145 +923,88 @@ function renderPortfolioItems() {
             ? "VIDEO"
             : "PHOTO"
         );
-
-
       meta.appendChild(
         category
       );
-
-
       const title =
         document.createElement(
           "h3"
         );
-
-
       title.textContent =
         item.title || "";
-
-
       meta.appendChild(
         title
       );
-
-
       if (item.description) {
-
         const description =
           document.createElement(
             "p"
           );
-
-
         description.className =
           "editor-portfolio-description";
-
-
         description.textContent =
           item.description;
-
-
         meta.appendChild(
           description
         );
-
       }
-
-
       if (
         item.is_visible === false
       ) {
-
         const badgeRow =
           document.createElement(
             "div"
           );
-
-
         badgeRow.className =
           "badge-row";
-
-
         badgeRow.appendChild(
           createBadge(
             "非公開",
             "hidden-item"
           )
         );
-
-
         meta.appendChild(
           badgeRow
         );
-
       }
-
-
       button.appendChild(
         meta
       );
-
-
       list.appendChild(
         button
       );
-
     }
   );
 }
-
-
 function openPortfolioModal(
   itemId = null
 ) {
-
   resetPortfolioForm();
-
-
   const title =
     document.getElementById(
       "portfolioModalTitle"
     );
-
-
   const deleteButton =
     document.getElementById(
       "deletePortfolioButton"
     );
-
-
   const saveButton =
     document.getElementById(
       "savePortfolioButton"
     );
-
-
   if (!itemId) {
-
     title.textContent =
       "制作実績を追加";
-
-
     deleteButton.hidden =
       true;
-
-
     saveButton.textContent =
       "追加する";
-
-
     updatePortfolioMediaFields();
-
-
     openModal(
       "portfolioModal"
     );
-
-
     return;
   }
-
-
   const item =
     portfolioItems.find(
       (portfolioItem) =>
@@ -1354,257 +1013,164 @@ function openPortfolioModal(
         ) ===
         String(itemId)
     );
-
-
   if (!item) {
     return;
   }
-
-
   document.getElementById(
     "portfolioEditId"
   ).value =
     item.id;
-
-
   document.getElementById(
     "portfolioTitle"
   ).value =
     item.title ?? "";
-
-
   document.getElementById(
     "portfolioDescription"
   ).value =
     item.description ?? "";
-
-
   document.getElementById(
     "portfolioMediaType"
   ).value =
     item.media_type ||
     "photo";
-
   document.getElementById(
     "portfolioCategory"
   ).value =
     item.category ?? "";
-
-
   document.getElementById(
     "portfolioSortOrder"
   ).value =
     item.sort_order ?? 0;
-
-
   document.getElementById(
     "portfolioVisible"
   ).checked =
     item.is_visible ?? true;
-
-
   title.textContent =
     "制作実績を編集";
-
-
   deleteButton.hidden =
     false;
-
-
   saveButton.textContent =
     "変更を保存";
-
-
   updatePortfolioMediaFields();
-
-
   openModal(
     "portfolioModal"
   );
 }
-
-
 function resetPortfolioForm() {
-
   document.getElementById(
     "portfolioEditId"
   ).value = "";
-
-
   document.getElementById(
     "portfolioTitle"
   ).value = "";
-
-
   document.getElementById(
     "portfolioDescription"
   ).value = "";
-
-
   document.getElementById(
     "portfolioMediaType"
   ).value =
     "photo";
-
-
   document.getElementById(
   "portfolioVideoFile"
 ).value = "";
-
-
   document.getElementById(
     "portfolioCategory"
   ).value = "";
-
-
   document.getElementById(
     "portfolioSortOrder"
   ).value = "";
-
-
   document.getElementById(
     "portfolioImage"
   ).value = "";
-
-
   document.getElementById(
     "portfolioVisible"
   ).checked =
     true;
-
-
   updatePortfolioMediaFields();
 }
-
-
 function updatePortfolioMediaFields() {
-
   const mediaType =
     document.getElementById(
       "portfolioMediaType"
     )?.value || "photo";
-
-
   const videoFileField =
     document.getElementById(
       "portfolioVideoFileField"
     );
-
-
   const imageLabel =
     document.getElementById(
       "portfolioImageLabel"
     );
-
-
   if (videoFileField) {
-
     videoFileField.classList.toggle(
       "business-field-hidden",
       mediaType !== "video"
     );
-
   }
-
-
   if (imageLabel) {
-
     imageLabel.textContent =
       mediaType === "video"
         ? "サムネイル画像"
         : "写真";
-
   }
-
 }
-
-
 async function savePortfolioItem() {
-
   const button =
     document.getElementById(
       "savePortfolioButton"
     );
-
-
   const editId =
     document.getElementById(
       "portfolioEditId"
     ).value;
-
-
   const title =
     document.getElementById(
       "portfolioTitle"
     ).value.trim();
-
-
   const description =
     document.getElementById(
       "portfolioDescription"
     ).value.trim();
-
-
   const mediaType =
     document.getElementById(
       "portfolioMediaType"
     ).value;
-
-
   const category =
     document.getElementById(
       "portfolioCategory"
     ).value.trim();
-
-
   const sortText =
     document.getElementById(
       "portfolioSortOrder"
     ).value.trim();
-
-
   const isVisible =
     document.getElementById(
       "portfolioVisible"
     ).checked;
-
-
   const imageFile =
     document.getElementById(
       "portfolioImage"
     ).files?.[0];
-
-
   const videoFile =
     document.getElementById(
       "portfolioVideoFile"
     ).files?.[0];
-
-
   if (!title) {
-
     alert(
       "タイトルを入力してください。"
     );
-
     return;
   }
-
-
   if (
     !["photo", "video"].includes(
       mediaType
     )
   ) {
-
     alert(
       "作品の種類を確認してください。"
     );
-
     return;
   }
-
-
   const existingItem =
     editId
       ? portfolioItems.find(
@@ -1613,71 +1179,49 @@ async function savePortfolioItem() {
             String(editId)
         )
       : null;
-
-
   if (
     mediaType === "photo" &&
     !imageFile &&
     !existingItem?.image_url
   ) {
-
     alert(
       "写真を選択してください。"
     );
-
     return;
   }
-
-
   if (
     mediaType === "video" &&
     !videoFile &&
     !existingItem?.video_url
   ) {
-
     alert(
       "動画ファイルを選択してください。"
     );
-
     return;
   }
-
-
   const sortOrder =
     Number(sortText || 0);
-
-
   if (
     !Number.isInteger(sortOrder) ||
     sortOrder < 0
   ) {
-
     alert(
-      "並び順は0以上の整数で入力してください。"
+      "表示順は0以上の整数で入力してください。"
     );
-
     return;
   }
-
-
   if (
     imageFile &&
     !validateImage(imageFile)
   ) {
-
     return;
   }
-
-
   if (
     videoFile &&
     !validateVideo(videoFile)
   ) {
-
     return;
   }
-
-
   setBusy(
     button,
     true,
@@ -1685,106 +1229,64 @@ async function savePortfolioItem() {
       ? "保存中..."
       : "追加中..."
   );
-
-
   let imageUrl =
     existingItem?.image_url ??
     null;
-
-
   let videoUrl =
     existingItem?.video_url ??
     null;
-
-
   let newImageUrl =
     null;
-
-
   let newVideoUrl =
     null;
-
-
   try {
-
     if (imageFile) {
-
       newImageUrl =
         await uploadImage(
           imageFile,
           "portfolio"
         );
-
-
       imageUrl =
         newImageUrl;
-
     }
-
-
     if (
       mediaType === "video" &&
       videoFile
     ) {
-
       newVideoUrl =
         await uploadPortfolioVideo(
           videoFile
         );
-
-
       videoUrl =
         newVideoUrl;
-
     }
-
-
     if (
       mediaType === "photo"
     ) {
-
       videoUrl =
         null;
-
     }
-
-
     const values = {
-
       title,
-
       description,
-
       media_type:
         mediaType,
-
       image_url:
         imageUrl,
-
       video_url:
         videoUrl,
-
       category:
         category || null,
-
       sort_order:
         sortOrder,
-
       is_visible:
         isVisible,
-
       company_id:
         currentCompanyId
-
     };
-
-
     let error =
       null;
-
-
     if (editId) {
-
       const result =
         await supabaseClient
           .from(
@@ -1799,13 +1301,9 @@ async function savePortfolioItem() {
             "company_id",
             currentCompanyId
           );
-
-
       error =
         result.error;
-
     } else {
-
       const result =
         await supabaseClient
           .from(
@@ -1814,89 +1312,58 @@ async function savePortfolioItem() {
           .insert([
             values
           ]);
-
-
       error =
         result.error;
-
     }
-
-
     if (error) {
       throw error;
     }
-
-
     if (
       imageFile &&
       existingItem?.image_url &&
       existingItem.image_url !==
         newImageUrl
     ) {
-
       await removeStorageFileByPublicUrl(
         existingItem.image_url
       );
-
     }
-
-
     if (
       videoFile &&
       existingItem?.video_url &&
       existingItem.video_url !==
         newVideoUrl
     ) {
-
       await removePortfolioVideoByPublicUrl(
         existingItem.video_url
       );
-
     }
-
-
     if (
       mediaType === "photo" &&
       existingItem?.video_url
     ) {
-
       await removePortfolioVideoByPublicUrl(
         existingItem.video_url
       );
-
     }
-
-
     closeModal(
       "portfolioModal"
     );
-
-
     showToast(
       editId
         ? "制作実績を変更しました"
         : "制作実績を追加しました"
     );
-
-
     await loadPortfolioItems();
-
-
   } catch (error) {
-
     console.error(
       "ポートフォリオ保存エラー:",
       error
     );
-
-
     alert(
       "制作実績の保存に失敗しました。"
     );
-
-
   } finally {
-
     setBusy(
       button,
       false,
@@ -1904,25 +1371,16 @@ async function savePortfolioItem() {
         ? "変更を保存"
         : "追加する"
     );
-
   }
-
 }
-
-
 async function deleteCurrentPortfolioItem() {
-
   const editId =
     document.getElementById(
       "portfolioEditId"
     ).value;
-
-
   if (!editId) {
     return;
   }
-
-
   const item =
     portfolioItems.find(
       (portfolioItem) =>
@@ -1931,32 +1389,22 @@ async function deleteCurrentPortfolioItem() {
         ) ===
         String(editId)
     );
-
-
   const ok =
     confirm(
       `「${item?.title || "この作品"}」を削除しますか？`
     );
-
-
   if (!ok) {
     return;
   }
-
-
   const button =
     document.getElementById(
       "deletePortfolioButton"
     );
-
-
   setBusy(
     button,
     true,
     "削除中..."
   );
-
-
   const { error } =
     await supabaseClient
       .from("portfolio_items")
@@ -1969,133 +1417,90 @@ async function deleteCurrentPortfolioItem() {
         "company_id",
         currentCompanyId
       );
-
-
   if (error) {
-
     console.error(
       "ポートフォリオ削除エラー:",
       error
     );
-
-
     setBusy(
       button,
       false,
       "削除"
     );
-
-
     alert(
       "制作実績の削除に失敗しました。"
     );
-
-
     return;
   }
-
-
   if (item?.image_url) {
-
     await removeStorageFileByPublicUrl(
       item.image_url
     );
-
   }
-
   if (item?.video_url) {
-
   await removePortfolioVideoByPublicUrl(
     item.video_url
   );
-
 }
-
   setBusy(
     button,
     false,
     "削除"
   );
-
-
   closeModal(
     "portfolioModal"
   );
-
-
   showToast(
     "制作実績を削除しました"
   );
-
-
   await loadPortfolioItems();
 }
-
-
 function isValidWebUrl(
   value
 ) {
-
   try {
-
     const url =
       new URL(value);
-
-
     return (
       url.protocol === "https:" ||
       url.protocol === "http:"
     );
-
   } catch {
-
     return false;
-
   }
 }
-
 /* ========================================
    お知らせ
 ======================================== */
-
 async function loadNews() {
   const { data, error } = await supabaseClient
     .from("news")
     .select("*")
     .eq("company_id", currentCompanyId)
     .order("created_at", { ascending: false });
-
   if (error) {
     console.error(error);
     showToast("お知らせを読み込めませんでした");
     return;
   }
-
   newsItems = data ?? [];
   renderNews();
 }
-
-
 function renderNews() {
   const list = document.getElementById("visualNewsList");
   list.replaceChildren();
-
   if (newsItems.length === 0) {
     list.appendChild(createEmptyState("まだお知らせがありません"));
     return;
   }
-
   newsItems.forEach((news) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "editor-news-card";
-
     if (!news.image_url) {
   button.classList.add("no-image");
 }
-
     button.addEventListener("click", () => openNewsModal(news.id));
-
     if (news.image_url) {
       const image = document.createElement("img");
       image.className = "editor-news-image";
@@ -2103,111 +1508,82 @@ function renderNews() {
       image.alt = "";
       button.appendChild(image);
     }
-
     const body = document.createElement("div");
-
     const date = document.createElement("p");
     date.className = "editor-news-date";
     date.textContent = formatDate(news.created_at);
     body.appendChild(date);
-
     const title = document.createElement("h3");
     title.textContent = news.title || "";
     body.appendChild(title);
-
     const content = document.createElement("p");
     content.className = "editor-news-content";
     content.textContent = news.content || "";
     body.appendChild(content);
-
     button.appendChild(body);
     list.appendChild(button);
   });
 }
-
-
 function openNewsModal(newsId = null) {
   resetNewsForm();
-
   const title = document.getElementById("newsModalTitle");
   const deleteButton = document.getElementById("deleteNewsButton");
   const saveButton = document.getElementById("saveNewsButton");
-
   if (!newsId) {
     title.textContent = "お知らせを追加";
     deleteButton.hidden = true;
-    saveButton.textContent = "公開する";
+    saveButton.textContent = "保存して公開";
     openModal("newsModal");
     return;
   }
-
   const news = newsItems.find(
     (item) => String(item.id) === String(newsId)
   );
-
   if (!news) {
     return;
   }
-
   document.getElementById("newsEditId").value = news.id;
   document.getElementById("newsTitle").value = news.title ?? "";
   document.getElementById("newsContent").value = news.content ?? "";
-
   title.textContent = "お知らせを編集";
   deleteButton.hidden = false;
-  saveButton.textContent = "変更を保存";
-
+  saveButton.textContent = "保存して公開";
   openModal("newsModal");
 }
-
-
 function resetNewsForm() {
   document.getElementById("newsEditId").value = "";
   document.getElementById("newsTitle").value = "";
   document.getElementById("newsContent").value = "";
   document.getElementById("newsImage").value = "";
 }
-
-
 async function saveNewsItem() {
   const button = document.getElementById("saveNewsButton");
   const editId = document.getElementById("newsEditId").value;
-
   const title =
     document.getElementById("newsTitle").value.trim();
-
   const content =
     document.getElementById("newsContent").value.trim();
-
   const imageFile =
     document.getElementById("newsImage").files?.[0];
-
   if (!title || !content) {
     alert("タイトルと内容を入力してください。");
     return;
   }
-
   if (imageFile && !validateImage(imageFile)) {
     return;
   }
-
   setBusy(button, true, editId ? "保存中..." : "公開中...");
-
   const existingNews = editId
     ? newsItems.find((item) => String(item.id) === String(editId))
     : null;
-
   let imageUrl = existingNews?.image_url ?? null;
   let newImageUrl = null;
-
   try {
     if (imageFile) {
       newImageUrl = await uploadImage(imageFile, "news");
       imageUrl = newImageUrl;
     }
-
     let error = null;
-
     if (editId) {
       const result = await supabaseClient
         .from("news")
@@ -2218,7 +1594,6 @@ async function saveNewsItem() {
         })
         .eq("id", editId)
         .eq("company_id", currentCompanyId);
-
       error = result.error;
     } else {
       const result = await supabaseClient
@@ -2231,14 +1606,11 @@ async function saveNewsItem() {
             company_id: currentCompanyId
           }
         ]);
-
       error = result.error;
     }
-
     if (error) {
       throw error;
     }
-
     if (
       imageFile &&
       existingNews?.image_url &&
@@ -2246,7 +1618,6 @@ async function saveNewsItem() {
     ) {
       await removeStorageFileByPublicUrl(existingNews.image_url);
     }
-
     closeModal("newsModal");
     showToast(editId ? "お知らせを変更しました" : "お知らせを公開しました");
     await loadNews();
@@ -2254,115 +1625,82 @@ async function saveNewsItem() {
     console.error(error);
     alert("お知らせの保存に失敗しました。");
   } finally {
-    setBusy(button, false, editId ? "変更を保存" : "公開する");
+    setBusy(button, false, "保存して公開");
   }
 }
-
-
 async function deleteCurrentNewsItem() {
   const editId = document.getElementById("newsEditId").value;
-
   if (!editId) {
     return;
   }
-
   const news = newsItems.find(
     (item) => String(item.id) === String(editId)
   );
-
   const ok = confirm(`「${news?.title || "このお知らせ"}」を削除しますか？`);
-
   if (!ok) {
     return;
   }
-
   const button = document.getElementById("deleteNewsButton");
   setBusy(button, true, "削除中...");
-
   const { error } = await supabaseClient
     .from("news")
     .delete()
     .eq("id", editId)
     .eq("company_id", currentCompanyId);
-
   if (error) {
     console.error(error);
     setBusy(button, false, "削除");
     alert("お知らせの削除に失敗しました。");
     return;
   }
-
   if (news?.image_url) {
     await removeStorageFileByPublicUrl(news.image_url);
   }
-
   setBusy(button, false, "削除");
   closeModal("newsModal");
   showToast("お知らせを削除しました");
   await loadNews();
 }
-
-
 /* ========================================
    Storage
 ======================================== */
-
 function validateVideo(file) {
-
   const allowedTypes = [
     "video/mp4",
     "video/webm"
   ];
-
-
   if (
     !allowedTypes.includes(
       file.type
     )
   ) {
-
     alert(
       "MP4またはWebMの動画を選んでください。"
     );
-
     return false;
   }
-
-
   if (
     file.size >
     50 * 1024 * 1024
   ) {
-
     alert(
       "動画は50MB以下のものを選んでください。"
     );
-
     return false;
   }
-
-
   return true;
-
 }
-
-
 async function uploadPortfolioVideo(
   file
 ) {
-
   const extension =
     file.name
       .split(".")
       .pop()
       ?.toLowerCase() ||
     "mp4";
-
-
   const fileName =
     `${currentCompanyId}/portfolio-${Date.now()}-${crypto.randomUUID()}.${extension}`;
-
-
   const { error } =
     await supabaseClient.storage
       .from(
@@ -2374,21 +1712,15 @@ async function uploadPortfolioVideo(
         {
           cacheControl:
             "3600",
-
           upsert:
             false,
-
           contentType:
             file.type
         }
       );
-
-
   if (error) {
     throw error;
   }
-
-
   const { data } =
     supabaseClient.storage
       .from(
@@ -2397,30 +1729,20 @@ async function uploadPortfolioVideo(
       .getPublicUrl(
         fileName
       );
-
-
   return data.publicUrl;
-
 }
-
-
 async function removePortfolioVideoByPublicUrl(
   url
 ) {
-
   try {
-
     if (
       !url ||
       !url.includes(
         "/portfolio-videos/"
       )
     ) {
-
       return;
     }
-
-
     const path =
       decodeURIComponent(
         url
@@ -2429,13 +1751,9 @@ async function removePortfolioVideoByPublicUrl(
           )[1]
           .split("?")[0]
       );
-
-
     if (!path) {
       return;
     }
-
-
     const { error } =
       await supabaseClient.storage
         .from(
@@ -2444,88 +1762,63 @@ async function removePortfolioVideoByPublicUrl(
         .remove([
           path
         ]);
-
-
     if (error) {
-
       console.warn(
         "動画削除:",
         error
       );
-
     }
-
-
   } catch (error) {
-
     console.warn(
       "動画削除処理:",
       error
     );
-
   }
-
 }
-
 function validateImage(file) {
   if (!file.type.startsWith("image/")) {
     alert("画像ファイルを選んでください。");
     return false;
   }
-
   if (file.size > 5 * 1024 * 1024) {
     alert("画像は5MB以下のものを選んでください。");
     return false;
   }
-
   return true;
 }
-
-
 async function uploadImage(file, prefix) {
   const extension =
     file.name.split(".").pop()?.toLowerCase() || "jpg";
-
   const fileName =
     `company-${currentCompanyId}/${prefix}-${Date.now()}-${crypto.randomUUID()}.${extension}`;
-
   const { error } = await supabaseClient.storage
     .from("news-images")
     .upload(fileName, file, {
       cacheControl: "3600",
       upsert: false
     });
-
   if (error) {
     throw error;
   }
-
   const { data } = supabaseClient.storage
     .from("news-images")
     .getPublicUrl(fileName);
-
   return data.publicUrl;
 }
-
-
 async function removeStorageFileByPublicUrl(url) {
   try {
     if (!url || !url.includes("/news-images/")) {
       return;
     }
-
     const path = decodeURIComponent(
       url.split("/news-images/")[1].split("?")[0]
     );
-
     if (!path) {
       return;
     }
-
     const { error } = await supabaseClient.storage
       .from("news-images")
       .remove([path]);
-
     if (error) {
       console.warn("画像削除:", error);
     }
@@ -2533,224 +1826,170 @@ async function removeStorageFileByPublicUrl(url) {
     console.warn("画像削除処理:", error);
   }
 }
-
-
 /* ========================================
    UI helpers
 ======================================== */
-
 function openModal(id) {
   const modal = document.getElementById(id);
-
   if (!modal) {
     return;
   }
-
+  editorCopy.apply();
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
 }
-
-
 function closeModal(id) {
   const modal = document.getElementById(id);
-
   if (!modal) {
     return;
   }
-
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
-
   if (!document.querySelector(".modal.open")) {
     document.body.style.overflow = "";
   }
 }
-
-
 function setBusy(button, busy, text) {
   button.disabled = busy;
   button.textContent = text;
 }
-
-
 function setText(id, value) {
   const element = document.getElementById(id);
-
   if (element) {
     element.textContent = value;
   }
 }
-
-
 function showToast(message) {
+  message = localizeEditorMessage(message);
   const toast = document.getElementById("toastMessage");
-
   toast.textContent = message;
   toast.classList.add("show");
-
   clearTimeout(showToast.timer);
-
   showToast.timer = setTimeout(() => {
     toast.classList.remove("show");
   }, 2400);
 }
-
-
 function createEmptyState(message) {
   const element = document.createElement("div");
   element.className = "empty-state";
   element.textContent = message;
   return element;
 }
-
-
 function createBadge(text, className = "") {
   const badge = document.createElement("span");
   badge.className = `mini-badge ${className}`.trim();
   badge.textContent = text;
   return badge;
 }
-
-
 function formatDate(value) {
   if (!value) {
     return "";
   }
-
   const date = new Date(value);
-
   return date.toLocaleDateString("ja-JP", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit"
   });
 }
-
-
 function escapeCssUrl(value) {
   return String(value)
     .replace(/\\/g, "\\\\")
     .replace(/"/g, '\\"')
-    .replace(/\n/g, "");
+    .replace(/[\r\n]/g, "");
 }
 
 function updateBusinessTypeUI() {
   const businessType =
     currentCompany?.business_type || "restaurant";
-
   const label = document.getElementById("serviceSectionLabel");
   const title = document.getElementById("serviceSectionTitle");
   const guide = document.getElementById("serviceSectionGuide");
-
   const current =
     BUSINESS_TYPE_SETTINGS[businessType] ||
     BUSINESS_TYPE_SETTINGS.restaurant;
-
   if (label) {
   label.textContent = current.label;
 }
-
 const descriptionLabel =
   document.getElementById(
     "companyDescriptionLabel"
   );
-
 if (descriptionLabel) {
   descriptionLabel.textContent =
     current.introTitle ||
     "店舗紹介";
 }
-
 if (title) {
   title.textContent = current.title;
 }
-
   if (guide) {
     guide.textContent = current.guide;
   }
-
   const modalLabel = document.getElementById("menuModalLabel");
 const nameLabel = document.getElementById("menuNameLabel");
 const priceLabel = document.getElementById("menuPriceLabel");
 const menuNameInput = document.getElementById("menuName");
 const menuDescriptionInput = document.getElementById("menuDescription");
 const menuCategoryInput = document.getElementById("menuCategory");
-
 if (modalLabel) {
   modalLabel.textContent = current.modalLabel;
 }
-
 if (nameLabel) {
   nameLabel.textContent = current.itemNameLabel;
 }
-
 if (priceLabel) {
   priceLabel.textContent = current.priceLabel;
 }
-
 if (menuNameInput) {
   menuNameInput.placeholder = current.namePlaceholder;
 }
-
 if (menuDescriptionInput) {
   menuDescriptionInput.placeholder = current.descriptionPlaceholder;
 }
-
 if (menuCategoryInput) {
   menuCategoryInput.placeholder = current.categoryPlaceholder;
 }
-
 const priceField = document
   .getElementById("menuPrice")
   ?.closest("label");
-
 if (priceField) {
   priceField.classList.toggle(
     "business-field-hidden",
     businessType === "hospital"
   );
 }
-
 const introTitle = document.getElementById("companyIntroTitle");
 const businessHoursLabel = document.getElementById("businessHoursLabel");
 const closedDaysLabel = document.getElementById("closedDaysLabel");
-
 if (introTitle) {
   introTitle.textContent = current.introTitle;
 }
-
 if (businessHoursLabel) {
   businessHoursLabel.textContent = current.businessHoursLabel;
 }
-
 if (closedDaysLabel) {
   closedDaysLabel.textContent = current.closedDaysLabel;
 }
-
 const companyInfoTitle =
   document.getElementById("companyInfoTitle");
-
 if (companyInfoTitle) {
   companyInfoTitle.textContent =
     current.companyInfoTitle;
 }
-
 const categoryField = document.getElementById("menuCategoryField");
 const recommendedField = document.getElementById("menuRecommendedField");
 const soldOutField = document.getElementById("menuSoldOutField");
-
 const hideRestaurantOnlyFields =
   businessType === "video_editing" ||
   businessType === "hospital";
-
 if (categoryField) {
   categoryField.classList.toggle(
     "business-field-hidden",
     hideRestaurantOnlyFields
   );
 }
-
 if (recommendedField) {
   recommendedField.classList.toggle(
     "business-field-hidden",
@@ -2759,7 +1998,6 @@ if (recommendedField) {
     businessType === "auto_repair"
   );
 }
-
 if (soldOutField) {
   soldOutField.classList.toggle(
     "business-field-hidden",
@@ -2768,29 +2006,291 @@ if (soldOutField) {
     businessType === "auto_repair"
   );
 }
-
 const portfolioSection =
   document.getElementById(
     "portfolioSection"
   );
-
-
 if (portfolioSection) {
-
   portfolioSection.hidden =
     businessType !==
     "video_editing";
-
 }
-
+  editorCopy.apply();
 }
-
 function getBusinessTypeSettings() {
   const businessType =
     currentCompany?.business_type || "restaurant";
-
   return (
     BUSINESS_TYPE_SETTINGS[businessType] ||
     BUSINESS_TYPE_SETTINGS.restaurant
   );
+}
+/* 管理画面の業種別文言 */
+const editorCopy = (() => {
+  "use strict";
+
+  const UI = {
+    restaurant: {
+      modalLabel: "店舗情報",
+      modalTitle: "店舗情報を編集",
+      nameLabel: "店舗名",
+      namePlaceholder: "店舗名",
+      addressLabel: "住所",
+      addressPlaceholder: "住所",
+      descriptionLabel: "店舗紹介",
+      descriptionPlaceholder: "店舗紹介文",
+      infoTitle: "店舗情報",
+      hoursLabel: "営業時間",
+      closedLabel: "定休日",
+      showMenuDescription: true
+    },
+    video_editing: {
+      modalLabel: "PROFILE",
+      modalTitle: "プロフィール情報を編集",
+      nameLabel: "ブランド名",
+      namePlaceholder: "CÈDRE",
+      addressLabel: "活動エリア・拠点",
+      addressPlaceholder: "例：愛知県 / 東海エリア",
+      descriptionLabel: "プロフィール",
+      descriptionPlaceholder: "活動内容や撮影・編集への想いを入力してください",
+      infoTitle: "ご依頼・連絡先",
+      hoursLabel: "対応時間",
+      closedLabel: "休業日",
+      showMenuDescription: false
+    },
+    hospital: {
+      modalLabel: "医院情報",
+      modalTitle: "医院情報を編集",
+      nameLabel: "医院名",
+      namePlaceholder: "医院名",
+      addressLabel: "住所",
+      addressPlaceholder: "住所",
+      descriptionLabel: "医院紹介",
+      descriptionPlaceholder: "医院紹介文",
+      infoTitle: "医院情報",
+      hoursLabel: "診療時間",
+      closedLabel: "休診日",
+      showMenuDescription: false
+    },
+    auto_repair: {
+      modalLabel: "事業者情報",
+      modalTitle: "事業者情報を編集",
+      nameLabel: "事業者名",
+      namePlaceholder: "事業者名",
+      addressLabel: "住所",
+      addressPlaceholder: "住所",
+      descriptionLabel: "会社紹介",
+      descriptionPlaceholder: "会社紹介文",
+      infoTitle: "店舗情報",
+      hoursLabel: "営業時間",
+      closedLabel: "定休日",
+      showMenuDescription: false
+    }
+  };
+
+  function getBusinessType() {
+    try {
+      if (typeof currentCompany !== "undefined" && currentCompany?.business_type) {
+        return currentCompany.business_type;
+      }
+    } catch (_) {}
+    return "restaurant";
+  }
+
+  function setLabelCaption(inputId, text) {
+    const input = document.getElementById(inputId);
+    const label = input?.closest("label");
+    if (!label) return;
+
+    const existing = label.querySelector(":scope > .dynamic-field-label");
+    if (existing) {
+      existing.textContent = text;
+      return;
+    }
+
+    const span = document.createElement("span");
+    span.className = "dynamic-field-label";
+    span.style.display = "block";
+    span.textContent = text;
+
+    for (const node of Array.from(label.childNodes)) {
+      if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+        node.remove();
+      }
+    }
+
+    label.insertBefore(span, label.firstChild);
+  }
+
+  function setRowLabel(field, text) {
+    const row = document.querySelector(`.information-row[data-company-field="${field}"]`);
+    const label = row?.querySelector("span:first-child");
+    if (label) label.textContent = text;
+  }
+
+  function setText(selector, text) {
+    const element = document.querySelector(selector);
+    if (element) element.textContent = text;
+  }
+
+  function setPlaceholder(id, text) {
+    const input = document.getElementById(id);
+    if (input) input.placeholder = text;
+  }
+
+  function setNote(id, text) {
+    const input = document.getElementById(id);
+    const label = input?.closest("label");
+    if (!label) return;
+    let note = label.querySelector(":scope > .copy-note");
+    if (!note) {
+      note = document.createElement("span");
+      note.className = "form-note copy-note";
+      note.style.display = "block";
+      label.appendChild(note);
+    }
+    note.textContent = text;
+  }
+
+  function applyCommonCopy() {
+    setText(".editor-topbar h1", "ホームページを編集");
+    setText(".editor-help", "編集したい文章や画像をタップしてください");
+    setText(".topbar-actions a[href^='site.html']", "公開サイトを見る");
+    setText(".editor-status strong", "編集中");
+    setText(".editor-status p", "保存すると公開サイトに反映されます");
+    setText("#addNewsQuickButton", "＋ お知らせを追加");
+    setText("#addPortfolioQuickButton", "＋ 実績を追加");
+    setLabelCaption("menuSortOrder", "表示順");
+    setLabelCaption("portfolioSortOrder", "表示順");
+    setNote("menuSortOrder", "数字が小さいものから表示されます。");
+    setNote("portfolioSortOrder", "数字が小さいものから表示されます。");
+    setText("#menuVisibleField > span", "公開サイトに表示する");
+    for (const id of ["menuVisible", "portfolioVisible"]) {
+      const caption = document.getElementById(id)?.closest("label")?.querySelector("span");
+      if (caption) caption.textContent = "公開サイトに表示する";
+      setNote(id, "オフにすると公開サイトには表示されません。");
+    }
+    setPlaceholder("newsTitle", "例：新しい撮影プランのお知らせ");
+    setNote("newsContent", "保存すると、このお知らせが公開されます。");
+    document.querySelectorAll(".modal-close").forEach((button) => {
+      button.setAttribute("aria-label", "編集画面を閉じる");
+    });
+  }
+
+  function applyEditorBusinessUI() {
+    applyCommonCopy();
+    const type = getBusinessType();
+    const settings = UI[type] || UI.restaurant;
+
+    const modal = document.getElementById("companyModal");
+    const modalLabel = modal?.querySelector(".modal-label");
+    const modalTitle = document.getElementById("companyModalTitle");
+
+    if (modalLabel) modalLabel.textContent = settings.modalLabel;
+    if (modalTitle) modalTitle.textContent = settings.modalTitle;
+
+    setLabelCaption("companyName", settings.nameLabel);
+    setLabelCaption("companyAddress", settings.addressLabel);
+    setLabelCaption("companyPhone", "電話番号");
+    setLabelCaption("companyHours", settings.hoursLabel);
+    setLabelCaption("companyClosedDays", settings.closedLabel);
+    setLabelCaption("companyInstagram", "Instagram URL");
+
+    const companyName = document.getElementById("companyName");
+    const companyAddress = document.getElementById("companyAddress");
+    const companyDescription = document.getElementById("companyDescription");
+    const companyHours = document.getElementById("companyHours");
+    const companyClosedDays = document.getElementById("companyClosedDays");
+
+    if (companyName) companyName.placeholder = settings.namePlaceholder;
+    if (companyAddress) companyAddress.placeholder = settings.addressPlaceholder;
+    if (companyDescription) companyDescription.placeholder = settings.descriptionPlaceholder;
+    if (companyHours && type === "video_editing") companyHours.placeholder = "例：10:00〜20:00 / 要相談";
+    if (companyClosedDays && type === "video_editing") companyClosedDays.placeholder = "例：不定休";
+
+    const descriptionLabel = document.getElementById("companyDescriptionLabel");
+    if (descriptionLabel) descriptionLabel.textContent = settings.descriptionLabel;
+
+    const menuDescription = document.getElementById("companyMenuDescription");
+    const menuDescriptionLabel = menuDescription?.closest("label");
+    if (menuDescriptionLabel) {
+      menuDescriptionLabel.hidden = !settings.showMenuDescription;
+      menuDescriptionLabel.style.display = settings.showMenuDescription ? "" : "none";
+      menuDescriptionLabel.classList.toggle("business-field-hidden", !settings.showMenuDescription);
+    }
+
+    const introTitle = document.getElementById("companyIntroTitle");
+    if (introTitle) introTitle.textContent = settings.descriptionLabel;
+
+    const infoTitle = document.getElementById("companyInfoTitle");
+    if (infoTitle) infoTitle.textContent = settings.infoTitle;
+
+    const businessHoursLabel = document.getElementById("businessHoursLabel");
+    if (businessHoursLabel) businessHoursLabel.textContent = settings.hoursLabel;
+
+    const closedDaysLabel = document.getElementById("closedDaysLabel");
+    if (closedDaysLabel) closedDaysLabel.textContent = settings.closedLabel;
+
+    setRowLabel("address", settings.addressLabel);
+    setRowLabel("phone", "電話番号");
+
+    const heroAddress = document.getElementById("editorCompanyAddress");
+    if (type === "video_editing" && heroAddress && (!heroAddress.textContent.trim() || heroAddress.textContent.trim() === "住所")) {
+      heroAddress.textContent = "活動エリアを設定";
+    }
+
+    const infoEditButton = document.querySelector('[data-company-field="phone"].round-edit-button');
+    if (infoEditButton) infoEditButton.setAttribute("aria-label", `${settings.infoTitle}を編集`);
+
+    const introEditButton = document.querySelector('[data-company-field="description"].round-edit-button');
+    if (introEditButton) introEditButton.setAttribute("aria-label", `${settings.descriptionLabel}を編集`);
+
+    const company = typeof currentCompany !== "undefined" ? currentCompany : null;
+    if (!company) return;
+    document.title = `${company.name || settings.nameLabel} | ホームページ編集`;
+    if (!company.name) setText("#editorCompanyName", `${settings.nameLabel}を設定`);
+    if (!company.description) setText("#editorCompanyDescription", `${settings.descriptionLabel}を入力してください`);
+
+    if (type !== "video_editing") {
+      setPlaceholder("newsTitle", "例：営業・休業日のお知らせ");
+      return;
+    }
+
+    setText("#serviceSectionLabel", "SERVICES");
+    setText("#serviceSectionTitle", "撮影・編集サービス");
+    setText("#serviceSectionGuide", "サービスをタップすると内容や料金を編集できます");
+    setText("#addMenuQuickButton", "＋ サービスを追加");
+    setText("#portfolioSection .section-guide", "実績をタップすると写真・動画や説明を編集できます");
+    setText("#menuNameLabel", "サービス名");
+    setText("#menuPriceLabel", "料金（円）");
+    setLabelCaption("menuDescription", "サービス内容");
+    setPlaceholder("menuName", "例：プロフィール写真撮影");
+    setPlaceholder("menuDescription", "撮影内容や所要時間、納品内容などを入力してください");
+    setNote("menuPrice", "円単位の数字で入力してください。例：15000");
+    setLabelCaption("portfolioTitle", "実績タイトル");
+    setLabelCaption("portfolioDescription", "実績の紹介文");
+    setLabelCaption("portfolioMediaType", "掲載する種類");
+    setLabelCaption("portfolioCategory", "カテゴリ");
+    setPlaceholder("portfolioTitle", "例：ウェディングムービー");
+    setPlaceholder("portfolioDescription", "撮影・制作の内容やこだわりを入力してください");
+    setPlaceholder("portfolioCategory", "例：ウェディング / ポートレート");
+    setNote("portfolioCategory", "作品を分類するための名称を入力してください。");
+    const menuTitle = document.getElementById("menuModalTitle");
+    if (menuTitle) menuTitle.textContent = document.getElementById("menuEditId")?.value ? "サービスを編集" : "サービスを追加";
+  }
+
+  return { apply: applyEditorBusinessUI };
+})();
+
+function getEditorItemNoun() {
+  const type = currentCompany?.business_type;
+  return type === "hospital" ? "診療科" :
+    ["video_editing", "auto_repair"].includes(type) ? "サービス" : "メニュー";
+}
+
+function localizeEditorMessage(message) {
+  if (currentCompany?.business_type === "video_editing") {
+    message = message.replaceAll("店舗情報", "プロフィール情報");
+  }
+  return message.replaceAll("メニュー", getEditorItemNoun());
 }
