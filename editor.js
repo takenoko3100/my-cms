@@ -1,3 +1,4 @@
+
 const SUPABASE_URL = "https://cshieomhxpuaclggicle.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_6mt_8wZcBX9aKPR04NzNBQ_StAq2Qbe";
@@ -104,6 +105,18 @@ async function init() {
   loadNews()
 ]);
 }
+function getLoginUrl() {
+  const currentUrl = new URL(window.location.href);
+  const loginUrl = new URL("login.html", currentUrl);
+  const companySlug = currentUrl.searchParams.get("company");
+
+  if (companySlug) {
+    loginUrl.searchParams.set("company", companySlug);
+  }
+
+  return loginUrl.href;
+}
+
 async function requireSession() {
   const {
     data: { session },
@@ -113,7 +126,7 @@ async function requireSession() {
     console.error(error);
   }
   if (!session) {
-    window.location.href = "login.html";
+    window.location.href = getLoginUrl();
     return null;
   }
   return session;
@@ -271,7 +284,7 @@ async function logout() {
     showToast("ログアウトに失敗しました");
     return;
   }
-  window.location.href = "login.html";
+  window.location.href = getLoginUrl();
 }
 /* ========================================
    店舗情報

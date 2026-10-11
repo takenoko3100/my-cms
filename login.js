@@ -8,53 +8,123 @@ const supabaseClient = supabase.createClient(
   SUPABASE_PUBLISHABLE_KEY
 );
 
-document
-  .getElementById("loginButton")
-  .addEventListener("click", async () => {
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const loginButton = document.getElementById("loginButton");
+const forgotPasswordButton =
+  document.getElementById("forgotPasswordButton");
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+const companySlug = new URLSearchParams(
+  window.location.search
+).get("company");
 
-    if (email === "" || password === "") {
-      alert("メールアドレスとパスワードを入力してください");
-      return;
-    }
+function getEditorUrl() {
+  const url = new URL("index.html", window.location.href);
 
-    const { data, error } =
-      await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
+  if (companySlug) {
+    url.searchParams.set("company", companySlug);
+  }
 
-    if (error) {
-  console.error(error);
-  alert(error.message);
-  return;
+  return url.href;
 }
 
-    alert("ログインしました！");
-    window.location.href = "index.html";
-  });
+let isLoggingIn = false;
 
-  const forgotPasswordButton = document.getElementById("forgotPasswordButton");
+loginButton.addEventListener("click", async (event) => {
+  event.preventDefault();
 
-forgotPasswordButton.addEventListener("click", async () => {
-  const email = document.getElementById("email").value.trim();
+  if (isLoggingIn) return;
 
-  if (!email) {
-    alert("メールアドレスを入力してください。");
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  if (!email || !password) {
+    alert("メールアドレスとパスワードを入力してください。");
     return;
   }
 
-  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-    redirectTo: "https://my-cms-phi-weld.vercel.app/reset-password.html",
-  });
+  isLoggingIn = true;
+  loginButton.disabled = true;
 
-  if (error) {
-  console.error(error);
-  alert(`再設定メールの送信に失敗しました。\n${error.message}`);
-  return;
-}
+  try {
+    const { error } =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
 
-  alert("パスワード再設定メールを送信しました。");
+    if (error) {
+      console.error(error);
+      alert(
+        "ログインできませんでした。\n" +
+        "メールアドレスとパスワードを確認してください。"
+      );
+      return;
+    }
+
+    window.location.href = getEditorUrl();
+  } catch (error) {
+    console.error(error);
+    alert(
+      "通信に失敗しました。\n" +
+      "インターネット接続を確認して、もう一度試してください。"
+    );
+  } finally {
+    isLoggingIn = false;
+    loginButton.disabled = false;
+  }
 });
+
+let isSendingResetEmail = false;
+
+if (forgotPasswordButton) {
+  forgotPasswordButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    if (isSendingResetEmail) return;
+
+    const email = emailInput.value.trim();
+
+    if (!email) {
+      alert("メールアドレスを入力してください。");
+      return;
+    }
+
+    isSendingResetEmail = true;
+    forgotPasswordButton.disabled = true;
+
+    try {
+      const resetUrl = new URL(
+        "reset-password.html",
+        window.location.href
+      );
+
+      const { error } =
+        await supabaseClient.auth.resetPasswordForEmail(email, {
+          redirectTo: resetUrl.href
+        });
+
+      if (error) {
+        console.error(error);
+        alert(
+          `再設定メールの送信に失敗しました。\n${error.message}`
+        );
+        return;
+      }
+
+      alert(
+        "パスワード再設定メールを送信しました。\n" +
+        "メールを確認してください。"
+      );
+    } catch (error) {
+      console.error(error);
+      alert(
+        "通信に失敗しました。\n" +
+        "インターネット接続を確認して、もう一度試してください。"
+      );
+    } finally {
+      isSendingResetEmail = false;
+      forgotPasswordButton.disabled = false;
+    }
+  });
+}
