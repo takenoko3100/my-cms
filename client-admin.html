@@ -2,428 +2,84 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>顧客管理 | TAKENOKO CMS</title>
-
-  <link
-  rel="stylesheet"
-  href="client-admin.css?v=3"
->
-
-<link
-  rel="stylesheet"
-  href="client-admin-fix.css?v=2"
->
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>顧客管理 | Website Studio</title>
+  <link rel="stylesheet" href="client-admin.css?v=studio-1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="client-admin.js?v=4" defer></script>
+  <script src="client-admin.js?v=studio-1" defer></script>
 </head>
-
 <body>
-
-  <header class="header">
-
-    <div>
-      <p class="header-label">
-        TAKENOKO CMS
-      </p>
-
-      <h1>
-        顧客管理
-      </h1>
-    </div>
-
-    <button
-      id="logoutButton"
-      class="logout-button"
-      type="button"
-    >
-      ログアウト
-    </button>
-
-  </header>
-
-
-  <main class="container">
-
-    <!-- ================================
-         新規顧客登録
-    ================================= -->
-
-    <section class="intro">
-
-      <p class="eyebrow">
-        NEW CLIENT
-      </p>
-
-      <h2>
-        新規顧客登録
-      </h2>
-
-      <p>
-        新しい顧客の会社情報と
-        CMS管理者を登録します。
-      </p>
-
-    </section>
-
-
-    <section class="card">
-
-      <div class="form-group">
-
-        <label for="companyName">
-          会社・店舗名
-        </label>
-
-        <input
-          id="companyName"
-          type="text"
-          placeholder="たけのこクリニック"
-          autocomplete="off"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label for="companySlug">
-          slug
-        </label>
-
-        <input
-          id="companySlug"
-          type="text"
-          placeholder="takenoko-clinic"
-          autocomplete="off"
-        >
-
-        <p class="help-text">
-          半角英数字とハイフンで入力
-        </p>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label for="businessType">
-          業種
-        </label>
-
-        <select id="businessType">
-
-          <option value="restaurant">
-            飲食店
-          </option>
-
-          <option value="hospital">
-            病院・クリニック
-          </option>
-
-          <option value="video_editing">
-            動画編集
-          </option>
-
-          <option value="auto_repair">
-            自動車整備
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label for="customerUserId">
-          顧客ユーザーID
-        </label>
-
-        <input
-          id="customerUserId"
-          type="text"
-          placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-          autocomplete="off"
-        >
-
-        <p class="help-text">
-          Supabase Authentication の User UID
-        </p>
-
-      </div>
-
-
-      <button
-        id="createClientButton"
-        class="primary-button"
-        type="button"
-      >
-        顧客を登録する
-      </button>
-
-    </section>
-
-
-    <!-- ================================
-         登録完了
-    ================================= -->
-
-    <section
-      id="resultCard"
-      class="card result-card"
-      hidden
-    >
-
-      <p class="eyebrow">
-        COMPLETE
-      </p>
-
-      <h2>
-        登録完了 🎉
-      </h2>
-
-
-      <div class="result-item">
-
-        <span>
-          管理画面
-        </span>
-
-        <a
-          id="adminUrl"
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
-        ></a>
-
-      </div>
-
-
-      <div class="result-item">
-
-        <span>
-          公開ページ
-        </span>
-
-        <a
-          id="publicUrl"
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
-        ></a>
-
-      </div>
-
-
-      <button
-        id="createAnotherButton"
-        class="secondary-button"
-        type="button"
-      >
-        続けて登録する
-      </button>
-
-    </section>
-
-
-    <!-- ================================
-         顧客一覧
-    ================================= -->
-
-    <section class="client-section">
-
-      <div class="client-section-header">
-
-        <div>
-
-          <p class="eyebrow">
-            CLIENTS
-          </p>
-
-          <h2>
-            登録済み顧客
-          </h2>
-
+  <aside class="sidebar">
+    <a class="brand" href="client-admin.html"><span class="brand-mark" aria-hidden="true">W</span><span>Website Studio<small>制作管理</small></span></a>
+    <p class="nav-caption">WORKSPACE</p>
+    <a class="nav-link active" href="#clientsSection" aria-current="page"><span aria-hidden="true">▦</span> 顧客一覧</a>
+    <button class="nav-link" type="button" id="sidebarCreateButton"><span aria-hidden="true">＋</span> 新規顧客登録</button>
+    <div class="sidebar-footer"><span class="online-dot" aria-hidden="true"></span>あなたの制作ワークスペース</div>
+  </aside>
+  <div class="workspace">
+    <header class="header">
+      <div class="breadcrumb">Workspace <span>/</span> <strong>顧客管理</strong></div>
+      <button id="logoutButton" class="logout-button" type="button">ログアウト</button>
+    </header>
+    <main class="container">
+      <section class="page-heading">
+        <div><p class="eyebrow">CLIENT MANAGEMENT</p><h1>顧客管理</h1><p class="page-description">大切な顧客と、そのホームページをひとつの場所で。</p></div>
+        <button id="toggleCreateButton" type="button" class="primary-button new-client-button" aria-expanded="false" aria-controls="createSection">＋ 新規顧客登録</button>
+      </section>
+      <section class="stats" aria-label="登録状況">
+        <div class="stat-card"><span>登録済み顧客</span><strong id="totalClientCount">—</strong><small>会社・店舗</small></div>
+        <div class="stat-card"><span>飲食店</span><strong id="restaurantCount">—</strong><small>RESTAURANT</small></div>
+        <div class="stat-card"><span>病院・クリニック</span><strong id="hospitalCount">—</strong><small>CLINIC</small></div>
+        <div class="stat-card"><span>動画編集・自動車整備</span><strong id="otherClientCount">—</strong><small>CREATIVE &amp; SERVICE</small></div>
+      </section>
+
+      <section id="createSection" class="card create-section" hidden aria-labelledby="createTitle">
+        <div class="section-title"><div><p class="eyebrow">NEW CLIENT</p><h2 id="createTitle">新しい顧客を登録</h2><p class="section-description">会社情報と、更新を担当するアカウントをひも付けます。</p></div><button id="closeCreateButton" class="icon-button" type="button" aria-label="登録フォームを閉じる">×</button></div>
+        <div class="form-grid">
+          <div class="form-group"><label for="companyName">会社・店舗名 <span class="required">必須</span></label><input id="companyName" type="text" placeholder="例：CÈDRE" autocomplete="off"></div>
+          <div class="form-group"><label for="businessType">業種</label><select id="businessType"><option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画編集</option><option value="auto_repair">自動車整備</option></select></div>
+          <div class="form-group"><label for="companySlug">サイトの識別名 <span class="required">必須</span></label><input id="companySlug" type="text" placeholder="例：cedre-visual" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="slugHelp"><p class="help-text" id="slugHelp">URLに使う名前。半角英数字とハイフンで入力します。</p></div>
+          <div class="form-group"><label for="customerUserId">更新担当者のユーザーID <span class="required">必須</span></label><input id="customerUserId" type="text" placeholder="担当者のUser UIDを貼り付け" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="userHelp"><p class="help-text" id="userHelp">SupabaseのAuthentication → Usersで、作成済みアカウントのUser UIDをコピーします。</p></div>
         </div>
+        <div class="form-footer"><p>登録後に、管理画面と公開サイトのリンクが表示されます。</p><button id="createClientButton" class="primary-button" type="button">顧客を登録する</button></div>
+      </section>
 
-
-        <p
-          id="clientCount"
-          class="client-count"
-        >
-          0件
-        </p>
-
-      </div>
-
-
-      <div
-        id="clientList"
-        class="client-list"
-      >
-
-        <div class="client-loading">
-          読み込み中...
+      <section id="resultCard" class="card result-card" hidden aria-labelledby="resultTitle">
+        <p class="eyebrow">COMPLETE</p><h2 id="resultTitle">顧客を登録しました</h2><p class="section-description">顧客に渡すリンクはこちら。ログイン情報と一緒に案内できます。</p>
+        <div class="result-grid">
+          <div class="result-item"><span>管理画面 · 更新するためのリンク</span><a id="adminUrl" href="#" target="_blank" rel="noopener noreferrer"></a><button class="copy-button" id="copyAdminUrlButton" type="button">リンクをコピー</button></div>
+          <div class="result-item"><span>公開サイト · お客さまに見てもらうリンク</span><a id="publicUrl" href="#" target="_blank" rel="noopener noreferrer"></a><button class="copy-button" id="copyPublicUrlButton" type="button">リンクをコピー</button></div>
         </div>
+        <button id="createAnotherButton" class="secondary-button" type="button">続けて登録する</button>
+      </section>
 
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- ================================
-     顧客編集モーダル
-================================= -->
-
-<div
-  id="editClientModal"
-  class="modal"
-  aria-hidden="true"
->
-
-  <div
-    class="modal-backdrop"
-    data-close-edit-modal
-  ></div>
-
-
-  <div
-    class="modal-panel"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="editClientModalTitle"
-  >
-
-    <div class="modal-header">
-
-      <div>
-
-        <p class="eyebrow">
-          EDIT CLIENT
-        </p>
-
-        <h2 id="editClientModalTitle">
-          顧客情報を編集
-        </h2>
-
-      </div>
-
-
-      <button
-        id="closeEditClientModalButton"
-        class="modal-close"
-        type="button"
-        aria-label="閉じる"
-      >
-        ×
-      </button>
-
-    </div>
-
-
-    <input
-      id="editClientId"
-      type="hidden"
-    >
-
-
-    <div class="form-group">
-
-      <label for="editCompanyName">
-        会社・店舗名
-      </label>
-
-      <input
-        id="editCompanyName"
-        type="text"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label for="editCompanySlug">
-        slug
-      </label>
-
-      <input
-        id="editCompanySlug"
-        type="text"
-      >
-
-      <p class="help-text">
-        半角英数字とハイフンで入力
-      </p>
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label for="editBusinessType">
-        業種
-      </label>
-
-      <select id="editBusinessType">
-
-        <option value="restaurant">
-          飲食店
-        </option>
-
-        <option value="hospital">
-          病院・クリニック
-        </option>
-
-        <option value="video_editing">
-          動画編集
-        </option>
-
-        <option value="auto_repair">
-          自動車整備
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <button
-      id="saveClientButton"
-      class="primary-button"
-      type="button"
-    >
-      変更を保存
-    </button>
-
-
-    <button
-      id="deleteClientButton"
-      class="danger-button"
-      type="button"
-    >
-      この顧客を削除
-    </button>
-
+      <section class="client-section" id="clientsSection" aria-labelledby="clientsTitle">
+        <div class="client-section-header"><div><p class="eyebrow">YOUR CLIENTS</p><h2 id="clientsTitle">顧客一覧 <span id="clientCount" class="client-count">読み込み中</span></h2></div><button class="secondary-button refresh-button" id="refreshClientsButton" type="button">↻ 一覧を更新</button></div>
+        <div class="toolbar">
+          <div class="search-field"><label class="sr-only" for="clientSearch">会社名・サイト識別名で検索</label><span aria-hidden="true">⌕</span><input type="search" id="clientSearch" placeholder="会社名・サイト識別名で検索" autocomplete="off"></div>
+          <div><label class="sr-only" for="clientTypeFilter">業種で絞り込む</label><select id="clientTypeFilter"><option value="">すべての業種</option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画編集</option><option value="auto_repair">自動車整備</option></select></div>
+          <div><label class="sr-only" for="clientSort">並び順</label><select id="clientSort"><option value="newest">登録が新しい順</option><option value="oldest">登録が古い順</option><option value="name">会社名順</option></select></div>
+        </div>
+        <p class="list-description" id="listDescription" role="status" aria-live="polite">顧客情報を読み込んでいます。</p>
+        <div id="clientList" class="client-list" aria-busy="true"><div class="client-loading">顧客一覧を読み込み中…</div></div>
+      </section>
+      <footer class="workspace-footer">Website Studio <span>あなたの制作を、もっとスムーズに。</span></footer>
+    </main>
   </div>
 
-</div>
-
-
-  <div
-    id="toastMessage"
-    class="toast"
-    role="status"
-    aria-live="polite"
-  ></div>
-
+  <div id="editClientModal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-edit-modal></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="editClientModalTitle" tabindex="-1">
+      <div class="modal-header"><div><p class="eyebrow">CLIENT SETTINGS</p><h2 id="editClientModalTitle">顧客情報を編集</h2></div><button id="closeEditClientModalButton" class="icon-button modal-close" type="button" aria-label="閉じる">×</button></div>
+      <input id="editClientId" type="hidden">
+      <div class="form-group"><label for="editCompanyName">会社・店舗名</label><input id="editCompanyName" type="text"></div>
+      <div class="form-group"><label for="editCompanySlug">サイトの識別名</label><input id="editCompanySlug" type="text" autocapitalize="none" spellcheck="false"><p class="help-text">変更すると管理画面・公開サイトのURLも変わります。変更後は新しいリンクを顧客に案内してください。</p></div>
+      <div class="form-group"><label for="editBusinessType">業種</label><select id="editBusinessType"><option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画編集</option><option value="auto_repair">自動車整備</option></select></div>
+      <button id="saveClientButton" class="primary-button" type="button">変更を保存</button>
+      <details class="danger-zone"><summary>顧客の削除</summary><p class="help-text">削除した顧客は元に戻せません。</p><button id="deleteClientButton" class="danger-button" type="button">この顧客を削除</button></details>
+    </div>
+  </div>
+  <div id="toastMessage" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
