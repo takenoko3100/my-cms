@@ -1757,3 +1757,133 @@ function setText(
       value;
   }
 }
+
+
+/* ========================================
+   自分が管理できる会社だけ「管理画面へ」を表示
+   編集画面と同じ company_members の所属条件を使う。
+   編集・保存の権限は編集画面とSupabase側で確認する。
+======================================== */
+
+(() => {
+  if (document.getElementById("siteAdminAccessLink")) return;
+
+  const link = document.createElement("a");
+  link.id = "siteAdminAccessLink";
+  link.textContent = "管理画面へ";
+  link.setAttribute("aria-label", "この会社の管理画面を開く");
+  link.hidden = true;
+  document.body.appendChild(link);
+
+  const style = document.createElement("style");
+  style.textContent = `
+    #siteAdminAccessLink[hidden] { display: none !important; }
+    #siteAdminAccessLink {
+      position: fixed;
+      right: calc(16px + env(safe-area-inset-right, 0px));
+      bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+      z-index: 1000;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      box-sizing: border-box;
+      padding: 12px 20px;
+      border: 1px solid rgba(255, 255, 255, .3);
+      border-radius: 999px;
+      background: #193f34;
+      color: #fff;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: .04em;
+      text-decoration: none;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, .18);
+    }
+    #siteAdminAccessLink:hover { background: #285747; }
+    #siteAdminAccessLink:focus-visible {
+      outline: 3px solid #d4b778;
+      outline-offset: 3px;
+    }
+  `;
+  document.head.appendChild(style);
+
+  let version = 0;
+  let timer = null;
+
+  function hideLink() {
+    link.hidden = true;
+    link.removeAttribute("href");
+  }
+
+  function invalidate() {
+    version += 1;
+    if (timer !== null) window.clearTimeout(timer);
+    timer = null;
+    hideLink();
+  }
+
+  async function checkAccess(checkVersion) {
+    try {
+      const { data: sessionData, error: sessionError } =
+        await supabaseClient.auth.getSession();
+      if (checkVersion !== version || sessionError || !sessionData?.session) return;
+
+      // サーバーでもログインユーザーを確認する。
+      const { data: userData, error: userError } =
+        await supabaseClient.auth.getUser();
+      if (checkVersion !== version || userError || !userData?.user) return;
+
+      const userId = userData.user.id;
+      const slug = getCompanySlug();
+      const { data: company, error: companyError } = await supabaseClient
+        .from("company_info")
+        .select("id, slug")
+        .eq("slug", slug)
+        .maybeSingle();
+      if (checkVersion !== version || companyError || !company?.id || company.slug !== slug) return;
+
+      // 別の会社に所属しているだけでは表示しない。
+      const { data: membership, error: membershipError } = await supabaseClient
+        .from("company_members")
+        .select("company_id, user_id")
+        .eq("user_id", userId)
+        .eq("company_id", company.id)
+        .limit(1)
+        .maybeSingle();
+      if (checkVersion !== version || membershipError ||
+          membership?.user_id !== userId || membership?.company_id !== company.id) return;
+
+      link.href = `index.html?company=${encodeURIComponent(company.slug)}`;
+      link.hidden = false;
+    } catch (error) {
+      if (checkVersion === version) hideLink();
+      console.warn("管理画面へのアクセスを確認できませんでした。", error);
+    }
+  }
+
+  function scheduleCheck() {
+    invalidate();
+    const checkVersion = version;
+    // Authのイベント処理が終わってから問い合わせる。
+    timer = window.setTimeout(() => {
+      timer = null;
+      void checkAccess(checkVersion);
+    }, 0);
+  }
+
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_OUT" || !session) {
+      invalidate();
+      return;
+    }
+    scheduleCheck();
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") scheduleCheck();
+  });
+  window.addEventListener("pageshow", scheduleCheck);
+  scheduleCheck();
+})();
