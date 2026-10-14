@@ -35,7 +35,9 @@ section h2 {
   font-size: 28px;
 }
 
-main section > h2 {
+main section > h2,
+.about-heading h2,
+.portfolio-heading h2 {
   margin-bottom: 28px;
   padding-bottom: 0;
   border-bottom: none;
@@ -188,7 +190,7 @@ header p {
 ======================================== */
 
 #about {
-  padding: 48px 40px;
+  padding: 48px 0;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -338,13 +340,13 @@ header p {
 ======================================== */
 
 #company {
-  padding: 24px;
+  padding: 24px 0;
   background: transparent;
   border: none;
   box-shadow: none;
 }
 
-#company p {
+#company > p:not(.section-label) {
   display: flex;
   gap: 12px;
   align-items: flex-start;
@@ -354,7 +356,7 @@ header p {
   line-height: 1.7;
 }
 
-#company p:last-child {
+#company > p:not(.section-label):last-child {
   border-bottom: none;
 }
 
@@ -370,7 +372,7 @@ header p {
 ======================================== */
 
 #access {
-  padding: 8px 24px;
+  padding: 8px 0;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -395,7 +397,7 @@ header p {
 ======================================== */
 
 #contact {
-  padding: 8px 24px;
+  padding: 8px 0;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -653,7 +655,7 @@ header p {
 
   main {
     margin: 30px auto;
-    padding: 0 14px;
+    padding: 0 20px;
   }
 
   .hero + main {
@@ -668,7 +670,9 @@ header p {
     margin-bottom: 56px;
   }
 
-  main section > h2 {
+  main section > h2,
+  .about-heading h2,
+  .portfolio-heading h2 {
     font-size: 24px;
   }
 
@@ -707,7 +711,7 @@ header p {
   }
 
   #about {
-    padding: 32px 22px;
+    padding: 32px 0;
   }
 
   .about-content #siteDescription {
@@ -724,7 +728,7 @@ header p {
     height: auto;
   }
 
-  #company p {
+  #company > p:not(.section-label) {
     display: block;
   }
 
@@ -1228,7 +1232,7 @@ body[data-theme="visual-dark"]
 }
 
 body[data-theme="visual-dark"]
-#company p {
+#company > p:not(.section-label) {
   border-bottom:
     1px solid
     rgba(255,255,255,.12);
