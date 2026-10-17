@@ -38,11 +38,37 @@
 
   <link
   rel="stylesheet"
-  href="site.css?v=5"
+  href="site.css?v=6"
 >
 </head>
 
 <body>
+
+  <!-- CÈDRE opening: video is requested only for the selected company. -->
+  <dialog
+    id="siteOpening"
+    aria-label="CÈDREのオープニング"
+    hidden
+  >
+    <video
+      id="siteOpeningVideo"
+      muted
+      playsinline
+      preload="none"
+      disablepictureinpicture
+      aria-hidden="true"
+      tabindex="-1"
+    ></video>
+    <button
+      id="siteOpeningSkip"
+      type="button"
+      aria-label="オープニングをスキップしてサイトを表示"
+    >
+      スキップ <span aria-hidden="true">→</span>
+    </button>
+  </dialog>
+  <script src="site-opening.js?v=1"></script>
+
 
   <!-- =========================
        Navigation
@@ -404,7 +430,7 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="site.js?v=8"></script>
+  <script src="site.js?v=9"></script>
 
 </body>
 </html>

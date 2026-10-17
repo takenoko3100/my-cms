@@ -1,4 +1,4 @@
-const SUPABASE_URL =
+﻿const SUPABASE_URL =
   "https://cshieomhxpuaclggicle.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
