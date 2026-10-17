@@ -44,6 +44,8 @@
     skip.removeEventListener("click", onSkip);
     dialog.removeEventListener("cancel", onCancel);
     dialog.removeEventListener("close", onUnexpectedClose);
+    dialog.removeEventListener("keydown", onKeyboard);
+    dialog.removeEventListener("pointerdown", onPointer);
     video.removeEventListener("playing", onPlaying);
     video.removeEventListener("ended", onEnded);
     video.removeEventListener("error", onError);
@@ -85,6 +87,10 @@
     }
   }
 
+  function onKeyboard(event) {
+    if (event.key === "Tab") dialog.classList.add("is-keyboard");
+  }
+  function onPointer() { dialog.classList.remove("is-keyboard"); }
   function onSkip() { finish(); }
   function onCancel(event) {
     event.preventDefault();
@@ -138,6 +144,8 @@
     skip.addEventListener("click", onSkip);
     dialog.addEventListener("cancel", onCancel);
     dialog.addEventListener("close", onUnexpectedClose);
+    dialog.addEventListener("keydown", onKeyboard);
+    dialog.addEventListener("pointerdown", onPointer);
     video.addEventListener("playing", onPlaying);
     video.addEventListener("ended", onEnded);
     video.addEventListener("error", onError);
