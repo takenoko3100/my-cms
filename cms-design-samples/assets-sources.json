@@ -1,0 +1,16 @@
+{
+  "source": "Unsplash",
+  "license": "https://unsplash.com/license",
+  "assets": {
+    "cafe.jpg": "https://images.unsplash.com/photo-1442512595331-e89e73853f31",
+    "washoku.jpg": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c",
+    "bar.jpg": "https://images.unsplash.com/photo-1514933651103-005eec06c04b",
+    "flower.jpg": "https://images.unsplash.com/photo-1490750967868-88aa4486c946",
+    "school.jpg": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b",
+    "minimal.jpg": "https://images.unsplash.com/photo-1497366811353-6870744d04b2",
+    "visual.jpg": "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
+    "company.jpg": "https://images.unsplash.com/photo-1497366754035-f200968a6e72",
+    "craft.jpg": "https://images.unsplash.com/photo-1503387762-592deb58ef4e",
+    "gym.jpg": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"
+  }
+}
