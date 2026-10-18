@@ -1,15 +1,13 @@
-CÈDRE オープニング 全画面版
+CÈDRE オープニング iPhoneの上下の境目調整版
 
-この中の5ファイルを my-cms フォルダ直下へ追加・上書き。
-site.html
-site.css
-site-opening.js
-cedre-opening-portrait.mp4
-cedre-opening-landscape.mp4
+同梱の6ファイルをmy-cms直下へ追加・上書きしてください。
+site.html / site.css / site-opening.js
+cedre-opening.mp4 / cedre-opening-portrait.mp4 / cedre-opening-landscape.mp4
 
-既存の cedre-opening.mp4 と site.js はそのまま残してください。
-端末の画面比率で、縦長 / 正方形 / 横長の動画から1つだけ読み込みます。
-object-fit: cover で画面を埋めます。縦横の比率の違いは周辺をトリミングし、中央の文字は見えるように配置しています。
-スマホのアドレスバー・ステータスバーなどブラウザ外の領域は対象外です。
-4秒・無音、小さなSKIP、再生失敗時の省略、CÈDREのみ表示の仕様は維持。
-新しいシークレットウィンドウで確認してください。
+画面の比率に合わせて動画を1本だけ読み込みます。
+動画の背景を均一な深緑にし、周辺の背景色と揃えています。
+動画中だけviewport-fit=cover・theme-color・ページ背景を設定し、終了時には元へ戻します。
+Safariのボタンやアドレスバー自体を消すものではありません。
+全端末でのSafari周辺色の一致は保証できないので、実機で確認してください。
+4秒・無音・控えめなSKIP・読み込み失敗時の省略は維持。
+反映後は新しいシークレットウィンドウで確認してください。

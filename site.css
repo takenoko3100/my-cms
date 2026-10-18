@@ -1617,6 +1617,9 @@ body:not([data-theme="visual-dark"])
 html.site-opening-active,
 html.site-opening-active body {
   overflow: hidden;
+  background: #091a1c !important;
+  background-image: none !important;
+  color-scheme: dark;
 }
 
 #siteOpening[hidden],
@@ -1639,14 +1642,14 @@ html.site-opening-active body {
   overflow: hidden;
   border: 0;
   border-radius: 0;
-  background: #091c1b;
+  background: #091a1c;
   color: #f2eddd;
   opacity: 1;
   transition: opacity 200ms ease;
 }
 
 #siteOpening::backdrop {
-  background: #091c1b;
+  background: #091a1c;
   opacity: 1;
   transition: opacity 200ms ease;
 }
@@ -1670,7 +1673,7 @@ html.site-opening-active body {
   object-position: center center;
   border: 0;
   border-radius: 0;
-  background: #091c1b;
+  background: #091a1c;
   box-shadow: none;
   pointer-events: none;
 }

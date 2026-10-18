@@ -11,9 +11,9 @@
   const settings = {
     "cedre-visual": {
       enabled: true,
-      video: "cedre-opening.mp4?v=1",
-      portraitVideo: "cedre-opening-portrait.mp4?v=1",
-      landscapeVideo: "cedre-opening-landscape.mp4?v=1",
+      video: "cedre-opening.mp4?v=2",
+      portraitVideo: "cedre-opening-portrait.mp4?v=2",
+      landscapeVideo: "cedre-opening-landscape.mp4?v=2",
       version: "1"
     }
   };
@@ -26,6 +26,50 @@
   let maximumTimer;
   let fadeTimer;
   let motion;
+  let viewportMeta;
+  let originalViewport;
+  let addedThemeMeta;
+  let themeMetaStates = [];
+
+  // 動画中だけ画面端まで背景を伸ばし、Safariの周辺色も揃える。
+  function prepareScreen() {
+    root.classList.add("site-opening-active");
+    viewportMeta = document.querySelector?.('meta[name="viewport"]');
+    if (viewportMeta) {
+      originalViewport = viewportMeta.getAttribute("content");
+      const value = (originalViewport || "width=device-width, initial-scale=1")
+        .replace(/,?\s*viewport-fit\s*=\s*[^,]+/gi, "");
+      viewportMeta.setAttribute("content", value + ", viewport-fit=cover");
+    }
+    const themes = document.querySelectorAll?.('meta[name="theme-color"]') || [];
+    for (const meta of themes) {
+      themeMetaStates.push({ meta, content: meta.getAttribute("content"), media: meta.getAttribute("media") });
+      meta.setAttribute("content", "#091a1c");
+      meta.removeAttribute("media");
+    }
+    if (!themes.length && document.head && document.createElement) {
+      addedThemeMeta = document.createElement("meta");
+      addedThemeMeta.setAttribute("name", "theme-color");
+      addedThemeMeta.setAttribute("content", "#091a1c");
+      document.head.prepend(addedThemeMeta);
+    }
+  }
+
+  function restoreScreen() {
+    if (viewportMeta) {
+      if (originalViewport === null) viewportMeta.removeAttribute("content");
+      else viewportMeta.setAttribute("content", originalViewport);
+    }
+    for (const { meta, content, media } of themeMetaStates) {
+      if (content === null) meta.removeAttribute("content");
+      else meta.setAttribute("content", content);
+      if (media === null) meta.removeAttribute("media");
+      else meta.setAttribute("media", media);
+    }
+    themeMetaStates = [];
+    addedThemeMeta?.remove();
+    addedThemeMeta = undefined;
+  }
 
   function markSeen() {
     if (!storageKey) return;
@@ -66,6 +110,7 @@
       if (dialog.open) dialog.close();
     } finally {
       dialog.remove();
+      restoreScreen();
       root.classList.remove("site-opening-active");
     }
   }
@@ -136,6 +181,8 @@
     } catch {
       // sessionStorageを使えない場合は、今回のページ表示だけで動作する。
     }
+
+    prepareScreen();
 
     // 正方形の動画を無理に拡大せず、画面に近い比率の動画を選ぶ。
     const viewportWidth = window.innerWidth || root.clientWidth;
