@@ -10,3 +10,6 @@
 .logo{font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.045em}.logo span{font-family:"Helvetica Neue",Arial,"Yu Gothic",sans-serif}
 
 .email-card{background:#f7f8f1;border:1px solid #d0d9c3;padding:30px;border-radius:5px;min-width:0}.email-card h3{font-size:23px;font-weight:500;margin:0 0 18px}.email-card>p{font-size:12px;color:#758268}.email-card .button{width:100%;margin-top:12px}.email-card .email-address{font-size:15px;overflow-wrap:anywhere;color:#354b3b;user-select:all;margin:22px 0 0}.email-card .small-note{font-size:10px;line-height:1.9}@media(max-width:700px){.email-card{padding:25px 20px}.email-card h3{font-size:21px}.email-card>p{font-size:11px}}
+
+/* Email / Instagram contact options */
+.instagram-contact{border-top:1px solid #d5dacc;margin-top:26px;padding-top:12px}.instagram-contact .button{width:100%;background:transparent}.instagram-contact .button:hover{background:#e7ebdf}.instagram-contact .instagram-handle{font-size:12px;color:#617456;margin:14px 0 0;letter-spacing:.04em}.instagram-contact .small-note{margin-top:12px}.email-card .consultation-note{border-top:1px solid #d5dacc;padding-top:18px;margin-top:22px}.email-card .mail-help{margin-top:12px}footer>div{flex-wrap:wrap;row-gap:16px}
