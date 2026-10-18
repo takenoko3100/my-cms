@@ -12,6 +12,8 @@
     "cedre-visual": {
       enabled: true,
       video: "cedre-opening.mp4?v=1",
+      portraitVideo: "cedre-opening-portrait.mp4?v=1",
+      landscapeVideo: "cedre-opening-landscape.mp4?v=1",
       version: "1"
     }
   };
@@ -135,7 +137,16 @@
       // sessionStorageを使えない場合は、今回のページ表示だけで動作する。
     }
 
-    const source = new URL(config.video, document.baseURI);
+    // 正方形の動画を無理に拡大せず、画面に近い比率の動画を選ぶ。
+    const viewportWidth = window.innerWidth || root.clientWidth;
+    const viewportHeight = window.innerHeight || root.clientHeight;
+    const viewportRatio = viewportWidth / viewportHeight;
+    const videoPath = viewportRatio < 0.8
+      ? (config.portraitVideo || config.video)
+      : viewportRatio > 1.3
+        ? (config.landscapeVideo || config.video)
+        : config.video;
+    const source = new URL(videoPath, document.baseURI);
     if (source.origin !== window.location.origin) {
       release();
       return;
