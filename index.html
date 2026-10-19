@@ -12,6 +12,7 @@
       connect-src 'self' https://cshieomhxpuaclggicle.supabase.co wss://cshieomhxpuaclggicle.supabase.co;
       img-src 'self' data: blob: https://cshieomhxpuaclggicle.supabase.co;
       style-src 'self' 'unsafe-inline';
+      frame-src 'self';
       object-src 'none';
       base-uri 'self';
       form-action 'self';
@@ -22,7 +23,7 @@
   <title>かんたん編集 | たけのこCMS</title>
 
   <link rel="stylesheet" href="editor.css?v=5">
-  <link rel="stylesheet" href="editor-design.css?v=3">
+  <link rel="stylesheet" href="editor-design.css?v=5">
 </head>
 
 <body>
@@ -80,47 +81,56 @@
     <section id="siteDesignAdminSection" class="visual-section content-section design-settings" hidden aria-labelledby="designSettingsTitle">
       <p class="section-label">DESIGN</p>
       <h2 id="designSettingsTitle">公開サイトのデザイン</h2>
-      <p class="design-help">運営者専用の設定です。写真や文章はそのままで、見た目を選べます。変更は「このデザインを保存」を押すと公開サイトに反映されます。</p>
+      <details id="siteDesignDisclosure" class="design-disclosure">
+        <summary><span class="design-summary-current"><small>保存中のデザイン</small><strong id="siteDesignSummary">読み込み中…</strong></span><span class="design-summary-open">変更する ＋</span><span class="design-summary-close">閉じる −</span></summary>
+        <div class="design-chooser-panel">
+      <p class="design-help">運営者専用の設定です。見た目を選んで確認し、「このデザインを保存」で反映します。</p>
       <fieldset id="siteDesignChoices" disabled>
         <legend>デザインを選ぶ</legend>
-        <div class="design-choice-grid"><label class="design-choice-card">
+        <div class="design-choice-grid"><article class="design-option" hidden><label class="design-choice-card">
 <input type="radio" name="siteDesign" value="standard" checked>
-<span class="design-card-art design-art-standard" aria-hidden="true"><span></span></span>
-<strong>今までのデザイン</strong><span>現在のデザインと配色を引き継ぎます。</span></label><label class="design-choice-card">
+<span class="design-card-art design-live-art" data-preview-design="standard" aria-hidden="true"></span>
+<strong>今までのデザイン</strong><span>現在のデザインと配色を引き継ぎます。</span></label><a class="design-card-open" data-preview-link="standard" target="_blank" rel="noopener noreferrer" hidden>今までのデザインを大きく確認 ↗</a></article><article class="design-option" hidden><label class="design-choice-card">
 <input type="radio" name="siteDesign" value="natural">
-<span class="design-card-art design-art-natural" aria-hidden="true"><span></span></span>
-<strong>ナチュラル</strong><span>ベージュと緑、アーチ型の写真。</span></label><label class="design-choice-card">
+<span class="design-card-art design-live-art" data-preview-design="natural" aria-hidden="true"></span>
+<strong>ナチュラル</strong><span>ベージュと緑、アーチ型の写真。</span></label><a class="design-card-open" data-preview-link="natural" target="_blank" rel="noopener noreferrer" hidden>ナチュラルを大きく確認 ↗</a></article><article class="design-option" hidden><label class="design-choice-card">
 <input type="radio" name="siteDesign" value="japanese">
-<span class="design-card-art design-art-japanese" aria-hidden="true"><span></span></span>
-<strong>和モダン</strong><span>縦書きと非対称の構図で、落ち着いた印象に。</span></label><label class="design-choice-card">
+<span class="design-card-art design-live-art" data-preview-design="japanese" aria-hidden="true"></span>
+<strong>和モダン</strong><span>縦書きと非対称の構図で、落ち着いた印象に。</span></label><a class="design-card-open" data-preview-link="japanese" target="_blank" rel="noopener noreferrer" hidden>和モダンを大きく確認 ↗</a></article><article class="design-option" hidden><label class="design-choice-card">
 <input type="radio" name="siteDesign" value="chic">
-<span class="design-card-art design-art-chic" aria-hidden="true"><span></span></span>
-<strong>シック</strong><span>写真を大きく使った、深い色合いのデザイン。</span></label><label class="design-choice-card">
+<span class="design-card-art design-live-art" data-preview-design="chic" aria-hidden="true"></span>
+<strong>シック</strong><span>写真を大きく使った、深い色合いのデザイン。</span></label><a class="design-card-open" data-preview-link="chic" target="_blank" rel="noopener noreferrer" hidden>シックを大きく確認 ↗</a></article><article class="design-option" hidden><label class="design-choice-card">
 <input type="radio" name="siteDesign" value="elegant">
-<span class="design-card-art design-art-elegant" aria-hidden="true"><span></span></span>
-<strong>エレガント</strong><span>丸みのある写真と余白で、上品に。</span></label><label class="design-choice-card">
+<span class="design-card-art design-live-art" data-preview-design="elegant" aria-hidden="true"></span>
+<strong>エレガント</strong><span>丸みのある写真と余白で、上品に。</span></label><a class="design-card-open" data-preview-link="elegant" target="_blank" rel="noopener noreferrer" hidden>エレガントを大きく確認 ↗</a></article><article class="design-option" hidden><label class="design-choice-card">
 <input type="radio" name="siteDesign" value="pop">
-<span class="design-card-art design-art-pop" aria-hidden="true"><span></span></span>
-<strong>ポップ</strong><span>明るい色と遊び心のあるカード。</span></label><label class="design-choice-card">
+<span class="design-card-art design-live-art" data-preview-design="pop" aria-hidden="true"></span>
+<strong>ポップ</strong><span>明るい色と遊び心のあるカード。</span></label><a class="design-card-open" data-preview-link="pop" target="_blank" rel="noopener noreferrer" hidden>ポップを大きく確認 ↗</a></article><article class="design-option" hidden><label class="design-choice-card">
 <input type="radio" name="siteDesign" value="minimal">
-<span class="design-card-art design-art-minimal" aria-hidden="true"><span></span></span>
-<strong>ミニマル</strong><span>白い余白と文字を主役に。</span></label><label class="design-choice-card">
+<span class="design-card-art design-live-art" data-preview-design="minimal" aria-hidden="true"></span>
+<strong>ミニマル</strong><span>白い余白と文字を主役に。</span></label><a class="design-card-open" data-preview-link="minimal" target="_blank" rel="noopener noreferrer" hidden>ミニマルを大きく確認 ↗</a></article><article class="design-option" hidden><label class="design-choice-card">
 <input type="radio" name="siteDesign" value="visual">
-<span class="design-card-art design-art-visual" aria-hidden="true"><span></span></span>
-<strong>ビジュアル</strong><span>写真や映像が引き立つ、映画のような雰囲気。</span></label><label class="design-choice-card">
+<span class="design-card-art design-live-art" data-preview-design="visual" aria-hidden="true"></span>
+<strong>ビジュアル</strong><span>写真や映像が引き立つ、映画のような雰囲気。</span></label><a class="design-card-open" data-preview-link="visual" target="_blank" rel="noopener noreferrer" hidden>ビジュアルを大きく確認 ↗</a></article><article class="design-option" hidden><label class="design-choice-card">
 <input type="radio" name="siteDesign" value="clean">
-<span class="design-card-art design-art-clean" aria-hidden="true"><span></span></span>
-<strong>クリーン</strong><span>青を基調に、情報を分かりやすく。</span></label><label class="design-choice-card">
+<span class="design-card-art design-live-art" data-preview-design="clean" aria-hidden="true"></span>
+<strong>クリーン</strong><span>青を基調に、情報を分かりやすく。</span></label><a class="design-card-open" data-preview-link="clean" target="_blank" rel="noopener noreferrer" hidden>クリーンを大きく確認 ↗</a></article><article class="design-option" hidden><label class="design-choice-card">
 <input type="radio" name="siteDesign" value="craft">
-<span class="design-card-art design-art-craft" aria-hidden="true"><span></span></span>
-<strong>クラフト</strong><span>素材感のある色と、雑誌のような構成。</span></label><label class="design-choice-card">
+<span class="design-card-art design-live-art" data-preview-design="craft" aria-hidden="true"></span>
+<strong>クラフト</strong><span>素材感のある色と、雑誌のような構成。</span></label><a class="design-card-open" data-preview-link="craft" target="_blank" rel="noopener noreferrer" hidden>クラフトを大きく確認 ↗</a></article><article class="design-option" hidden><label class="design-choice-card">
 <input type="radio" name="siteDesign" value="bold">
-<span class="design-card-art design-art-bold" aria-hidden="true"><span></span></span>
-<strong>ボールド</strong><span>黒とライム、力強い文字と斜めの構図。</span></label></div></fieldset>
-      <div class="design-preview-links"><a id="selectedDesignPreview" target="_blank" rel="noopener noreferrer" hidden>選択中のデザインを確認 ↗</a></div>
-      <p class="design-help">見本を開くだけではデザインは変わりません。デザインを選び、写真や文字の見え方を確認してから保存してください。</p>
+<span class="design-card-art design-live-art" data-preview-design="bold" aria-hidden="true"></span>
+<strong>ボールド</strong><span>黒とライム、力強い文字と斜めの構図。</span></label><a class="design-card-open" data-preview-link="bold" target="_blank" rel="noopener noreferrer" hidden>ボールドを大きく確認 ↗</a></article></div></fieldset>
+      <nav class="design-pagination" aria-label="デザイン一覧のページ切り替え">
+        <button type="button" id="designPreviousPage">← 前へ</button>
+        <span id="designPageStatus" role="status" aria-live="polite"></span>
+        <button type="button" id="designNextPage">次へ →</button>
+      </nav>
+      <p class="design-help">見本を開くだけではデザインは変わりません。カードで雰囲気を比較し、「大きく確認」から写真や文字の見え方を確認できます。</p>
       <p id="siteDesignStatus" class="design-status" role="status" aria-live="polite">会社情報を読み込んでいます。</p>
       <button id="saveSiteDesign" type="button" class="primary-action" disabled>このデザインを保存</button>
+        </div>
+      </details>
     </section>
 
 
@@ -1206,7 +1216,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="editor.js?v=14"></script>
+  <script src="editor.js?v=16"></script>
 
 </body>
 </html>

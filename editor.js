@@ -215,7 +215,18 @@ async function resolveCompanyId(userId) {
 ======================================== */
 function bindEvents() {
   document.getElementById("saveSiteDesign").addEventListener("click", saveSiteDesign);
-  document.getElementById("siteDesignChoices").addEventListener("change", updateSelectedDesignPreview);
+  document.getElementById("siteDesignDisclosure").addEventListener("toggle", () => {
+    if (document.getElementById("siteDesignDisclosure").open) renderDesignChooserPage(true);
+  });
+  document.getElementById("designPreviousPage").addEventListener("click", () => {
+    designChooserPage -= 1;
+    renderDesignChooserPage();
+  });
+  document.getElementById("designNextPage").addEventListener("click", () => {
+    designChooserPage += 1;
+    renderDesignChooserPage();
+  });
+  window.matchMedia("(max-width:600px)").addEventListener("change", () => renderDesignChooserPage(true));
   document
     .getElementById("logoutButton")
     .addEventListener("click", logout);
@@ -2336,21 +2347,64 @@ function renderSiteDesignSettings() {
   document.getElementById("saveSiteDesign").disabled = siteDesignSaving;
   document.getElementById("siteDesignStatus").textContent =
     `保存済み：${SITE_DESIGN_NAMES[design]}`;
-  updateSelectedDesignPreview();
+  document.getElementById("siteDesignSummary").textContent = SITE_DESIGN_NAMES[design];
+  renderDesignChooserPage(true);
 }
-function updateSelectedDesignPreview() {
-  const link = document.getElementById("selectedDesignPreview");
-  const design = document.querySelector('input[name="siteDesign"]:checked')?.value;
-  const slug = currentCompany?.slug;
-  link.hidden = !canManageSiteDesign || !slug || !Object.hasOwn(SITE_DESIGN_NAMES, design);
-  if (link.hidden) { link.removeAttribute("href"); return; }
+function getDesignPreviewUrl(design, slug) {
+  if (!Object.hasOwn(SITE_DESIGN_NAMES, design) || !slug) return null;
   const path = design === "standard" ? "site.html" : design === "natural" ? "natural-site.html" : "design-site.html";
   const url = new URL(path, window.location.href);
   url.searchParams.set("company", slug);
   url.searchParams.set("design-preview", design);
   if (!["standard", "natural"].includes(design)) url.searchParams.set("design", design);
-  link.href = url.href;
-  link.textContent = `${SITE_DESIGN_NAMES[design]}を確認 ↗`;
+  return url.href;
+}
+let designPreviewResizeObserver = null;
+function renderDesignCardPreviews() {
+  if (!canManageSiteDesign || !currentCompany?.slug || !document.getElementById("siteDesignDisclosure").open) return;
+  document.querySelectorAll("[data-preview-link]").forEach(link => {
+    const url = getDesignPreviewUrl(link.dataset.previewLink, currentCompany.slug);
+    link.hidden = !url;
+    if (url) link.href = url;
+  });
+  document.querySelectorAll("[data-preview-design]").forEach(container => {
+    const design = container.dataset.previewDesign;
+    if (container.closest(".design-option")?.hidden) return;
+    if (!Object.hasOwn(SITE_DESIGN_NAMES, design)) return;
+    let frame = container.querySelector("iframe");
+    if (!frame) {
+      frame = document.createElement("iframe");
+      frame.title = `${SITE_DESIGN_NAMES[design]}の表示イメージ`;
+      frame.tabIndex = -1;
+      frame.setAttribute("aria-hidden", "true");
+      frame.setAttribute("sandbox", "allow-scripts allow-same-origin");
+      frame.loading = "lazy";
+      frame.addEventListener("load", () => sendDesignCardPreview(frame, design));
+      frame.src = `design-card-preview.html?design=${encodeURIComponent(design)}`;
+      container.appendChild(frame);
+      if (typeof ResizeObserver !== "undefined") {
+        if (!designPreviewResizeObserver) {
+          designPreviewResizeObserver = new ResizeObserver(entries => {
+            entries.forEach(entry => entry.target.style.setProperty("--preview-scale", String(entry.contentRect.width / 1040)));
+          });
+        }
+        designPreviewResizeObserver.observe(container);
+      }
+    }
+    container.style.setProperty("--preview-scale", String(container.clientWidth / 1040));
+    sendDesignCardPreview(frame, design);
+  });
+}
+function sendDesignCardPreview(frame, design) {
+  if (!canManageSiteDesign || !currentCompany || !frame.contentWindow) return;
+  frame.contentWindow.postMessage({
+    type: "sasulie-design-preview",
+    design,
+    name: currentCompany.name || "",
+    address: currentCompany.address || "",
+    heroImage: currentCompany.hero_image_url || "",
+    businessType: currentCompany.business_type || "restaurant"
+  }, window.location.origin);
 }
 
 async function saveSiteDesign() {
@@ -2393,6 +2447,9 @@ async function saveSiteDesign() {
     renderSiteDesignSettings();
     updatePublicPageLink();
     showToast("公開サイトのデザインを保存しました");
+    const disclosure = document.getElementById("siteDesignDisclosure");
+    disclosure.open = false;
+    disclosure.querySelector("summary").focus({ preventScroll: true });
   } catch (error) {
     status.textContent = error.message || "保存できませんでした。もう一度試してください。";
     if (!canManageSiteDesign) showToast(status.textContent);
@@ -2430,4 +2487,26 @@ async function loadDesignAdminPermission() {
   } catch (error) {
     console.warn("デザイン管理権限の確認に失敗", error);
   }
+}
+
+// デザイン一覧は、開いた時だけPC4件・スマホ2件を表示。
+// 別ページへ移っても、選択状態は保存ボタンを押すまで保持する。
+let designChooserPage = 0;
+function renderDesignChooserPage(goToSelection = false) {
+  if (!canManageSiteDesign || !currentCompany) return;
+  const cards = Array.from(document.querySelectorAll(".design-option"));
+  const size = window.matchMedia("(max-width:600px)").matches ? 2 : 4;
+  const count = Math.max(1, Math.ceil(cards.length / size));
+  if (goToSelection) {
+    const selected = cards.findIndex(card => card.querySelector('input[name="siteDesign"]')?.checked);
+    if (selected >= 0) designChooserPage = Math.floor(selected / size);
+  }
+  designChooserPage = Math.max(0, Math.min(designChooserPage, count - 1));
+  const start = designChooserPage * size;
+  const end = Math.min(start + size, cards.length);
+  cards.forEach((card, index) => { card.hidden = index < start || index >= end; });
+  document.getElementById("designPreviousPage").disabled = designChooserPage === 0;
+  document.getElementById("designNextPage").disabled = designChooserPage === count - 1;
+  document.getElementById("designPageStatus").textContent = `${start + 1}–${end} / ${cards.length}件`;
+  renderDesignCardPreviews();
 }
