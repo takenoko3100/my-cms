@@ -6,6 +6,7 @@ const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
+const SITE_DESIGN_NAMES = Object.freeze({"standard": "今までのデザイン", "natural": "ナチュラル", "japanese": "和モダン", "chic": "シック", "elegant": "エレガント", "pop": "ポップ", "minimal": "ミニマル", "visual": "ビジュアル", "clean": "クリーン", "craft": "クラフト", "bold": "ボールド"});
 let canManageSiteDesign = false;
 let currentCompanyId = null;
 let currentCompany = null;
@@ -214,6 +215,7 @@ async function resolveCompanyId(userId) {
 ======================================== */
 function bindEvents() {
   document.getElementById("saveSiteDesign").addEventListener("click", saveSiteDesign);
+  document.getElementById("siteDesignChoices").addEventListener("change", updateSelectedDesignPreview);
   document
     .getElementById("logoutButton")
     .addEventListener("click", logout);
@@ -2326,29 +2328,35 @@ function renderSiteDesignSettings() {
     document.getElementById("saveSiteDesign").disabled = true;
     return;
   }
-  const design = currentCompany.site_design === "natural" ? "natural" : "standard";
+  const design = Object.hasOwn(SITE_DESIGN_NAMES, currentCompany.site_design) ? currentCompany.site_design : "standard";
   document.querySelectorAll('input[name="siteDesign"]').forEach(input => {
     input.checked = input.value === design;
   });
   document.getElementById("siteDesignChoices").disabled = siteDesignSaving;
   document.getElementById("saveSiteDesign").disabled = siteDesignSaving;
   document.getElementById("siteDesignStatus").textContent =
-    `保存済み：${design === "natural" ? "ナチュラル" : "今までのデザイン"}`;
-  const slug = currentCompany.slug;
-  for (const [id, path] of [["standardDesignPreview", "site.html"], ["naturalDesignPreview", "natural-site.html"]]) {
-    const link = document.getElementById(id);
-    link.hidden = !slug;
-    if (!slug) { link.removeAttribute("href"); continue; }
-    const url = new URL(path, window.location.href);
-    url.searchParams.set("company", slug);
-    if (id === "standardDesignPreview") url.searchParams.set("design-preview", "standard");
-    link.href = url.href;
-  }
+    `保存済み：${SITE_DESIGN_NAMES[design]}`;
+  updateSelectedDesignPreview();
 }
+function updateSelectedDesignPreview() {
+  const link = document.getElementById("selectedDesignPreview");
+  const design = document.querySelector('input[name="siteDesign"]:checked')?.value;
+  const slug = currentCompany?.slug;
+  link.hidden = !canManageSiteDesign || !slug || !Object.hasOwn(SITE_DESIGN_NAMES, design);
+  if (link.hidden) { link.removeAttribute("href"); return; }
+  const path = design === "standard" ? "site.html" : design === "natural" ? "natural-site.html" : "design-site.html";
+  const url = new URL(path, window.location.href);
+  url.searchParams.set("company", slug);
+  url.searchParams.set("design-preview", design);
+  if (!["standard", "natural"].includes(design)) url.searchParams.set("design", design);
+  link.href = url.href;
+  link.textContent = `${SITE_DESIGN_NAMES[design]}を確認 ↗`;
+}
+
 async function saveSiteDesign() {
   if (!canManageSiteDesign || siteDesignSaving || !currentCompany || !currentCompanyId) return;
   const selected = document.querySelector('input[name="siteDesign"]:checked')?.value;
-  if (!["standard", "natural"].includes(selected)) return;
+  if (!Object.hasOwn(SITE_DESIGN_NAMES, selected)) return;
   const status = document.getElementById("siteDesignStatus");
   const button = document.getElementById("saveSiteDesign");
   const choices = document.getElementById("siteDesignChoices");

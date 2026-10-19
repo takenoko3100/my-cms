@@ -166,14 +166,17 @@ async function loadCompanyInfo() {
   }
 
 
-  // 公開URLは共通のまま、会社ごとの保存済みデザインに切り替える。
-  // 明示的な標準デザイン見本では切り替えない（DBへの書き込みなし）。
-  if (data.site_design === "natural" &&
+  // 保存済みのデザインへ。見本の確認ではDBを変更しない。
+  const extraDesigns = ["japanese", "chic", "elegant", "pop", "minimal", "visual", "clean", "craft", "bold"];
+  if ((data.site_design === "natural" || extraDesigns.includes(data.site_design)) &&
       new URLSearchParams(window.location.search).get("design-preview") !== "standard") {
-    const destination = new URL("natural-site.html", window.location.href);
+    const file = data.site_design === "natural" ? "natural-site.html" : "design-site.html";
+    const destination = new URL(file, window.location.href);
     destination.search = window.location.search;
     destination.searchParams.set("company", data.slug);
     destination.searchParams.delete("design-preview");
+    destination.searchParams.delete("design");
+    if (data.site_design !== "natural") destination.searchParams.set("design", data.site_design);
     destination.hash = window.location.hash;
     window.location.replace(destination.href);
     return false;

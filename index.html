@@ -22,7 +22,7 @@
   <title>かんたん編集 | たけのこCMS</title>
 
   <link rel="stylesheet" href="editor.css?v=5">
-  <link rel="stylesheet" href="editor-design.css?v=2">
+  <link rel="stylesheet" href="editor-design.css?v=3">
 </head>
 
 <body>
@@ -83,26 +83,42 @@
       <p class="design-help">運営者専用の設定です。写真や文章はそのままで、見た目を選べます。変更は「このデザインを保存」を押すと公開サイトに反映されます。</p>
       <fieldset id="siteDesignChoices" disabled>
         <legend>デザインを選ぶ</legend>
-        <div class="design-choice-grid">
-          <label class="design-choice-card">
-            <input type="radio" name="siteDesign" value="standard" checked>
-            <span class="design-card-art design-art-standard" aria-hidden="true"><span></span></span>
-            <strong>今までのデザイン</strong>
-            <span>現在使っているデザインと配色を引き継ぎます。</span>
-          </label>
-          <label class="design-choice-card">
-            <input type="radio" name="siteDesign" value="natural">
-            <span class="design-card-art design-art-natural" aria-hidden="true"><span></span></span>
-            <strong>ナチュラル</strong>
-            <span>ベージュと緑を使った、やさしい雰囲気のデザイン。</span>
-          </label>
-        </div>
-      </fieldset>
-      <div class="design-preview-links">
-        <a id="standardDesignPreview" target="_blank" rel="noopener noreferrer" hidden>今までのデザインを確認 ↗</a>
-        <a id="naturalDesignPreview" target="_blank" rel="noopener noreferrer" hidden>ナチュラルを確認 ↗</a>
-      </div>
-      <p class="design-help">見本を開くだけではデザインは変わりません。ほかのデザインも順番に追加予定です。</p>
+        <div class="design-choice-grid"><label class="design-choice-card">
+<input type="radio" name="siteDesign" value="standard" checked>
+<span class="design-card-art design-art-standard" aria-hidden="true"><span></span></span>
+<strong>今までのデザイン</strong><span>現在のデザインと配色を引き継ぎます。</span></label><label class="design-choice-card">
+<input type="radio" name="siteDesign" value="natural">
+<span class="design-card-art design-art-natural" aria-hidden="true"><span></span></span>
+<strong>ナチュラル</strong><span>ベージュと緑、アーチ型の写真。</span></label><label class="design-choice-card">
+<input type="radio" name="siteDesign" value="japanese">
+<span class="design-card-art design-art-japanese" aria-hidden="true"><span></span></span>
+<strong>和モダン</strong><span>縦書きと非対称の構図で、落ち着いた印象に。</span></label><label class="design-choice-card">
+<input type="radio" name="siteDesign" value="chic">
+<span class="design-card-art design-art-chic" aria-hidden="true"><span></span></span>
+<strong>シック</strong><span>写真を大きく使った、深い色合いのデザイン。</span></label><label class="design-choice-card">
+<input type="radio" name="siteDesign" value="elegant">
+<span class="design-card-art design-art-elegant" aria-hidden="true"><span></span></span>
+<strong>エレガント</strong><span>丸みのある写真と余白で、上品に。</span></label><label class="design-choice-card">
+<input type="radio" name="siteDesign" value="pop">
+<span class="design-card-art design-art-pop" aria-hidden="true"><span></span></span>
+<strong>ポップ</strong><span>明るい色と遊び心のあるカード。</span></label><label class="design-choice-card">
+<input type="radio" name="siteDesign" value="minimal">
+<span class="design-card-art design-art-minimal" aria-hidden="true"><span></span></span>
+<strong>ミニマル</strong><span>白い余白と文字を主役に。</span></label><label class="design-choice-card">
+<input type="radio" name="siteDesign" value="visual">
+<span class="design-card-art design-art-visual" aria-hidden="true"><span></span></span>
+<strong>ビジュアル</strong><span>写真や映像が引き立つ、映画のような雰囲気。</span></label><label class="design-choice-card">
+<input type="radio" name="siteDesign" value="clean">
+<span class="design-card-art design-art-clean" aria-hidden="true"><span></span></span>
+<strong>クリーン</strong><span>青を基調に、情報を分かりやすく。</span></label><label class="design-choice-card">
+<input type="radio" name="siteDesign" value="craft">
+<span class="design-card-art design-art-craft" aria-hidden="true"><span></span></span>
+<strong>クラフト</strong><span>素材感のある色と、雑誌のような構成。</span></label><label class="design-choice-card">
+<input type="radio" name="siteDesign" value="bold">
+<span class="design-card-art design-art-bold" aria-hidden="true"><span></span></span>
+<strong>ボールド</strong><span>黒とライム、力強い文字と斜めの構図。</span></label></div></fieldset>
+      <div class="design-preview-links"><a id="selectedDesignPreview" target="_blank" rel="noopener noreferrer" hidden>選択中のデザインを確認 ↗</a></div>
+      <p class="design-help">見本を開くだけではデザインは変わりません。デザインを選び、写真や文字の見え方を確認してから保存してください。</p>
       <p id="siteDesignStatus" class="design-status" role="status" aria-live="polite">会社情報を読み込んでいます。</p>
       <button id="saveSiteDesign" type="button" class="primary-action" disabled>このデザインを保存</button>
     </section>
@@ -1190,7 +1206,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="editor.js?v=13"></script>
+  <script src="editor.js?v=14"></script>
 
 </body>
 </html>

@@ -3,3 +3,16 @@
 
 /* 権限確認前と顧客アカウントでは設定全体を非表示にする。 */
 .design-settings[hidden]{display:none!important}
+
+/* 全10デザインと従来デザイン。選択は保存ボタンで確定。 */
+.design-choice-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.design-choice-card{gap:10px}.design-card-art{height:105px}
+.design-art-japanese{background:#eeece3}.design-art-japanese:before{content:"";position:absolute;left:7%;top:10%;bottom:10%;width:50%;background:#a1a48c}.design-art-japanese span{position:absolute;right:20%;top:20%;height:60%;border-left:3px solid #7c3831;border-right:2px solid #7c3831;width:10%}
+.design-art-chic{background:linear-gradient(90deg,#131918,#665c43)}.design-art-chic span{position:absolute;left:10%;top:30%;height:30%;width:50%;border-top:4px solid #d0b77f;border-bottom:2px solid #d0b77f}
+.design-art-elegant{background:#f7f0ed}.design-art-elegant:before{content:"";position:absolute;right:12%;top:12%;width:35%;height:76%;border-radius:50% 50% 30% 30%;background:#baaaa3}.design-art-elegant span{position:absolute;left:10%;top:40%;width:30%;border-top:3px solid #96776e}
+.design-art-pop{background:#fff8df}.design-art-pop:before{content:"";position:absolute;right:12%;top:20%;height:65%;width:35%;background:#efb9ad;border:5px solid white;transform:rotate(6deg);box-shadow:5px 5px #f4c45d}.design-art-pop span{position:absolute;left:8%;top:35%;width:28%;height:20%;border-top:5px solid #285cbd;border-bottom:5px solid #285cbd}
+.design-art-minimal{background:#fafafa;border:1px solid #ddd}.design-art-minimal:before{content:"";position:absolute;right:7%;bottom:15%;height:38%;width:32%;background:#e2e2e2}.design-art-minimal span{position:absolute;left:8%;top:22%;height:32%;width:40%;border-top:5px solid #333;border-bottom:3px solid #333}
+.design-art-visual{background:linear-gradient(155deg,#536a61,#101a19)}.design-art-visual span{position:absolute;left:10%;bottom:16%;height:24%;width:60%;border-top:4px solid #e2e7da;border-bottom:2px solid #e2e7da}
+.design-art-clean{background:#f4f8fa}.design-art-clean:before{content:"";position:absolute;right:0;top:10%;width:50%;height:80%;background:#a8c4d4}.design-art-clean span{position:absolute;left:8%;top:35%;height:26%;width:52%;border-top:5px solid #24618b;border-bottom:3px solid #24618b;background:#f4f8fa}
+.design-art-craft{background:#eee9de}.design-art-craft:before{content:"";position:absolute;right:8%;top:15%;width:43%;height:73%;background:#b7a88c;clip-path:polygon(0 0,100% 0,100% 85%,80% 100%,0 100%)}.design-art-craft span{position:absolute;left:8%;top:35%;width:30%;height:25%;border-top:4px solid #9b5737;border-bottom:2px solid #9b5737}
+.design-art-bold{background:#171a1c}.design-art-bold:before{content:"";position:absolute;right:0;top:0;width:50%;height:100%;background:#50594c;clip-path:polygon(20% 0,100% 0,100% 100%,0 100%)}.design-art-bold span{position:absolute;left:9%;top:30%;width:42%;height:35%;border-top:7px solid #d6ff4f;border-bottom:4px solid #d6ff4f;transform:skew(-8deg)}
+@media(max-width:1000px){.design-choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.design-choice-grid{grid-template-columns:1fr}}

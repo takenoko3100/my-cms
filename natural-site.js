@@ -1,5 +1,8 @@
-﻿(() => {
+(() => {
 "use strict";
+const previewNote = document.getElementById("designPreviewNote");
+if (previewNote) previewNote.hidden = !new URLSearchParams(window.location.search).has("design-preview");
+
 if (typeof supabase === "undefined") {
   document.body.classList.add("load-failed");
   document.body.classList.remove("is-loading");
