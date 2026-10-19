@@ -8,10 +8,13 @@ const supabaseClient =
     SUPABASE_PUBLISHABLE_KEY
   );
 const BUSINESS_TYPE_LABELS = {
-  restaurant: "飲食店",
-  hospital: "病院・クリニック",
-  video_editing: "動画編集",
-  auto_repair: "自動車整備"
+  "restaurant": "飲食店",
+  "hospital": "病院・クリニック",
+  "video_editing": "動画・映像制作",
+  "auto_repair": "自動車整備",
+  "salon": "美容室・サロン",
+  "retail": "物販・雑貨",
+  "school": "教室・スクール"
 };
 const SITE_DESIGN_LABELS = Object.freeze({standard:"今までのデザイン",natural:"ナチュラル",japanese:"和モダン",chic:"シック",elegant:"エレガント",pop:"ポップ",minimal:"ミニマル",visual:"ビジュアル",clean:"クリーン",craft:"クラフト",bold:"ボールド"});
 let operatorUserId = null;
@@ -294,9 +297,9 @@ function renderClients() {
   list.replaceChildren();
   count.textContent = `${clients.length}件`;
   document.getElementById("totalClientCount").textContent = clients.length;
-  document.getElementById("restaurantCount").textContent = clients.filter(c => c.business_type === "restaurant").length;
-  document.getElementById("hospitalCount").textContent = clients.filter(c => c.business_type === "hospital").length;
-  document.getElementById("otherClientCount").textContent = clients.filter(c => ["video_editing", "auto_repair"].includes(c.business_type)).length;
+  for (const key of Object.keys(BUSINESS_TYPE_LABELS)) {
+    document.getElementById(`${key}Count`).textContent = clients.filter(client => client.business_type === key).length;
+  }
   document.getElementById("listDescription").textContent = query || type
     ? `${clients.length}件中 ${shown.length}件を表示しています。`
     : `${clients.length}件の顧客を表示しています。`;
@@ -496,6 +499,7 @@ async function saveClientChanges() {
     );
     return;
   }
+  if (!Object.hasOwn(BUSINESS_TYPE_LABELS, businessType)) { alert("業種を選択してください。"); return; }
   if (button.disabled) return;
   if (!ownCompanyIds.has(String(clientId))) { alert("先に「自分を管理担当に追加」で、この会社の編集を有効にしてください。"); return; }
   setBusy(

@@ -95,8 +95,49 @@ companyTitle: "ご依頼について",
     navAbout: "会社紹介",
     navService: "サービス",
     navCompany: "店舗情報"
-  }
-
+  },
+  salon: {
+  "heroKicker": "",
+  "aboutLabel": "INTRODUCTION",
+  "aboutTitle": "サロン紹介",
+  "serviceLabel": "MENU",
+  "serviceTitle": "施術メニュー",
+  "companyLabel": "INFORMATION",
+  "companyTitle": "サロン情報",
+  "hoursLabel": "営業時間：",
+  "closedDaysLabel": "定休日：",
+  "navAbout": "サロン紹介",
+  "navService": "施術メニュー",
+  "navCompany": "サロン情報"
+},
+  retail: {
+  "heroKicker": "",
+  "aboutLabel": "INTRODUCTION",
+  "aboutTitle": "お店の紹介",
+  "serviceLabel": "PRODUCTS",
+  "serviceTitle": "商品紹介",
+  "companyLabel": "INFORMATION",
+  "companyTitle": "店舗情報",
+  "hoursLabel": "営業時間：",
+  "closedDaysLabel": "定休日：",
+  "navAbout": "お店の紹介",
+  "navService": "商品紹介",
+  "navCompany": "店舗情報"
+},
+  school: {
+  "heroKicker": "",
+  "aboutLabel": "INTRODUCTION",
+  "aboutTitle": "教室紹介",
+  "serviceLabel": "COURSES",
+  "serviceTitle": "コース・料金",
+  "companyLabel": "INFORMATION",
+  "companyTitle": "教室情報",
+  "hoursLabel": "開講・受付時間：",
+  "closedDaysLabel": "休講日：",
+  "navAbout": "教室紹介",
+  "navService": "コース・料金",
+  "navCompany": "教室情報"
+}
 };
 
 
@@ -728,12 +769,8 @@ async function loadMenuItems() {
       "public-empty";
 
 
-    empty.textContent =
-      currentCompany
-        ?.business_type ===
-        "restaurant"
-        ? "現在メニューを準備中です。"
-        : "現在サービスを準備中です。";
+    const settings = PUBLIC_BUSINESS_SETTINGS[currentCompany?.business_type] || PUBLIC_BUSINESS_SETTINGS.restaurant;
+    empty.textContent = `現在${settings.serviceTitle}を準備中です。`;
 
 
     menuList.appendChild(

@@ -219,3 +219,6 @@ body[data-design="clean"] .hero,body[data-design="clean"] .hero.has-image{grid-t
 body[data-design="clean"] .hero-overlay{margin-right:0;padding:24px 0;background:transparent}
 body[data-design="clean"] .hero-visual{margin:0;width:100%}
 @media(max-width:600px){body[data-design="craft"] .hero-overlay h1{font-size:32px}body[data-design="visual"] .hero-overlay h1{font-size:clamp(28px,7vw,40px)}body[data-design="clean"] .hero,body[data-design="clean"] .hero.has-image{padding:30px 24px 50px;gap:26px}body[data-design="clean"] .hero-overlay{padding:0}body[data-design="clean"] .hero-visual{width:100%;margin:0}}
+
+/* スマホのミニマル: 左余白ぶん写真の幅を引き、画面内に収める。 */
+@media(max-width:600px){body[data-design="minimal"] .hero-visual{width:80%;max-width:80%;margin-left:20%;min-width:0}}

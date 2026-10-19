@@ -81,7 +81,61 @@ const BUSINESS_TYPE_SETTINGS = {
     namePlaceholder: "オイル交換",
     descriptionPlaceholder: "サービス内容",
     categoryPlaceholder: "車検・オイル交換など"
-  }
+  },
+  salon: {
+  "label": "MENU",
+  "title": "施術メニュー",
+  "guide": "メニューをタップすると内容や料金を編集できます",
+  "modalLabel": "MENU",
+  "itemNameLabel": "メニュー名",
+  "priceLabel": "料金（円）",
+  "addTitle": "施術メニューを追加",
+  "editTitle": "施術メニューを編集",
+  "introTitle": "サロン紹介",
+  "companyInfoTitle": "サロン情報",
+  "businessHoursLabel": "営業時間",
+  "closedDaysLabel": "定休日",
+  "namePlaceholder": "例：カット・カラー",
+  "descriptionPlaceholder": "施術内容や所要時間を入力してください",
+  "categoryPlaceholder": "例：ヘア・ネイル・ボディ",
+  "itemNoun": "施術メニュー"
+},
+  retail: {
+  "label": "PRODUCTS",
+  "title": "商品紹介",
+  "guide": "商品をタップすると写真や価格を編集できます",
+  "modalLabel": "PRODUCTS",
+  "itemNameLabel": "商品名",
+  "priceLabel": "価格（円）",
+  "addTitle": "商品を追加",
+  "editTitle": "商品を編集",
+  "introTitle": "お店の紹介",
+  "companyInfoTitle": "店舗情報",
+  "businessHoursLabel": "営業時間",
+  "closedDaysLabel": "定休日",
+  "namePlaceholder": "例：季節の花束・陶器のマグカップ",
+  "descriptionPlaceholder": "商品の特徴やサイズなどを入力してください",
+  "categoryPlaceholder": "例：雑貨・花・アクセサリー",
+  "itemNoun": "商品"
+},
+  school: {
+  "label": "COURSES",
+  "title": "コース・料金",
+  "guide": "コースをタップすると内容や料金を編集できます",
+  "modalLabel": "COURSES",
+  "itemNameLabel": "コース名",
+  "priceLabel": "料金（円）",
+  "addTitle": "コースを追加",
+  "editTitle": "コースを編集",
+  "introTitle": "教室紹介",
+  "companyInfoTitle": "教室情報",
+  "businessHoursLabel": "開講・受付時間",
+  "closedDaysLabel": "休講日",
+  "namePlaceholder": "例：はじめてのピアノコース",
+  "descriptionPlaceholder": "対象年齢・レッスン内容・料金の単位（月額／1回など）を入力してください",
+  "categoryPlaceholder": "例：キッズ・大人・体験",
+  "itemNoun": "コース"
+}
 };
 /* ========================================
    初期化
@@ -2020,17 +2074,13 @@ if (categoryField) {
 if (recommendedField) {
   recommendedField.classList.toggle(
     "business-field-hidden",
-    businessType === "video_editing" ||
-    businessType === "hospital" ||
-    businessType === "auto_repair"
+    businessType !== "restaurant"
   );
 }
 if (soldOutField) {
   soldOutField.classList.toggle(
     "business-field-hidden",
-    businessType === "video_editing" ||
-    businessType === "hospital" ||
-    businessType === "auto_repair"
+    businessType !== "restaurant"
   );
 }
 const portfolioSection =
@@ -2112,7 +2162,49 @@ const editorCopy = (() => {
       hoursLabel: "営業時間",
       closedLabel: "定休日",
       showMenuDescription: false
-    }
+    },
+    salon: {
+  "modalLabel": "サロン情報",
+  "modalTitle": "サロン情報を編集",
+  "nameLabel": "サロン名",
+  "namePlaceholder": "サロン名",
+  "addressLabel": "住所",
+  "addressPlaceholder": "住所",
+  "descriptionLabel": "サロン紹介",
+  "descriptionPlaceholder": "サロン紹介文",
+  "infoTitle": "サロン情報",
+  "hoursLabel": "営業時間",
+  "closedLabel": "定休日",
+  "showMenuDescription": false
+},
+    retail: {
+  "modalLabel": "店舗情報",
+  "modalTitle": "店舗情報を編集",
+  "nameLabel": "店舗名",
+  "namePlaceholder": "店舗名",
+  "addressLabel": "住所",
+  "addressPlaceholder": "住所",
+  "descriptionLabel": "お店の紹介",
+  "descriptionPlaceholder": "お店の紹介文",
+  "infoTitle": "店舗情報",
+  "hoursLabel": "営業時間",
+  "closedLabel": "定休日",
+  "showMenuDescription": false
+},
+    school: {
+  "modalLabel": "教室情報",
+  "modalTitle": "教室情報を編集",
+  "nameLabel": "教室名",
+  "namePlaceholder": "教室名",
+  "addressLabel": "住所",
+  "addressPlaceholder": "住所",
+  "descriptionLabel": "教室紹介",
+  "descriptionPlaceholder": "教室紹介文",
+  "infoTitle": "教室情報",
+  "hoursLabel": "開講・受付時間",
+  "closedLabel": "休講日",
+  "showMenuDescription": false
+}
   };
 
   function getBusinessType() {
@@ -2279,7 +2371,10 @@ const editorCopy = (() => {
     if (!company.description) setText("#editorCompanyDescription", `${settings.descriptionLabel}を入力してください`);
 
     if (type !== "video_editing") {
-      setPlaceholder("newsTitle", "例：営業・休業日のお知らせ");
+      const itemSettings = BUSINESS_TYPE_SETTINGS[type] || BUSINESS_TYPE_SETTINGS.restaurant;
+      setText("#addMenuQuickButton", `＋ ${itemSettings.addTitle}`);
+      setLabelCaption("menuDescription", itemSettings.itemNoun ? `${itemSettings.itemNoun}の説明` : "説明");
+      setPlaceholder("newsTitle", type === "school" ? "例：体験レッスン・休講日のお知らせ" : "例：営業・休業日のお知らせ");
       return;
     }
 
@@ -2311,6 +2406,7 @@ const editorCopy = (() => {
 
 function getEditorItemNoun() {
   const type = currentCompany?.business_type;
+  if (BUSINESS_TYPE_SETTINGS[type]?.itemNoun) return BUSINESS_TYPE_SETTINGS[type].itemNoun;
   return type === "hospital" ? "診療科" :
     ["video_editing", "auto_repair"].includes(type) ? "サービス" : "メニュー";
 }
@@ -2373,7 +2469,7 @@ function renderDesignCardPreviews() {
       frame.setAttribute("sandbox", "allow-scripts allow-same-origin");
       frame.loading = "lazy";
       frame.addEventListener("load", () => sendDesignCardPreview(frame, design));
-      frame.src = `design-card-preview.html?design=${encodeURIComponent(design)}`;
+      frame.src = `design-card-preview.html?v=2&design=${encodeURIComponent(design)}`;
       container.appendChild(frame);
       if (typeof ResizeObserver !== "undefined") {
         if (!designPreviewResizeObserver) {

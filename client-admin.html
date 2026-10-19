@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>顧客管理 | sasulie</title>
-  <link rel="stylesheet" href="client-admin.css?v=sasulie-2">
+  <link rel="stylesheet" href="client-admin.css?v=seven-types-1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="client-admin.js?v=sasulie-2" defer></script>
+  <script src="client-admin.js?v=seven-types-1" defer></script>
 </head>
 <body class="auth-pending">
   <aside class="sidebar">
@@ -32,14 +32,18 @@
         <div class="stat-card"><span>登録済み顧客</span><strong id="totalClientCount">—</strong><small>会社・店舗</small></div>
         <div class="stat-card"><span>飲食店</span><strong id="restaurantCount">—</strong><small>RESTAURANT</small></div>
         <div class="stat-card"><span>病院・クリニック</span><strong id="hospitalCount">—</strong><small>CLINIC</small></div>
-        <div class="stat-card"><span>動画編集・自動車整備</span><strong id="otherClientCount">—</strong><small>CREATIVE &amp; SERVICE</small></div>
+        <div class="stat-card"><span>動画・映像制作</span><strong id="video_editingCount">—</strong><small>FILM</small></div>
+        <div class="stat-card"><span>自動車整備</span><strong id="auto_repairCount">—</strong><small>AUTO REPAIR</small></div>
+        <div class="stat-card"><span>美容室・サロン</span><strong id="salonCount">—</strong><small>SALON</small></div>
+        <div class="stat-card"><span>物販・雑貨</span><strong id="retailCount">—</strong><small>SHOP</small></div>
+        <div class="stat-card"><span>教室・スクール</span><strong id="schoolCount">—</strong><small>SCHOOL</small></div>
       </section>
 
       <section id="createSection" class="card create-section" hidden aria-labelledby="createTitle">
         <div class="section-title"><div><p class="eyebrow">NEW CLIENT</p><h2 id="createTitle">新しい顧客を登録</h2><p class="section-description">会社情報と、更新を担当するアカウントをひも付けます。</p></div><button id="closeCreateButton" class="icon-button" type="button" aria-label="登録フォームを閉じる">×</button></div>
         <div class="form-grid">
           <div class="form-group"><label for="companyName">会社・店舗名 <span class="required">必須</span></label><input id="companyName" type="text" placeholder="例：CÈDRE" autocomplete="off"></div>
-          <div class="form-group"><label for="businessType">業種</label><select id="businessType"><option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画編集</option><option value="auto_repair">自動車整備</option></select></div>
+          <div class="form-group"><label for="businessType">業種</label><select id="businessType"><option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画・映像制作</option><option value="auto_repair">自動車整備</option><option value="salon">美容室・サロン</option><option value="retail">物販・雑貨</option><option value="school">教室・スクール</option></select></div>
           <div class="form-group"><label for="companySlug">サイトの識別名 <span class="required">必須</span></label><input id="companySlug" type="text" placeholder="例：cedre-visual" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="slugHelp"><p class="help-text" id="slugHelp">URLに使う名前。半角英数字とハイフンで入力します。</p></div>
           <div class="form-group"><label for="customerUserId">更新担当者のユーザーID <span class="required">必須</span></label><input id="customerUserId" type="text" placeholder="担当者のUser UIDを貼り付け" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="userHelp"><p class="help-text" id="userHelp">SupabaseのAuthentication → Usersで、作成済みアカウントのUser UIDをコピーします。</p></div>
         </div>
@@ -59,7 +63,7 @@
         <div class="client-section-header"><div><p class="eyebrow">YOUR CLIENTS</p><h2 id="clientsTitle">顧客一覧 <span id="clientCount" class="client-count">読み込み中</span></h2></div><button class="secondary-button refresh-button" id="refreshClientsButton" type="button">↻ 一覧を更新</button></div>
         <div class="toolbar">
           <div class="search-field"><label class="sr-only" for="clientSearch">会社名・サイト識別名で検索</label><span aria-hidden="true">⌕</span><input type="search" id="clientSearch" placeholder="会社名・サイト識別名で検索" autocomplete="off"></div>
-          <div><label class="sr-only" for="clientTypeFilter">業種で絞り込む</label><select id="clientTypeFilter"><option value="">すべての業種</option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画編集</option><option value="auto_repair">自動車整備</option></select></div>
+          <div><label class="sr-only" for="clientTypeFilter">業種で絞り込む</label><select id="clientTypeFilter"><option value="">すべての業種</option><option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画・映像制作</option><option value="auto_repair">自動車整備</option><option value="salon">美容室・サロン</option><option value="retail">物販・雑貨</option><option value="school">教室・スクール</option></select></div>
           <div><label class="sr-only" for="clientSort">並び順</label><select id="clientSort"><option value="newest">登録が新しい順</option><option value="oldest">登録が古い順</option><option value="name">会社名順</option></select></div>
         </div>
         <p class="list-description" id="listDescription" role="status" aria-live="polite">顧客情報を読み込んでいます。</p>
@@ -76,7 +80,7 @@
       <input id="editClientId" type="hidden">
       <div class="form-group"><label for="editCompanyName">会社・店舗名</label><input id="editCompanyName" type="text"></div>
       <div class="form-group"><label for="editCompanySlug">サイトの識別名</label><input id="editCompanySlug" type="text" autocapitalize="none" spellcheck="false"><p class="help-text">変更すると管理画面・公開サイトのURLも変わります。変更後は新しいリンクを顧客に案内してください。</p></div>
-      <div class="form-group"><label for="editBusinessType">業種</label><select id="editBusinessType"><option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画編集</option><option value="auto_repair">自動車整備</option></select></div>
+      <div class="form-group"><label for="editBusinessType">業種</label><select id="editBusinessType"><option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画・映像制作</option><option value="auto_repair">自動車整備</option><option value="salon">美容室・サロン</option><option value="retail">物販・雑貨</option><option value="school">教室・スクール</option></select></div>
       <section class="member-settings" aria-labelledby="memberSettingsTitle">
         <h3 id="memberSettingsTitle">管理担当者</h3>
         <p id="editAccessStatus" class="help-text"></p>

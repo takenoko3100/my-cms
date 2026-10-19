@@ -20,7 +20,7 @@ window.addEventListener("message", event => {
   const address = document.getElementById("previewAddress");
   address.textContent = typeof data.address === "string" ? data.address.slice(0,500) : "";
   address.hidden = !address.textContent;
-  document.getElementById("previewMenuLabel").textContent = data.businessType === "restaurant" ? "メニュー" : "サービス";
+  document.getElementById("previewMenuLabel").textContent = ({restaurant:"メニュー",hospital:"診療科",video_editing:"撮影・編集サービス",auto_repair:"サービス・料金",salon:"施術メニュー",retail:"商品紹介",school:"コース・料金"})[data.businessType] || "サービス";
   let url;
   try { url = new URL(data.heroImage, document.baseURI); } catch { hideImage(); return; }
   if (!data.heroImage || !["https:","http:"].includes(url.protocol) ||
