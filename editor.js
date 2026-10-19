@@ -216,17 +216,10 @@ async function resolveCompanyId(userId) {
 function bindEvents() {
   document.getElementById("saveSiteDesign").addEventListener("click", saveSiteDesign);
   document.getElementById("siteDesignDisclosure").addEventListener("toggle", () => {
-    if (document.getElementById("siteDesignDisclosure").open) renderDesignChooserPage(true);
+    if (document.getElementById("siteDesignDisclosure").open) renderDesignCarousel(true);
   });
-  document.getElementById("designPreviousPage").addEventListener("click", () => {
-    designChooserPage -= 1;
-    renderDesignChooserPage();
-  });
-  document.getElementById("designNextPage").addEventListener("click", () => {
-    designChooserPage += 1;
-    renderDesignChooserPage();
-  });
-  window.matchMedia("(max-width:600px)").addEventListener("change", () => renderDesignChooserPage(true));
+  document.getElementById("designCarousel").addEventListener("scroll", updateDesignScrollStatus, { passive: true });
+  window.matchMedia("(max-width:600px)").addEventListener("change", () => renderDesignCarousel(true));
   document
     .getElementById("logoutButton")
     .addEventListener("click", logout);
@@ -2348,7 +2341,7 @@ function renderSiteDesignSettings() {
   document.getElementById("siteDesignStatus").textContent =
     `保存済み：${SITE_DESIGN_NAMES[design]}`;
   document.getElementById("siteDesignSummary").textContent = SITE_DESIGN_NAMES[design];
-  renderDesignChooserPage(true);
+  renderDesignCarousel(true);
 }
 function getDesignPreviewUrl(design, slug) {
   if (!Object.hasOwn(SITE_DESIGN_NAMES, design) || !slug) return null;
@@ -2489,24 +2482,33 @@ async function loadDesignAdminPermission() {
   }
 }
 
-// デザイン一覧は、開いた時だけPC4件・スマホ2件を表示。
-// 別ページへ移っても、選択状態は保存ボタンを押すまで保持する。
-let designChooserPage = 0;
-function renderDesignChooserPage(goToSelection = false) {
+// ページ全体は縦、カードの帯だけ横へネイティブスクロール。
+function renderDesignCarousel(goToSelection = false) {
   if (!canManageSiteDesign || !currentCompany) return;
-  const cards = Array.from(document.querySelectorAll(".design-option"));
-  const size = window.matchMedia("(max-width:600px)").matches ? 2 : 4;
-  const count = Math.max(1, Math.ceil(cards.length / size));
-  if (goToSelection) {
-    const selected = cards.findIndex(card => card.querySelector('input[name="siteDesign"]')?.checked);
-    if (selected >= 0) designChooserPage = Math.floor(selected / size);
-  }
-  designChooserPage = Math.max(0, Math.min(designChooserPage, count - 1));
-  const start = designChooserPage * size;
-  const end = Math.min(start + size, cards.length);
-  cards.forEach((card, index) => { card.hidden = index < start || index >= end; });
-  document.getElementById("designPreviousPage").disabled = designChooserPage === 0;
-  document.getElementById("designNextPage").disabled = designChooserPage === count - 1;
-  document.getElementById("designPageStatus").textContent = `${start + 1}–${end} / ${cards.length}件`;
+  const track = document.getElementById("designCarousel");
+  const cards = Array.from(track.querySelectorAll(".design-option"));
+  cards.forEach(card => { card.hidden = false; });
+  if (!document.getElementById("siteDesignDisclosure").open) return;
   renderDesignCardPreviews();
+  requestAnimationFrame(() => {
+    if (!document.getElementById("siteDesignDisclosure").open) return;
+    if (goToSelection) {
+      const selected = cards.find(card => card.querySelector('input[name="siteDesign"]')?.checked);
+      if (selected) track.scrollTo({ left: Math.max(0, selected.offsetLeft - 8), behavior: "auto" });
+    }
+    updateDesignScrollStatus();
+  });
+}
+function updateDesignScrollStatus() {
+  const track = document.getElementById("designCarousel");
+  const cards = Array.from(track.querySelectorAll(".design-option"));
+  const bounds = track.getBoundingClientRect();
+  const visible = cards.map((card, index) => {
+    const rect = card.getBoundingClientRect();
+    const overlap = Math.min(rect.right, bounds.right) - Math.max(rect.left, bounds.left);
+    return overlap > Math.min(40, rect.width / 4) ? index : -1;
+  }).filter(index => index >= 0);
+  document.getElementById("designPageStatus").textContent = visible.length
+    ? `${visible[0] + 1}–${visible[visible.length - 1] + 1} / ${cards.length}件`
+    : `全${cards.length}件`;
 }
