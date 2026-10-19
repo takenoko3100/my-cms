@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>顧客管理 | Website Studio</title>
-  <link rel="stylesheet" href="client-admin.css?v=studio-1">
+  <title>顧客管理 | sasulie</title>
+  <link rel="stylesheet" href="client-admin.css?v=sasulie-2">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="client-admin.js?v=studio-1" defer></script>
+  <script src="client-admin.js?v=sasulie-2" defer></script>
 </head>
-<body>
+<body class="auth-pending">
   <aside class="sidebar">
-    <a class="brand" href="client-admin.html"><span class="brand-mark" aria-hidden="true">W</span><span>Website Studio<small>制作管理</small></span></a>
+    <a class="brand" href="client-admin.html"><span class="brand-mark" aria-hidden="true">s</span><span>sasulie<small>制作管理</small></span></a>
     <p class="nav-caption">WORKSPACE</p>
     <a class="nav-link active" href="#clientsSection" aria-current="page"><span aria-hidden="true">▦</span> 顧客一覧</a>
     <button class="nav-link" type="button" id="sidebarCreateButton"><span aria-hidden="true">＋</span> 新規顧客登録</button>
@@ -19,7 +19,7 @@
   </aside>
   <div class="workspace">
     <header class="header">
-      <div class="breadcrumb">Workspace <span>/</span> <strong>顧客管理</strong></div>
+      <div><div class="breadcrumb">sasulie <span>/</span> <strong>顧客管理</strong></div><p id="operatorStatus" class="operator-status" role="status">運営者を確認しています…</p></div>
       <button id="logoutButton" class="logout-button" type="button">ログアウト</button>
     </header>
     <main class="container">
@@ -27,6 +27,7 @@
         <div><p class="eyebrow">CLIENT MANAGEMENT</p><h1>顧客管理</h1><p class="page-description">大切な顧客と、そのホームページをひとつの場所で。</p></div>
         <button id="toggleCreateButton" type="button" class="primary-button new-client-button" aria-expanded="false" aria-controls="createSection">＋ 新規顧客登録</button>
       </section>
+      <nav class="workspace-shortcuts" aria-label="制作の入口"><a href="sales.html" target="_blank" rel="noopener noreferrer">sasulieのホームページ ↗</a><a href="cms-design-samples/designs.html" target="_blank" rel="noopener noreferrer">デザイン見本 ↗</a><span>会社を選んで、編集・デザイン設定・公開確認へ。</span></nav>
       <section class="stats" aria-label="登録状況">
         <div class="stat-card"><span>登録済み顧客</span><strong id="totalClientCount">—</strong><small>会社・店舗</small></div>
         <div class="stat-card"><span>飲食店</span><strong id="restaurantCount">—</strong><small>RESTAURANT</small></div>
@@ -42,7 +43,7 @@
           <div class="form-group"><label for="companySlug">サイトの識別名 <span class="required">必須</span></label><input id="companySlug" type="text" placeholder="例：cedre-visual" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="slugHelp"><p class="help-text" id="slugHelp">URLに使う名前。半角英数字とハイフンで入力します。</p></div>
           <div class="form-group"><label for="customerUserId">更新担当者のユーザーID <span class="required">必須</span></label><input id="customerUserId" type="text" placeholder="担当者のUser UIDを貼り付け" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="userHelp"><p class="help-text" id="userHelp">SupabaseのAuthentication → Usersで、作成済みアカウントのUser UIDをコピーします。</p></div>
         </div>
-        <div class="form-footer"><p>登録後に、管理画面と公開サイトのリンクが表示されます。</p><button id="createClientButton" class="primary-button" type="button">顧客を登録する</button></div>
+        <p id="createFeedback" class="operation-feedback" role="status" aria-live="polite"></p><div class="form-footer"><p>顧客とログイン中の運営者を管理担当に登録し、編集・公開リンクを表示します。</p><button id="createClientButton" class="primary-button" type="button">顧客を登録する</button></div>
       </section>
 
       <section id="resultCard" class="card result-card" hidden aria-labelledby="resultTitle">
@@ -64,7 +65,7 @@
         <p class="list-description" id="listDescription" role="status" aria-live="polite">顧客情報を読み込んでいます。</p>
         <div id="clientList" class="client-list" aria-busy="true"><div class="client-loading">顧客一覧を読み込み中…</div></div>
       </section>
-      <footer class="workspace-footer">Website Studio <span>あなたの制作を、もっとスムーズに。</span></footer>
+      <footer class="workspace-footer">sasulie <span>あなたの制作を、もっとスムーズに。</span></footer>
     </main>
   </div>
 
@@ -76,6 +77,13 @@
       <div class="form-group"><label for="editCompanyName">会社・店舗名</label><input id="editCompanyName" type="text"></div>
       <div class="form-group"><label for="editCompanySlug">サイトの識別名</label><input id="editCompanySlug" type="text" autocapitalize="none" spellcheck="false"><p class="help-text">変更すると管理画面・公開サイトのURLも変わります。変更後は新しいリンクを顧客に案内してください。</p></div>
       <div class="form-group"><label for="editBusinessType">業種</label><select id="editBusinessType"><option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画編集</option><option value="auto_repair">自動車整備</option></select></div>
+      <section class="member-settings" aria-labelledby="memberSettingsTitle">
+        <h3 id="memberSettingsTitle">管理担当者</h3>
+        <p id="editAccessStatus" class="help-text"></p>
+        <button id="addOperatorMembershipButton" type="button" class="secondary-button" hidden>自分を管理担当に追加</button>
+        <details><summary>顧客アカウントを追加する</summary><label for="additionalMemberUid">更新を担当するアカウントのユーザーID</label><input id="additionalMemberUid" type="text" autocapitalize="none" spellcheck="false" placeholder="作成済みアカウントのUser UID"><p class="help-text">この会社の管理担当として追加します。既存の担当者は引き続き利用できます。</p><button id="addClientMemberButton" class="secondary-button" type="button">この会社の担当者に追加</button></details>
+        <p id="memberFeedback" class="operation-feedback" role="status" aria-live="polite"></p>
+      </section>
       <button id="saveClientButton" class="primary-button" type="button">変更を保存</button>
       <details class="danger-zone"><summary>顧客の削除</summary><p class="help-text">削除した顧客は元に戻せません。</p><button id="deleteClientButton" class="danger-button" type="button">この顧客を削除</button></details>
     </div>
