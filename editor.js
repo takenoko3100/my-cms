@@ -211,6 +211,7 @@ async function resolveCompanyId(userId) {
    イベント
 ======================================== */
 function bindEvents() {
+  document.getElementById("saveSiteDesign").addEventListener("click", saveSiteDesign);
   document
     .getElementById("logoutButton")
     .addEventListener("click", logout);
@@ -335,6 +336,7 @@ function renderCompanyInfo() {
 fillCompanyForm();
 syncCompanySlugInUrl();
 updatePublicPageLink();
+renderSiteDesignSettings();
 }
 /* ========================================
    会社URL・公開ページ
@@ -2310,4 +2312,71 @@ function localizeEditorMessage(message) {
     message = message.replaceAll("店舗情報", "プロフィール情報");
   }
   return message.replaceAll("メニュー", getEditorItemNoun());
+}
+
+/* 会社ごとの公開デザイン。既存のtheme（配色）とは別に保存する。 */
+let siteDesignSaving = false;
+function renderSiteDesignSettings() {
+  if (!currentCompany) return;
+  const design = currentCompany.site_design === "natural" ? "natural" : "standard";
+  document.querySelectorAll('input[name="siteDesign"]').forEach(input => {
+    input.checked = input.value === design;
+  });
+  document.getElementById("siteDesignChoices").disabled = siteDesignSaving;
+  document.getElementById("saveSiteDesign").disabled = siteDesignSaving;
+  document.getElementById("siteDesignStatus").textContent =
+    `保存済み：${design === "natural" ? "ナチュラル" : "今までのデザイン"}`;
+  const slug = currentCompany.slug;
+  for (const [id, path] of [["standardDesignPreview", "site.html"], ["naturalDesignPreview", "natural-site.html"]]) {
+    const link = document.getElementById(id);
+    link.hidden = !slug;
+    if (!slug) { link.removeAttribute("href"); continue; }
+    const url = new URL(path, window.location.href);
+    url.searchParams.set("company", slug);
+    if (id === "standardDesignPreview") url.searchParams.set("design-preview", "standard");
+    link.href = url.href;
+  }
+}
+async function saveSiteDesign() {
+  if (siteDesignSaving || !currentCompany || !currentCompanyId) return;
+  const selected = document.querySelector('input[name="siteDesign"]:checked')?.value;
+  if (!["standard", "natural"].includes(selected)) return;
+  const status = document.getElementById("siteDesignStatus");
+  const button = document.getElementById("saveSiteDesign");
+  const choices = document.getElementById("siteDesignChoices");
+  const companyId = currentCompanyId;
+  siteDesignSaving = true;
+  choices.disabled = true;
+  button.disabled = true;
+  button.textContent = "保存中…";
+  status.textContent = "デザインを保存しています。";
+  try {
+    const { data: auth, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !auth?.user) throw new Error("ログインの有効期限が切れています。ログインし直してください。");
+    const { data: member, error: memberError } = await supabaseClient
+      .from("company_members").select("company_id")
+      .eq("user_id", auth.user.id).eq("company_id", companyId).maybeSingle();
+    if (memberError || !member) throw new Error("この会社のデザインを変更する権限がありません。");
+    const { data, error } = await supabaseClient.from("company_info")
+      .update({ site_design: selected }).eq("id", companyId).select("*").single();
+    if (error) {
+      console.error(error);
+      throw new Error("保存できませんでした。デザイン設定用SQLを実行済みか確認して、もう一度試してください。");
+    }
+    if (!data || data.id !== companyId || data.site_design !== selected) {
+      throw new Error("保存結果を確認できませんでした。再読み込みして確認してください。");
+    }
+    if (currentCompanyId !== companyId) return;
+    currentCompany = data;
+    renderSiteDesignSettings();
+    updatePublicPageLink();
+    showToast("公開サイトのデザインを保存しました");
+  } catch (error) {
+    status.textContent = error.message || "保存できませんでした。もう一度試してください。";
+  } finally {
+    siteDesignSaving = false;
+    choices.disabled = false;
+    button.disabled = false;
+    button.textContent = "このデザインを保存";
+  }
 }

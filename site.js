@@ -166,6 +166,19 @@ async function loadCompanyInfo() {
   }
 
 
+  // 公開URLは共通のまま、会社ごとの保存済みデザインに切り替える。
+  // 明示的な標準デザイン見本では切り替えない（DBへの書き込みなし）。
+  if (data.site_design === "natural" &&
+      new URLSearchParams(window.location.search).get("design-preview") !== "standard") {
+    const destination = new URL("natural-site.html", window.location.href);
+    destination.search = window.location.search;
+    destination.searchParams.set("company", data.slug);
+    destination.searchParams.delete("design-preview");
+    destination.hash = window.location.hash;
+    window.location.replace(destination.href);
+    return false;
+  }
+
   currentCompany =
     data;
 
