@@ -6,6 +6,7 @@ const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
+let canManageSiteDesign = false;
 let currentCompanyId = null;
 let currentCompany = null;
 let menuItems = [];
@@ -91,6 +92,7 @@ async function init() {
   if (!session) {
     return;
   }
+  await loadDesignAdminPermission();
   const companyId = await resolveCompanyId(session.user.id);
   if (!companyId) {
     alert("管理できる店舗が設定されていません。");
@@ -2317,7 +2319,13 @@ function localizeEditorMessage(message) {
 /* 会社ごとの公開デザイン。既存のtheme（配色）とは別に保存する。 */
 let siteDesignSaving = false;
 function renderSiteDesignSettings() {
-  if (!currentCompany) return;
+  const section = document.getElementById("siteDesignAdminSection");
+  section.hidden = !canManageSiteDesign;
+  if (!canManageSiteDesign || !currentCompany) {
+    document.getElementById("siteDesignChoices").disabled = true;
+    document.getElementById("saveSiteDesign").disabled = true;
+    return;
+  }
   const design = currentCompany.site_design === "natural" ? "natural" : "standard";
   document.querySelectorAll('input[name="siteDesign"]').forEach(input => {
     input.checked = input.value === design;
@@ -2338,7 +2346,7 @@ function renderSiteDesignSettings() {
   }
 }
 async function saveSiteDesign() {
-  if (siteDesignSaving || !currentCompany || !currentCompanyId) return;
+  if (!canManageSiteDesign || siteDesignSaving || !currentCompany || !currentCompanyId) return;
   const selected = document.querySelector('input[name="siteDesign"]:checked')?.value;
   if (!["standard", "natural"].includes(selected)) return;
   const status = document.getElementById("siteDesignStatus");
@@ -2353,6 +2361,12 @@ async function saveSiteDesign() {
   try {
     const { data: auth, error: authError } = await supabaseClient.auth.getUser();
     if (authError || !auth?.user) throw new Error("ログインの有効期限が切れています。ログインし直してください。");
+    const isCreator = await isDesignCreatorAdmin(auth.user.id);
+    if (!isCreator) {
+      canManageSiteDesign = false;
+      renderSiteDesignSettings();
+      throw new Error("デザイン変更は運営者のみ利用できます。");
+    }
     const { data: member, error: memberError } = await supabaseClient
       .from("company_members").select("company_id")
       .eq("user_id", auth.user.id).eq("company_id", companyId).maybeSingle();
@@ -2373,10 +2387,39 @@ async function saveSiteDesign() {
     showToast("公開サイトのデザインを保存しました");
   } catch (error) {
     status.textContent = error.message || "保存できませんでした。もう一度試してください。";
+    if (!canManageSiteDesign) showToast(status.textContent);
   } finally {
     siteDesignSaving = false;
-    choices.disabled = false;
-    button.disabled = false;
+    choices.disabled = !canManageSiteDesign;
+    button.disabled = !canManageSiteDesign;
     button.textContent = "このデザインを保存";
+  }
+}
+
+// creator_admins を参照し、表示も保存も運営者の権限を確認する。
+// メールアドレスや会社名、URLの文字列では判定しない。
+async function isDesignCreatorAdmin(userId) {
+  if (!userId) return false;
+  try {
+    const { data, error } = await supabaseClient.from("creator_admins")
+      .select("user_id").eq("user_id", userId).maybeSingle();
+    if (error) { console.warn("デザイン管理権限の確認に失敗", error); return false; }
+    return data?.user_id === userId;
+  } catch (error) {
+    console.warn("デザイン管理権限の確認に失敗", error);
+    return false;
+  }
+}
+async function loadDesignAdminPermission() {
+  canManageSiteDesign = false;
+  const section = document.getElementById("siteDesignAdminSection");
+  if (section) section.hidden = true;
+  try {
+    const { data, error } = await supabaseClient.auth.getUser();
+    if (!error && data?.user) {
+      canManageSiteDesign = await isDesignCreatorAdmin(data.user.id);
+    }
+  } catch (error) {
+    console.warn("デザイン管理権限の確認に失敗", error);
   }
 }
