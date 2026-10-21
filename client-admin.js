@@ -44,7 +44,7 @@ async function init() {
       "このページを利用する権限がありません。"
     );
     window.location.href =
-      "index.html";
+      "/editor";
     return;
   }
   operatorUserId = session.user.id;
@@ -60,7 +60,7 @@ async function init() {
 async function requireSession() {
   try {
     const { data, error } = await supabaseClient.auth.getUser();
-    if (error || !data?.user) { window.location.href = "login.html"; return null; }
+    if (error || !data?.user) { window.location.href = "/login.html"; return null; }
     return { user: data.user };
   } catch (error) {
     console.error(error);
@@ -633,16 +633,8 @@ async function deleteCurrentClient() {
    登録完了
 ======================================== */
 function showResult(slug) {
-  const baseUrl =
-    window.location.origin;
-  const adminUrl =
-    `${baseUrl}/index.html?company=${encodeURIComponent(
-      slug
-    )}`;
-  const publicUrl =
-    `${baseUrl}/site.html?company=${encodeURIComponent(
-      slug
-    )}`;
+  const adminUrl = window.sasulieURLs.editorURL(slug);
+  const publicUrl = window.sasulieURLs.publicURL(slug);
   const adminLink =
     document.getElementById(
       "adminUrl"
@@ -781,7 +773,7 @@ async function logout() {
     return;
   }
   window.location.href =
-    "login.html";
+    "/login.html";
 }
 
 // 一覧・登録フォームの操作。DBの権限や登録方法は既存処理を使用する。
@@ -841,11 +833,7 @@ async function copyLink(url) {
 
 function buildCompanyLinks(slug) {
   if (typeof slug !== "string" || !isValidSlug(slug)) return null;
-  const admin = new URL("index.html", window.location.href);
-  const published = new URL("site.html", window.location.href);
-  admin.searchParams.set("company", slug);
-  published.searchParams.set("company", slug);
-  return {admin:admin.href, public:published.href};
+  return {admin:window.sasulieURLs.editorURL(slug),public:window.sasulieURLs.publicURL(slug)};
 }
 async function requireCreatorIdentity() {
   const {data,error} = await supabaseClient.auth.getUser();

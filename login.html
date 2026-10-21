@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-
   <meta
     http-equiv="Content-Security-Policy"
     content="
@@ -19,27 +18,16 @@
       upgrade-insecure-requests;
     "
   >
-
   <title>ホームページ管理 | ログイン</title>
-
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       color: #292d29;
       background: #f5f5f1;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Helvetica Neue",
-        "Noto Sans JP",
-        sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Noto Sans JP", sans-serif;
       line-height: 1.6;
     }
-
     .login-page {
       min-height: 100vh;
       min-height: 100svh;
@@ -47,7 +35,6 @@
       place-items: center;
       padding: 40px 20px;
     }
-
     .login-card {
       width: 100%;
       max-width: 440px;
@@ -55,21 +42,16 @@
       background: #fff;
       border: 1px solid #e4e7df;
       border-radius: 20px;
-      box-shadow: 0 12px 40px rgba(35, 48, 36, 0.05);
+      box-shadow: 0 12px 40px rgba(35, 48, 36, .05);
     }
-
-    .login-heading {
-      margin-bottom: 28px;
-    }
-
+    .login-heading { margin-bottom: 28px; }
     .login-eyebrow {
       margin: 0 0 10px;
       color: #697665;
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.18em;
+      letter-spacing: .18em;
     }
-
     h1 {
       margin: 0 0 12px;
       font-size: clamp(23px, 5.5vw, 29px);
@@ -77,24 +59,9 @@
       line-height: 1.4;
       overflow-wrap: anywhere;
     }
-
-    .login-description {
-      margin: 0;
-      color: #6b7069;
-      font-size: 14px;
-    }
-
-    .login-field {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
+    .login-description { margin: 0; color: #6b7069; font-size: 14px; }
+    .login-field { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; }
     input {
       display: block;
       width: 100%;
@@ -107,23 +74,12 @@
       font: inherit;
       font-size: 16px;
     }
-
-    input::placeholder {
-      color: #92978e;
-    }
-
-    button {
-      font: inherit;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-
-    input:focus-visible,
-    button:focus-visible {
+    input::placeholder { color: #92978e; }
+    button { font: inherit; cursor: pointer; touch-action: manipulation; }
+    input:focus-visible, button:focus-visible {
       outline: 3px solid #849c78;
       outline-offset: 3px;
     }
-
     .login-button {
       width: 100%;
       min-height: 52px;
@@ -135,21 +91,9 @@
       color: #fff;
       font-weight: 600;
     }
-
-    .login-button:hover {
-      background: #293f2e;
-    }
-
-    button:disabled {
-      opacity: 0.65;
-      cursor: wait;
-    }
-
-    .forgot-password {
-      margin: 16px 0 0;
-      text-align: center;
-    }
-
+    .login-button:hover { background: #293f2e; }
+    button:disabled { opacity: .65; cursor: wait; }
+    .forgot-password { margin: 16px 0 0; text-align: center; }
     .forgot-button {
       min-height: 44px;
       max-width: 100%;
@@ -161,79 +105,43 @@
       text-decoration: underline;
       text-underline-offset: 4px;
     }
-
     @media (max-width: 480px) {
-      .login-page {
-        padding: 28px 20px;
-      }
-
-      .login-card {
-        padding: 28px 22px;
-      }
+      .login-page { padding: 28px 20px; }
+      .login-card { padding: 28px 22px; }
     }
   </style>
+  <script src="/company-urls.js?v=1"></script>
 </head>
-
 <body>
   <main class="login-page">
     <section class="login-card" aria-labelledby="loginTitle">
       <header class="login-heading">
         <p class="login-eyebrow">WEBSITE MANAGER</p>
         <h1 id="loginTitle">ホームページ管理</h1>
-        <p class="login-description">
-          ログインして、ホームページを更新しよう。
-        </p>
+        <p class="login-description">ログインして、ホームページを更新しよう。</p>
       </header>
-
       <form id="loginForm">
         <div class="login-field">
           <label for="email">メールアドレス</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
+          <input type="email" id="email" name="email"
             placeholder="登録したメールアドレス"
-            autocomplete="username"
-            autocapitalize="none"
-            spellcheck="false"
-            required
-          >
+            autocomplete="username" autocapitalize="none"
+            spellcheck="false" required>
         </div>
-
         <div class="login-field">
           <label for="password">パスワード</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
+          <input type="password" id="password" name="password"
             placeholder="パスワードを入力"
-            autocomplete="current-password"
-            required
-          >
+            autocomplete="current-password" required>
         </div>
-
-        <button
-          type="submit"
-          id="loginButton"
-          class="login-button"
-        >
-          ログイン
-        </button>
+        <button type="submit" id="loginButton" class="login-button">ログイン</button>
       </form>
-
       <p class="forgot-password">
-        <button
-          type="button"
-          id="forgotPasswordButton"
-          class="forgot-button"
-        >
-          パスワードを忘れた方
-        </button>
+        <button type="button" id="forgotPasswordButton" class="forgot-button">パスワードを忘れた方</button>
       </p>
     </section>
   </main>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="login.js"></script>
+  <script src="/login.js?v=2"></script>
 </body>
 </html>

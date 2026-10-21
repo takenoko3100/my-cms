@@ -13,7 +13,7 @@ const passwordInput = document.getElementById("password");
 const loginButton = document.getElementById("loginButton");
 const loginForm = document.getElementById("loginForm");
 const forgotPasswordButton = document.getElementById("forgotPasswordButton");
-const companySlug = new URLSearchParams(window.location.search).get("company");
+const companySlug = window.sasulieURLs.company();
 
 // 会社名は表示用。管理権限はログイン後に editor.js と RLS で確認する。
 async function loadLoginCompanyName() {
@@ -44,9 +44,7 @@ async function loadLoginCompanyName() {
 }
 
 function getEditorUrl() {
-  const url = new URL("index.html", window.location.href);
-  if (companySlug) url.searchParams.set("company", companySlug);
-  return url.href;
+  return companySlug ? window.sasulieURLs.editorURL(companySlug) : new URL("/editor",location.origin).href;
 }
 
 let isLoggingIn = false;
@@ -116,7 +114,7 @@ if (forgotPasswordButton) {
     forgotPasswordButton.textContent = "メールを送信中…";
 
     try {
-      const resetUrl = new URL("reset-password.html", window.location.href);
+      const resetUrl = new URL("/reset-password.html", window.location.href);
       const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
         redirectTo: resetUrl.href
       });

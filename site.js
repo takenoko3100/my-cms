@@ -160,18 +160,7 @@ initSite();
 ======================================== */
 
 function getCompanySlug() {
-
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
-
-  return (
-    params.get("company") ||
-    "takenoko-restaurant"
-  );
-
+  return window.sasulieURLs.company();
 }
 
 
@@ -212,7 +201,11 @@ async function loadCompanyInfo() {
   if ((data.site_design === "natural" || extraDesigns.includes(data.site_design)) &&
       new URLSearchParams(window.location.search).get("design-preview") !== "standard") {
     const file = data.site_design === "natural" ? "natural-site.html" : "design-site.html";
-    const destination = new URL(file, window.location.href);
+    if (window.sasulieURLs.context?.kind === "public") {
+      window.location.replace(window.sasulieURLs.designURL(data.slug, data.site_design));
+      return false;
+    }
+    const destination = new URL("/" + file, window.location.href);
     destination.search = window.location.search;
     destination.searchParams.set("company", data.slug);
     destination.searchParams.delete("design-preview");
@@ -330,7 +323,7 @@ if (
 
 
     menuMoreLink.href =
-      `menu.html?company=${encodeURIComponent(
+      `/menu.html?company=${encodeURIComponent(
         data.slug
       )}`;
 
@@ -1908,7 +1901,7 @@ function setText(
       if (checkVersion !== version || membershipError ||
           membership?.user_id !== userId || membership?.company_id !== company.id) return;
 
-      link.href = `index.html?company=${encodeURIComponent(company.slug)}`;
+      link.href = window.sasulieURLs.editorURL(company.slug);
       link.hidden = false;
     } catch (error) {
       if (checkVersion === version) hideLink();

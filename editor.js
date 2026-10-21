@@ -164,7 +164,9 @@ async function init() {
 }
 function getLoginUrl() {
   const currentUrl = new URL(window.location.href);
-  const loginUrl = new URL("login.html", currentUrl);
+  const routeSlug = window.sasulieURLs.company();
+  if (routeSlug) return window.sasulieURLs.loginURL(routeSlug);
+  const loginUrl = new URL("/login.html", currentUrl);
   const companySlug = currentUrl.searchParams.get("company");
 
   if (companySlug) {
@@ -192,7 +194,7 @@ async function resolveCompanyId(userId) {
   const params =
     new URLSearchParams(window.location.search);
   const companySlug =
-    params.get("company");
+    window.sasulieURLs.company();
   /* URLで会社が指定されている場合 */
   if (companySlug) {
     const {
@@ -407,6 +409,7 @@ function syncCompanySlugInUrl() {
   if (!currentCompany?.slug) {
     return;
   }
+  if (window.sasulieURLs.context?.slug === currentCompany.slug) return;
   const url =
     new URL(window.location.href);
   if (
@@ -431,7 +434,7 @@ function updatePublicPageLink() {
   }
   const publicPageLink =
     document.querySelector(
-      'a[href^="site.html"]'
+      '#publicSiteLink'
     );
   if (!publicPageLink) {
     console.warn(
@@ -439,10 +442,7 @@ function updatePublicPageLink() {
     );
     return;
   }
-  publicPageLink.href =
-    `site.html?company=${encodeURIComponent(
-      currentCompany.slug
-    )}`;
+  publicPageLink.href = window.sasulieURLs.publicURL(currentCompany.slug);
 }
 function fillCompanyForm() {
   if (!currentCompany) {
@@ -2274,7 +2274,7 @@ const editorCopy = (() => {
   function applyCommonCopy() {
     setText(".editor-topbar h1", "ホームページを編集");
     setText(".editor-help", "編集したい文章や画像をタップしてください");
-    setText(".topbar-actions a[href^='site.html']", "公開サイトを見る");
+    setText("#publicSiteLink", "公開サイトを見る");
     setText(".editor-status strong", "編集中");
     setText(".editor-status p", "保存すると公開サイトに反映されます");
     setText("#addNewsQuickButton", "＋ お知らせを追加");
@@ -2442,7 +2442,7 @@ function renderSiteDesignSettings() {
 function getDesignPreviewUrl(design, slug) {
   if (!Object.hasOwn(SITE_DESIGN_NAMES, design) || !slug) return null;
   const path = design === "standard" ? "site.html" : design === "natural" ? "natural-site.html" : "design-site.html";
-  const url = new URL(path, window.location.href);
+  const url = new URL("/" + path, window.location.href);
   url.searchParams.set("company", slug);
   url.searchParams.set("design-preview", design);
   if (!["standard", "natural"].includes(design)) url.searchParams.set("design", design);
@@ -2469,7 +2469,7 @@ function renderDesignCardPreviews() {
       frame.setAttribute("sandbox", "allow-scripts allow-same-origin");
       frame.loading = "lazy";
       frame.addEventListener("load", () => sendDesignCardPreview(frame, design));
-      frame.src = `design-card-preview.html?v=2&design=${encodeURIComponent(design)}`;
+      frame.src = `/design-card-preview.html?v=2&design=${encodeURIComponent(design)}`;
       container.appendChild(frame);
       if (typeof ResizeObserver !== "undefined") {
         if (!designPreviewResizeObserver) {

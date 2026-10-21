@@ -156,7 +156,7 @@
   }
 
   try {
-    const slug = new URLSearchParams(window.location.search).get("company");
+    const slug = window.sasulieURLs.company();
     const config = settings[slug];
     motion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -193,7 +193,7 @@
       : viewportRatio > 1.3
         ? (config.landscapeVideo || config.video)
         : config.video;
-    const source = new URL(videoPath, document.baseURI);
+    const source = new URL("/" + videoPath, location.origin);
     if (source.origin !== window.location.origin) {
       release();
       return;

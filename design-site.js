@@ -2,7 +2,7 @@
 "use strict";
 const designNames = Object.freeze({"japanese": "和モダン", "chic": "シック", "elegant": "エレガント", "pop": "ポップ", "minimal": "ミニマル", "visual": "ビジュアル", "clean": "クリーン", "craft": "クラフト", "bold": "ボールド"});
 const designParams = new URLSearchParams(window.location.search);
-const chosenDesign = designParams.get("design");
+const chosenDesign = window.sasulieURLs.context?.design || designParams.get("design");
 if (!Object.hasOwn(designNames, chosenDesign)) {
   document.body.classList.add("load-failed");
   document.body.classList.remove("is-loading");
@@ -202,18 +202,7 @@ initSite();
 ======================================== */
 
 function getCompanySlug() {
-
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
-
-  return (
-    params.get("company") ||
-    ""
-  );
-
+  return window.sasulieURLs.company();
 }
 
 
@@ -361,7 +350,7 @@ if (
 
 
     menuMoreLink.href =
-      `menu.html?company=${encodeURIComponent(
+      `/menu.html?company=${encodeURIComponent(
         data.slug
       )}`;
 
@@ -1932,7 +1921,7 @@ function setText(
       if (checkVersion !== version || membershipError ||
           membership?.user_id !== userId || membership?.company_id !== company.id) return;
 
-      link.href = `index.html?company=${encodeURIComponent(company.slug)}`;
+      link.href = window.sasulieURLs.editorURL(company.slug);
       link.hidden = false;
     } catch (error) {
       if (checkVersion === version) hideLink();
