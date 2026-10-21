@@ -52,6 +52,7 @@ async function init() {
   document.body.classList.remove("auth-pending");
   bindEvents();
   bindWorkspaceEvents();
+  bindDisplaySettings();
   await loadClients();
 }
 /* ========================================
@@ -181,6 +182,8 @@ async function createClient() {
   if (!isValidSlug(slug)) { alert("サイト識別名は半角英数字とハイフンで入力してください。"); return; }
   if (!isValidUuid(customerId)) { alert("顧客ユーザーIDの形式を確認してください。"); return; }
   if (!Object.hasOwn(BUSINESS_TYPE_LABELS, business_type)) return;
+  const displaySettings = readDisplaySettings("create");
+  if (!displaySettings) { alert("表示設定を確認してください。"); return; }
   setBusy(button, true, "登録中…");
   feedback.textContent = "";
   let company = null;
@@ -192,7 +195,7 @@ async function createClient() {
       const { data: existing, error: existingError } = await supabaseClient.from("company_info").select("id").eq("slug", slug).maybeSingle();
       if (existingError) throw existingError;
       if (existing) { feedback.textContent = "このサイト識別名は使用済みです。一覧から会社を開くか、別の識別名を入力してください。"; return; }
-      const result = await supabaseClient.from("company_info").insert([{name, slug, business_type}]).select("id, name, slug, business_type, site_design").single();
+      const result = await supabaseClient.from("company_info").insert([{name, slug, business_type, ...displaySettings}]).select("id, name, slug, business_type, site_design, contact_method, price_input_mode, show_closed_days").single();
       if (result.error) throw result.error;
       company = result.data;
       pendingCreation = { slug, company };
@@ -247,7 +250,7 @@ async function loadClients() {
     await supabaseClient
       .from("company_info")
       .select(
-        "id, name, slug, business_type, site_design"
+        "id, name, slug, business_type, site_design, contact_method, price_input_mode, show_closed_days"
       )
       .order(
         "id",
@@ -330,7 +333,10 @@ function createClientCard(client) {
   const own = ownCompanyIds.has(String(client.id));
   const status = document.createElement("span"); status.className = `client-access ${own ? "ready" : "pending"}`;
   status.textContent = membershipState === "error" ? "管理担当を確認できません" : own ? "編集できます" : "運営者の担当設定が必要";
-  meta.append(design,status);
+  const options = window.companySettings.settings(client);
+  const display = document.createElement("span");display.className="client-display-summary";
+  display.textContent = `連絡先：${window.companySettings.CONTACT_METHODS[options.contactMethod]} ／ 料金：${client.business_type === "hospital" ? "表示なし" : window.companySettings.PRICE_MODES[options.priceMode]} ／ 休業日：${options.showClosedDays ? "表示" : "非表示"}`;
+  meta.append(design,display,status);
   const actions = document.createElement("div"); actions.className = "client-actions";
   const links = buildCompanyLinks(client.slug);
   if (links) {
@@ -349,7 +355,7 @@ function createClientCard(client) {
   } else {
     const note = document.createElement("p"); note.className="client-link-note"; note.textContent="サイト識別名を設定すると、編集・公開リンクを使えます。"; actions.appendChild(note);
   }
-  const edit = document.createElement("button"); edit.type="button"; edit.className="client-action-button"; edit.textContent="会社情報・担当者設定"; edit.addEventListener("click",()=>openEditClientModal(client.id)); actions.appendChild(edit);
+  const edit = document.createElement("button"); edit.type="button"; edit.className="client-action-button"; edit.textContent="会社情報・表示設定"; edit.addEventListener("click",()=>openEditClientModal(client.id)); actions.appendChild(edit);
   card.append(top,meta,actions);
   if (links) {
     const details = document.createElement("details"); details.className="client-link-details";
@@ -419,6 +425,8 @@ function openEditClientModal(
   ).value =
     client.business_type ||
     "restaurant";
+  writeDisplaySettings("edit", client);
+  refreshPriceModeHelp("edit");
   const modal =
     document.getElementById(
       "editClientModal"
@@ -500,6 +508,8 @@ async function saveClientChanges() {
     return;
   }
   if (!Object.hasOwn(BUSINESS_TYPE_LABELS, businessType)) { alert("業種を選択してください。"); return; }
+  const displaySettings = readDisplaySettings("edit");
+  if (!displaySettings) { alert("表示設定を確認してください。"); return; }
   if (button.disabled) return;
   if (!ownCompanyIds.has(String(clientId))) { alert("先に「自分を管理担当に追加」で、この会社の編集を有効にしてください。"); return; }
   setBusy(
@@ -519,6 +529,7 @@ async function saveClientChanges() {
           slug,
           business_type:
             businessType,
+          ...displaySettings,
           updated_at:
             new Date().toISOString()
         })
@@ -684,6 +695,8 @@ function resetForm() {
     "resultCard"
   ).hidden =
     true;
+  writeDisplaySettings("create", null);
+  refreshPriceModeHelp("create");
   setCreateSection(true);
 }
 function isValidSlug(value) {
@@ -906,4 +919,32 @@ async function addClientMember() {
     refreshEditMembershipStatus();
   } catch(error) { console.error(error); document.getElementById("memberFeedback").textContent="担当者を追加できませんでした。ユーザーIDと権限を確認してください。"; handleDatabaseError(error); }
   finally { setBusy(button,false,"この会社の担当者に追加"); }
+}
+
+
+function readDisplaySettings(prefix) {
+  const contact = document.getElementById(`${prefix}ContactMethod`).value;
+  const price = document.getElementById(`${prefix}PriceMode`).value;
+  const closed = document.getElementById(`${prefix}ShowClosedDays`).value;
+  if (!Object.hasOwn(window.companySettings.CONTACT_METHODS,contact) || !Object.hasOwn(window.companySettings.PRICE_MODES,price) || !["true","false"].includes(closed)) return null;
+  return {contact_method:contact,price_input_mode:price,show_closed_days:closed === "true"};
+}
+function writeDisplaySettings(prefix,company) {
+  const options=window.companySettings.settings(company);
+  document.getElementById(`${prefix}ContactMethod`).value=options.contactMethod;
+  document.getElementById(`${prefix}PriceMode`).value=options.priceMode;
+  document.getElementById(`${prefix}ShowClosedDays`).value=String(options.showClosedDays);
+}
+function refreshPriceModeHelp(prefix) {
+  const type=document.getElementById(prefix === "edit" ? "editBusinessType" : "businessType").value;
+  const hospital=type === "hospital";
+  document.getElementById(`${prefix}PriceMode`).disabled=hospital;
+  document.getElementById(`${prefix}PriceModeHelp`).textContent=hospital
+    ? "病院・クリニックの診療科には料金を表示しません。料金の入力設定は他の業種に変更した場合に使います。"
+    : "保存済みの料金は自動変換しません。各サービスで料金を保存すると表記が切り替わります。";
+}
+function bindDisplaySettings() {
+  document.getElementById("businessType").addEventListener("change",()=>refreshPriceModeHelp("create"));
+  document.getElementById("editBusinessType").addEventListener("change",()=>refreshPriceModeHelp("edit"));
+  refreshPriceModeHelp("create");
 }

@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="/natural-site.css?v=2">
   <link rel="stylesheet" href="/design-site.css?v=3">
   <script src="/company-urls.js?v=1"></script>
-  <script src="/cedre-profile.js?v=1"></script>
+  <script src="/company-settings.js?v=1"></script>
 </head>
 
 <body class="natural-live is-loading" aria-busy="true">
@@ -243,6 +243,11 @@
         <span id="sitePhone"></span>
       </p>
 
+      <p id="siteEmailRow" hidden>
+        <strong id="emailLabel">メールアドレス：</strong>
+        <span id="siteEmail"></span>
+      </p>
+
       <p>
         <strong id="hoursLabel">
           営業時間：
@@ -309,6 +314,8 @@
       </h2>
 
       <div class="contact-links">
+        <a id="emailLink" class="contact-button" hidden>メールで問い合わせる</a>
+
 
         <a
           id="phoneLink"
@@ -398,7 +405,7 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/design-site.js?v=4"></script>
+  <script src="/design-site.js?v=5"></script>
 
 <noscript><p class="load-status">店舗情報を表示するにはJavaScriptを有効にしてください。</p></noscript>
 </body>

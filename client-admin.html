@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>顧客管理 | sasulie</title>
-  <link rel="stylesheet" href="/client-admin.css?v=seven-types-1">
+  <link rel="stylesheet" href="/client-admin.css?v=company-settings-1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/client-admin.js?v=short-urls-1" defer></script>
+  <script src="/client-admin.js?v=company-settings-1" defer></script>
   <script src="/company-urls.js?v=1"></script>
+  <script src="/company-settings.js?v=1"></script>
 </head>
 <body class="auth-pending">
   <aside class="sidebar">
@@ -48,6 +49,15 @@
           <div class="form-group"><label for="companySlug">サイトの識別名 <span class="required">必須</span></label><input id="companySlug" type="text" placeholder="例：cedre-visual" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="slugHelp"><p class="help-text" id="slugHelp">URLに使う名前。半角英数字とハイフンで入力します。</p></div>
           <div class="form-group"><label for="customerUserId">更新担当者のユーザーID <span class="required">必須</span></label><input id="customerUserId" type="text" placeholder="担当者のUser UIDを貼り付け" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="userHelp"><p class="help-text" id="userHelp">SupabaseのAuthentication → Usersで、作成済みアカウントのUser UIDをコピーします。</p></div>
         </div>
+<section class="display-settings" aria-labelledby="createDisplaySettingsTitle">
+        <h3 id="createDisplaySettingsTitle">サイトの表示設定</h3>
+        <p class="help-text">顧客の編集画面と公開サイトに反映します。この設定を変更できるのは運営者だけです。</p>
+        <div class="display-settings-grid">
+          <div class="form-group"><label for="createContactMethod">連絡先</label><select id="createContactMethod"><option value="phone">電話</option><option value="email">メール</option><option value="both">電話・メールの両方</option></select><p class="help-text">内容が未入力の連絡先は公開サイトに表示しません。</p></div>
+          <div class="form-group"><label for="createPriceMode">料金の入力方法</label><select id="createPriceMode" aria-describedby="createPriceModeHelp"><option value="number">数字で入力</option><option value="text">自由入力（○円〜・要相談など）</option></select><p class="help-text" id="createPriceModeHelp">保存済みの料金は自動変換しません。各サービスで料金を保存すると表記が切り替わります。</p></div>
+          <div class="form-group"><label for="createShowClosedDays">休業日・定休日の欄</label><select id="createShowClosedDays"><option value="true">表示する</option><option value="false">表示しない</option></select><p class="help-text">非表示にしても登録済みの内容は残ります。</p></div>
+        </div>
+      </section>
         <p id="createFeedback" class="operation-feedback" role="status" aria-live="polite"></p><div class="form-footer"><p>顧客とログイン中の運営者を管理担当に登録し、編集・公開リンクを表示します。</p><button id="createClientButton" class="primary-button" type="button">顧客を登録する</button></div>
       </section>
 
@@ -82,6 +92,15 @@
       <div class="form-group"><label for="editCompanyName">会社・店舗名</label><input id="editCompanyName" type="text"></div>
       <div class="form-group"><label for="editCompanySlug">サイトの識別名</label><input id="editCompanySlug" type="text" autocapitalize="none" spellcheck="false"><p class="help-text">変更すると管理画面・公開サイトのURLも変わります。変更後は新しいリンクを顧客に案内してください。</p></div>
       <div class="form-group"><label for="editBusinessType">業種</label><select id="editBusinessType"><option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画・映像制作</option><option value="auto_repair">自動車整備</option><option value="salon">美容室・サロン</option><option value="retail">物販・雑貨</option><option value="school">教室・スクール</option></select></div>
+<section class="display-settings" aria-labelledby="editDisplaySettingsTitle">
+        <h3 id="editDisplaySettingsTitle">サイトの表示設定</h3>
+        <p class="help-text">顧客の編集画面と公開サイトに反映します。この設定を変更できるのは運営者だけです。</p>
+        <div class="display-settings-grid">
+          <div class="form-group"><label for="editContactMethod">連絡先</label><select id="editContactMethod"><option value="phone">電話</option><option value="email">メール</option><option value="both">電話・メールの両方</option></select><p class="help-text">内容が未入力の連絡先は公開サイトに表示しません。</p></div>
+          <div class="form-group"><label for="editPriceMode">料金の入力方法</label><select id="editPriceMode" aria-describedby="editPriceModeHelp"><option value="number">数字で入力</option><option value="text">自由入力（○円〜・要相談など）</option></select><p class="help-text" id="editPriceModeHelp">保存済みの料金は自動変換しません。各サービスで料金を保存すると表記が切り替わります。</p></div>
+          <div class="form-group"><label for="editShowClosedDays">休業日・定休日の欄</label><select id="editShowClosedDays"><option value="true">表示する</option><option value="false">表示しない</option></select><p class="help-text">非表示にしても登録済みの内容は残ります。</p></div>
+        </div>
+      </section>
       <section class="member-settings" aria-labelledby="memberSettingsTitle">
         <h3 id="memberSettingsTitle">管理担当者</h3>
         <p id="editAccessStatus" class="help-text"></p>

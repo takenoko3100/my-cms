@@ -44,20 +44,10 @@ initMenuPage();
 ======================================== */
 
 function getCompanySlug() {
-
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
-
-  return (
-    params.get("company") ||
-    "takenoko-restaurant"
-  );
-
+  const slug = window.sasulieURLs.company();
+  return typeof slug === "string" && slug.length <= 160 &&
+    /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) ? slug : "";
 }
-
 
 /* ========================================
    会社情報
@@ -67,6 +57,11 @@ async function loadCompany() {
 
   const slug =
     getCompanySlug();
+
+  if (!slug) {
+    showNotFound();
+    return null;
+  }
 
 
   const { data, error } =
@@ -153,9 +148,7 @@ function renderCompany(
 
 
   const homeUrl =
-    `site.html?company=${encodeURIComponent(
-      company.slug
-    )}`;
+    window.sasulieURLs.publicURL(company.slug);
 
 
   const homeLink =
@@ -621,9 +614,7 @@ function createMenuCard(
 
 
   price.textContent =
-    `¥${Number(
-      item.price || 0
-    ).toLocaleString()}`;
+    window.companySettings.price(item);
 
 
   titleRow.append(
@@ -690,7 +681,7 @@ function groupByCategory(
   items
 ) {
 
-  const groups = {};
+  const groups = Object.create(null);
 
 
   items.forEach(

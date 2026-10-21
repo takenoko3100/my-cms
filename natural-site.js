@@ -489,7 +489,7 @@ if (
     new Date().getFullYear()
   );
 
-  window.cedreProfile.renderContact(data);
+  window.companySettings.renderContact(data);
 
 
   const footerInstagram =
@@ -947,7 +947,7 @@ async function loadMenuItems() {
           );
 
 
-        price.textContent = window.cedreProfile.price(item, currentCompany);
+        price.textContent = window.companySettings.price(item, currentCompany);
 
 
         priceWrap.appendChild(

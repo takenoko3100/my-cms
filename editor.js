@@ -478,7 +478,7 @@ function openCompanyModal(fieldToFocus = "") {
     name: "companyName",
     address: "companyAddress",
     description: "companyDescription",
-    phone: window.cedreProfile.applies(currentCompany) ? "companyEmail" : "companyPhone",
+    phone: window.companySettings.settings(currentCompany).phone ? "companyPhone" : "companyEmail",
     contact_email: "companyEmail",
     business_hours: "companyHours",
     closed_days: "companyClosedDays",
@@ -515,13 +515,13 @@ async function saveCompanyInfo() {
     alert(`${currentCompany?.business_type === "video_editing" ? "ブランド名" : "名称"}を入力してください。`);
     return;
   }
-  const customProfile = window.cedreProfile.applies(currentCompany);
+  const displaySettings = window.companySettings.settings(currentCompany);
   const contactEmail = document.getElementById("companyEmail").value.trim();
-  if (customProfile && contactEmail && !window.cedreProfile.isEmail(contactEmail)) {
+  if (displaySettings.email && contactEmail && !window.companySettings.isEmail(contactEmail)) {
     alert("メールアドレスを確認してください。");
     return;
   }
-  if (!customProfile && phone && !/^[0-9+\-() ]+$/.test(phone)) {
+  if (displaySettings.phone && phone && !/^[0-9+\-() ]+$/.test(phone)) {
     alert("電話番号を確認してください。");
     return;
   }
@@ -545,12 +545,9 @@ async function saveCompanyInfo() {
     instagram_url: instagramUrl,
     updated_at: new Date().toISOString()
   };
-  if (customProfile) {
-    values.contact_email = contactEmail || null;
-    // Preserve the stored phone/rest days; they are simply absent from CÈDRE's UI.
-    delete values.phone;
-    delete values.closed_days;
-  }
+  if (displaySettings.email) values.contact_email = contactEmail || null;
+  if (!displaySettings.phone) delete values.phone;
+  if (!displaySettings.showClosedDays) delete values.closed_days;
   const { data, error } = await supabaseClient
     .from("company_info")
     .update(values)
@@ -670,7 +667,7 @@ function renderMenuItems() {
     if (currentCompany?.business_type !== "hospital") {
   const price = document.createElement("p");
   price.className = "editor-menu-price";
-  price.textContent = window.cedreProfile.price(item, currentCompany);
+  price.textContent = window.companySettings.price(item, currentCompany);
   meta.appendChild(price);
 }
     const badgeRow = document.createElement("div");
@@ -714,9 +711,9 @@ function openMenuModal(itemId = null) {
   document.getElementById("menuName").value = item.name ?? "";
   document.getElementById("menuDescription").value =
     item.description ?? "";
-  document.getElementById("menuPrice").value = window.cedreProfile.applies(currentCompany)
-    ? (item.price_text?.trim() || (item.price == null ? "" : window.cedreProfile.price(item, null)))
-    : (item.price ?? "");
+  document.getElementById("menuPrice").value = window.companySettings.settings(currentCompany).priceMode === "text"
+    ? (item.price_text?.trim() || (item.price == null ? "" : window.companySettings.price(item)))
+    : (item.price_text?.trim() ? "" : (item.price ?? ""));
   document.getElementById("menuSortOrder").value =
     item.sort_order ?? 0;
   document.getElementById("menuCategory").value =
@@ -776,7 +773,7 @@ if (!name || (!isHospital && !priceText)) {
   );
   return;
 }
-  const customPrice = window.cedreProfile.applies(currentCompany);
+  const customPrice = window.companySettings.settings(currentCompany).priceMode === "text";
   if (customPrice && priceText.length > 120) {
     alert("料金は120文字以内で入力してください。");
     return;
@@ -828,7 +825,7 @@ if (!name || (!isHospital && !priceText)) {
       image_url: imageUrl,
       company_id: currentCompanyId
     };
-    if (customPrice) values.price_text = priceText;
+    if (!isHospital) values.price_text = customPrice ? priceText : null;
     let error = null;
     if (editId) {
       const result = await supabaseClient
@@ -1945,7 +1942,7 @@ function openModal(id) {
     return;
   }
   editorCopy.apply();
-  applyCedreProfileUI();
+  applyCompanySettingsUI();
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
@@ -2123,33 +2120,42 @@ if (portfolioSection) {
     "video_editing";
 }
   editorCopy.apply();
-  applyCedreProfileUI();
+  applyCompanySettingsUI();
 }
-function applyCedreProfileUI() {
-  const custom = window.cedreProfile.applies(currentCompany);
+function applyCompanySettingsUI() {
+  const options = window.companySettings.settings(currentCompany);
   for (const [selector, hide] of [
-    ['.information-row[data-company-field="phone"]', custom],
-    ['.information-row[data-company-field="closed_days"]', custom],
-    ['.information-row[data-company-field="contact_email"]', !custom],
-    ['#companyEmailField', !custom],
-    ['#companyPhone', custom], ['#companyClosedDays', custom]
+    ['.information-row[data-company-field="phone"]', !options.phone],
+    ['.information-row[data-company-field="closed_days"]', !options.showClosedDays],
+    ['.information-row[data-company-field="contact_email"]', !options.email],
+    ['#companyEmailField', !options.email],
+    ['#companyPhone', !options.phone], ['#companyClosedDays', !options.showClosedDays]
   ]) {
     const element = document.querySelector(selector);
     const field = element?.matches("input") ? element.closest("label") : element;
     if (field) { field.hidden = hide; field.classList.toggle("business-field-hidden", hide); }
   }
   const price = document.getElementById("menuPrice");
+  const custom = options.priceMode === "text";
   price.type = custom ? "text" : "number";
   price.setAttribute("inputmode", custom ? "text" : "numeric");
+  const label = price.closest("label");
+  let note = label.querySelector(".copy-note");
+  if (!note) { note = document.createElement("span"); note.className = "form-note copy-note"; label.appendChild(note); }
   if (custom) {
     price.maxLength = 120;
     price.placeholder = "例：100,000円〜 / 要相談";
     document.getElementById("menuPriceLabel").textContent = "料金";
-    const label = price.closest("label");
-    let note = label.querySelector(".copy-note");
-    if (!note) { note = document.createElement("span"); note.className = "form-note copy-note"; label.appendChild(note); }
     note.textContent = "例：100,000円〜、要相談。円・〜なども含め、公開したい表記で入力してください。";
-  } else price.removeAttribute("maxlength");
+  } else {
+    price.removeAttribute("maxlength");price.placeholder="例：15000";
+    document.getElementById("menuPriceLabel").textContent = getBusinessTypeSettings().priceLabel;
+    const editId = document.getElementById("menuEditId").value;
+    const item = menuItems.find(item => String(item.id) === String(editId));
+    note.textContent = item?.price_text?.trim()
+      ? `現在の表示：${item.price_text.trim()}。数字で料金を入力し直して保存すると、この表記を置き換えます。`
+      : "円単位の数字で入力してください。例：15000";
+  }
 }
 function getBusinessTypeSettings() {
   const businessType =
