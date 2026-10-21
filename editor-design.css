@@ -28,3 +28,33 @@
 /* カードの帯だけ横スクロール。ページの縦スクロールは通常のまま。 */
 .design-chooser-panel,.design-disclosure{min-width:0;max-width:100%}.design-chooser-panel .design-choice-grid{position:relative;display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;width:100%;max-width:100%;padding:5px 8px 14px;scroll-padding-inline:8px;scroll-snap-type:x proximity;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#a3b297 #eef1e8;align-items:stretch;touch-action:auto}.design-chooser-panel .design-option{flex:0 0 264px;scroll-snap-align:start;scroll-margin-inline:8px;display:flex;flex-direction:column}.design-chooser-panel .design-choice-card{flex:1}.design-chooser-panel .design-card-open{flex-shrink:0}.design-chooser-panel .design-live-art{aspect-ratio:1040/760}.design-choice-grid:focus-visible{outline:2px solid #8c9b77;outline-offset:3px;border-radius:10px}.design-swipe-hint{margin:0 0 10px;color:#69765e;font-size:11px;line-height:1.8}.design-scroll-status{text-align:right;margin:8px 0 12px;color:#69765e;font-size:11px}.design-chooser-panel .design-choice-grid::-webkit-scrollbar{height:6px}.design-chooser-panel .design-choice-grid::-webkit-scrollbar-track{background:#eef1e8;border-radius:10px}.design-chooser-panel .design-choice-grid::-webkit-scrollbar-thumb{background:#a3b297;border-radius:10px}
 @media(max-width:600px){.design-chooser-panel .design-option{flex-basis:82%;max-width:310px}.design-chooser-panel .design-choice-grid{gap:12px;padding-bottom:12px}.design-chooser-panel .design-choice-card{padding:12px;gap:9px;grid-template-columns:20px minmax(0,1fr)}.design-chooser-panel .design-choice-card strong{font-size:14px}.design-chooser-panel .design-card-open{margin:0 12px 12px;font-size:12px}.design-swipe-hint{font-size:10px}}
+
+
+/* Editor hero: avoid filtered text clipping during the initial iPhone Safari paint. */
+[hidden], .business-field-hidden { display: none !important; }
+#editorHero .hero-overlay {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: rgba(16, 24, 20, .64);
+  overflow: visible;
+}
+#editorHero .hero-title-button,
+#editorHero .hero-address-button {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+  overflow: visible !important;
+  clip-path: none;
+  max-width: 100%;
+  box-sizing: border-box;
+  white-space: normal;
+  padding-inline: .35em;
+}
+#editorCompanyName {
+  display: block;
+  overflow: visible;
+  padding: .1em .12em;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+#editorInfoEmail { min-width: 0; overflow-wrap: anywhere; }

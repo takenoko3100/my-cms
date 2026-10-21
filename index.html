@@ -23,8 +23,9 @@
   <title>かんたん編集 | たけのこCMS</title>
 
   <link rel="stylesheet" href="/editor.css?v=5">
-  <link rel="stylesheet" href="/editor-design.css?v=6">
+  <link rel="stylesheet" href="/editor-design.css?v=7">
   <script src="/company-urls.js?v=1"></script>
+  <script src="/cedre-profile.js?v=1"></script>
 </head>
 
 <body>
@@ -414,6 +415,12 @@
         </button>
 
 
+        <button type="button" class="information-row" data-company-field="contact_email" hidden>
+          <span>メールアドレス</span>
+          <strong id="editorInfoEmail">未設定</strong>
+          <span class="row-pencil">✏️</span>
+        </button>
+
         <button
           type="button"
           class="information-row"
@@ -629,6 +636,12 @@
 
         </label>
 
+
+        <label id="companyEmailField" hidden>
+          <span>メールアドレス（公開用）</span>
+          <input type="email" id="companyEmail" inputmode="email" autocomplete="email" maxlength="254" placeholder="例：hello@example.com">
+          <span class="form-note">公開サイトの連絡先に表示します。ログイン用メールアドレスは変わりません。</span>
+        </label>
 
         <label>
 
@@ -1213,7 +1226,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="/editor.js?v=19"></script>
+  <script src="/editor.js?v=20"></script>
 
 </body>
 </html>

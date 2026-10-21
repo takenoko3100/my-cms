@@ -477,6 +477,8 @@ if (
     new Date().getFullYear()
   );
 
+  window.cedreProfile.renderContact(data);
+
 
   const footerInstagram =
     document.getElementById(
@@ -944,10 +946,7 @@ async function loadMenuItems() {
           );
 
 
-        price.textContent =
-          `¥${Number(
-            item.price || 0
-          ).toLocaleString()}`;
+        price.textContent = window.cedreProfile.price(item, currentCompany);
 
 
         priceWrap.appendChild(
