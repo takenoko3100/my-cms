@@ -58,3 +58,77 @@
   overflow-wrap: anywhere;
 }
 #editorInfoEmail { min-width: 0; overflow-wrap: anywhere; }
+
+
+/* Keep the media and text at the top, including native button content alignment. */
+#visualMenuList { align-items: stretch; }
+#visualMenuList > .editor-menu-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: flex-start;
+  align-self: stretch;
+  min-width: 0;
+  vertical-align: top;
+  text-align: left;
+}
+#visualMenuList .editor-menu-image,
+#visualMenuList .editor-menu-placeholder {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  aspect-ratio: 8 / 5;
+  flex: none;
+  box-sizing: border-box;
+  margin-block: 0;
+}
+#visualMenuList .editor-menu-image {
+  display: block;
+  object-fit: cover;
+}
+#visualMenuList .editor-menu-placeholder {
+  display: grid;
+  place-items: center;
+}
+#visualMenuList .editor-menu-meta { min-width: 0; }
+
+
+/* Paired modal fields: captions, controls and notes flow from the same top edge. */
+.modal-sheet .form-grid { align-items: start; }
+.modal-sheet .form-grid > label {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+}
+.modal-sheet .form-grid > label > span:not(.form-note) {
+  margin: 0;
+  line-height: 1.6;
+}
+.modal-sheet .form-grid > label > input[type="text"],
+.modal-sheet .form-grid > label > input[type="number"],
+.modal-sheet .form-grid > label > select {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
+  margin: 0;
+  padding: 12px 14px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.modal-sheet .form-grid > label > select { padding-right: 36px; }
+.modal-sheet .form-grid > label > .form-note {
+  margin: 0;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
