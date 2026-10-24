@@ -29,3 +29,9 @@
 
 /* sasulie wordmark */
 .gallery-brand{font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.045em}.gallery-brand>span{font-family:Arial,"Yu Gothic",sans-serif}
+
+/* New cards show the same layout used by the CMS. */
+.live-mini{position:relative;display:block;overflow:hidden;isolation:isolate}.live-mini iframe{position:absolute;top:0;left:0;width:1040px;height:950px;border:0;transform:scale(.43);transform-origin:top left;pointer-events:none;max-width:none}.live-mini:focus-visible{outline:3px solid #53664b;outline-offset:4px}.live-mini:after{content:"";position:absolute;inset:0;z-index:3}
+@media(max-width:1100px){.live-mini iframe{transform:scale(.35)}}
+@media(max-width:700px){.live-mini iframe{transform:scale(.38)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

@@ -1,6 +1,6 @@
 (() => {
 "use strict";
-const designNames = Object.freeze({"japanese": "和モダン", "chic": "シック", "elegant": "エレガント", "pop": "ポップ", "minimal": "ミニマル", "visual": "ビジュアル", "clean": "クリーン", "craft": "クラフト", "bold": "ボールド"});
+const designNames = Object.freeze({"japanese": "和モダン", "chic": "シック", "elegant": "エレガント", "pop": "ポップ", "minimal": "ミニマル", "visual": "ビジュアル", "clean": "クリーン", "craft": "クラフト", "bold": "ボールド", "magazine":"マガジン", "split":"スプリット", "gallery":"ギャラリー"});
 const designParams = new URLSearchParams(window.location.search);
 const chosenDesign = window.sasulieURLs.context?.design || designParams.get("design");
 if (!Object.hasOwn(designNames, chosenDesign)) {

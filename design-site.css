@@ -222,3 +222,116 @@ body[data-design="clean"] .hero-visual{margin:0;width:100%}
 
 /* スマホのミニマル: 左余白ぶん写真の幅を引き、画面内に収める。 */
 @media(max-width:600px){body[data-design="minimal"] .hero-visual{width:80%;max-width:80%;margin-left:20%;min-width:0}}
+/* Three additional layouts share the CMS content and palette tokens. */
+body:is([data-design="magazine"],[data-design="split"],[data-design="gallery"]){--paper:#f8f6f1;--ink:#292c29;--accent:#465d50;--muted:#64695f;--line:#d5d8ce;--surface:#eceee6}
+body:is([data-design="magazine"],[data-design="split"],[data-design="gallery"]) .hero-overlay h1{font-size:clamp(32px,4.4vw,64px);line-height:1.4;letter-spacing:.025em;overflow-wrap:anywhere;text-wrap:balance}
+body:is([data-design="magazine"],[data-design="split"],[data-design="gallery"]) .hero:not(.has-image){display:block;min-height:0;padding:60px 7%}
+body:is([data-design="magazine"],[data-design="split"],[data-design="gallery"]) .hero:not(.has-image) .hero-overlay{max-width:900px;margin:auto}
+body:is([data-design="magazine"],[data-design="split"],[data-design="gallery"]) #company{display:block;border-top:1px solid var(--line)}
+body:is([data-design="magazine"],[data-design="split"],[data-design="gallery"]) #company>p:not(.section-label){grid-template-columns:130px minmax(0,1fr);column-gap:24px}
+body:is([data-design="magazine"],[data-design="split"],[data-design="gallery"]) .menu-card img{border-radius:0}
+/* Magazine: masthead, editorial hero, asymmetric feature cards. */
+body[data-design="magazine"]{--accent:#85513b}
+body[data-design="magazine"] .site-nav{padding:32px 6% 20px;border-bottom:3px double var(--line)}
+body[data-design="magazine"] .site-nav-inner{flex-direction:column;gap:12px}
+body[data-design="magazine"] .site-logo{font-size:clamp(24px,3vw,36px);max-width:100%;text-align:center}
+body[data-design="magazine"] .site-nav-links{justify-content:center}
+body[data-design="magazine"] .hero.has-image{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:5%;padding:40px 6% 60px;min-height:0;align-items:end}
+body[data-design="magazine"] .hero-visual{grid-column:1;grid-row:1;height:clamp(360px,42vw,590px)}
+body[data-design="magazine"] .hero-overlay{grid-column:2;grid-row:1;padding:30px 0;border-top:1px solid var(--ink)}
+body[data-design="magazine"] .hero-overlay h1{font-family:"Yu Mincho",serif;font-weight:500}
+body[data-design="magazine"] #about{grid-template-columns:1fr 1.5fr;gap:8%;border-top:1px solid var(--line);align-items:start}
+body[data-design="magazine"] #siteMenuList{grid-template-columns:repeat(3,minmax(0,1fr));gap:36px}
+body[data-design="magazine"] .menu-card{display:flex;flex-direction:column;border-top:1px solid var(--ink);padding:18px 0 0}
+body[data-design="magazine"] .menu-card:first-child{grid-column:span 2}
+body[data-design="magazine"] .menu-card>img{order:-1;margin:0 0 24px;aspect-ratio:4/3}
+body[data-design="magazine"] .menu-card:first-child>img{aspect-ratio:16/9}
+body[data-design="magazine"] .menu-card-head h3{font-family:"Yu Mincho",serif;font-size:25px}
+body[data-design="magazine"] #siteNewsList{display:block}
+body[data-design="magazine"] .news{border-top:1px solid var(--line);padding:24px 0}
+body[data-design="magazine"] .news h3{font-family:"Yu Mincho",serif;font-size:23px}
+/* Split: equal columns in the hero; alternating service rows. */
+body[data-design="split"]{--paper:#f5f7f6;--ink:#283e3c;--accent:#365f5b;--muted:#566a66;--line:#ced9d4;--surface:#e7eeea}
+body[data-design="split"] .hero.has-image{grid-template-columns:repeat(2,minmax(0,1fr));gap:0;padding:0;min-height:0;background:var(--surface);align-items:stretch}
+body[data-design="split"] .hero-overlay{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:clamp(28px,5vw,80px);min-height:590px}
+body[data-design="split"] .hero-visual{height:100%;min-height:590px}
+body[data-design="split"] .hero-link{margin-top:12px}
+body[data-design="split"] #about{align-items:start;gap:7%;grid-template-columns:1fr 1fr}
+body[data-design="split"] .about-content{padding-left:35px;border-left:1px solid var(--line)}
+body[data-design="split"] #siteMenuList{display:flex;flex-direction:column;gap:0}
+body[data-design="split"] .menu-card{padding:32px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 6%;border-top:1px solid var(--line);align-content:center}
+body[data-design="split"] .menu-card>img{grid-column:1;grid-row:1/5;height:100%;min-height:240px;max-height:400px;margin:0;aspect-ratio:4/3}
+body[data-design="split"] .menu-card>:not(img){grid-column:2;margin:0;align-self:start}
+body[data-design="split"] .menu-card:not(:has(>img)){display:block}
+body[data-design="split"] .menu-card:not(:has(>img))>p{margin-top:12px}
+body[data-design="split"] .menu-card:nth-child(even)>img{grid-column:2}
+body[data-design="split"] .menu-card:nth-child(even)>:not(img){grid-column:1}
+body[data-design="split"] #sitePortfolioList{gap:50px}
+/* Gallery: full-width image, compact caption, generous image-first collections. */
+body[data-design="gallery"]{--paper:#fafafa;--ink:#282828;--accent:#505650;--muted:#666b66;--line:#d8dcd8;--surface:#eeefec}
+body[data-design="gallery"] .site-nav{padding-top:25px;padding-bottom:25px}
+body[data-design="gallery"] .site-logo{font-family:inherit;font-size:19px;letter-spacing:.1em}
+body[data-design="gallery"] .hero.has-image{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0 4% 55px;min-height:0}
+body[data-design="gallery"] .hero-visual{order:-1;width:100%;height:auto;aspect-ratio:16/8;max-height:650px}
+body[data-design="gallery"] .hero-overlay{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:10px 35px;padding:30px 0 0;align-items:center}
+body[data-design="gallery"] .hero-overlay h1{grid-column:1;grid-row:1/4;font-family:inherit;font-size:clamp(28px,3.8vw,52px);font-weight:500;margin:0}
+body[data-design="gallery"] .hero-overlay>p,body[data-design="gallery"] .hero-link{grid-column:2;margin:0}
+body[data-design="gallery"] .hero-link{grid-column:2;justify-self:start}
+body[data-design="gallery"] #about{display:block;max-width:760px;margin:auto;border:0;padding-top:45px;text-align:center}
+body[data-design="gallery"] #siteMenuList{gap:35px 25px}
+body[data-design="gallery"] .menu-card{display:flex;flex-direction:column;border:0;padding:0}
+body[data-design="gallery"] .menu-card>img{order:-1;aspect-ratio:1;object-fit:cover;margin:0 0 20px}
+body[data-design="gallery"] .menu-card h3{font-family:inherit;font-size:17px;margin-bottom:12px}
+body[data-design="gallery"] #sitePortfolioList{grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 25px}
+body[data-design="gallery"] .portfolio-card:first-child{grid-column:span 2}
+body[data-design="gallery"] .portfolio-visual{border-radius:0;aspect-ratio:4/3}
+body[data-design="gallery"] .portfolio-card:first-child .portfolio-visual{aspect-ratio:16/9}
+body[data-design="gallery"] .portfolio-meta h3{font-size:17px;margin-bottom:12px}
+body[data-design="gallery"] main>section h2{font-family:inherit;font-weight:500;font-size:26px}
+body[data-design="gallery"] #siteNewsList{grid-template-columns:repeat(3,minmax(0,1fr));gap:25px}
+@media(max-width:850px){
+ body[data-design="magazine"] .hero.has-image{gap:5%;padding:30px 5% 45px}
+ body[data-design="magazine"] .hero-overlay h1{font-size:34px}
+ body[data-design="split"] .hero-overlay{padding:34px 28px;min-height:460px}
+ body[data-design="split"] .hero-visual{min-height:460px}
+ body[data-design="split"] .hero-overlay h1{font-size:36px}
+ body[data-design="magazine"] #siteMenuList{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px}
+ body[data-design="magazine"] .menu-card:first-child{grid-column:span 2}
+ body[data-design="gallery"] #sitePortfolioList{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body[data-design="gallery"] #siteNewsList{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+ body:is([data-design="magazine"],[data-design="split"],[data-design="gallery"]) .hero-overlay h1{font-size:clamp(28px,8vw,38px)}
+ body:is([data-design="magazine"],[data-design="split"],[data-design="gallery"]) .hero:not(.has-image){padding:40px 24px}
+ body:is([data-design="magazine"],[data-design="split"],[data-design="gallery"]) #company>p:not(.section-label){grid-template-columns:90px minmax(0,1fr);gap:16px}
+ body[data-design="magazine"] .site-nav{padding:24px 24px 16px}
+ body[data-design="magazine"] .site-nav-inner{display:flex;gap:10px}
+ body[data-design="magazine"] .site-logo{font-size:25px}
+ body[data-design="magazine"] .site-nav-links{gap:6px 17px;margin-top:0}
+ body[data-design="magazine"] .hero.has-image{display:flex;flex-direction:column;padding:28px 24px 42px;gap:24px}
+ body[data-design="magazine"] .hero-visual{order:-1;height:auto;aspect-ratio:4/3}
+ body[data-design="magazine"] .hero-overlay{width:100%;padding:22px 0 0}
+ body[data-design="magazine"] #about{display:block}
+ body[data-design="magazine"] #siteMenuList{grid-template-columns:1fr;gap:34px}
+ body[data-design="magazine"] .menu-card:first-child{grid-column:auto}
+ body[data-design="magazine"] .menu-card:first-child>img{aspect-ratio:4/3}
+ body[data-design="magazine"] .menu-card-head h3{font-size:23px}
+ body[data-design="split"] .hero.has-image{display:flex;flex-direction:column;gap:0;padding:0}
+ body[data-design="split"] .hero-overlay{min-height:0;padding:42px 24px}
+ body[data-design="split"] .hero-visual{height:auto;min-height:0;aspect-ratio:4/3}
+ body[data-design="split"] #about{display:block}
+ body[data-design="split"] .about-content{border-left:0;padding-left:0}
+ body[data-design="split"] .menu-card{display:flex;flex-direction:column;gap:14px;padding:25px 0}
+ body[data-design="split"] .menu-card>img{order:-1;min-height:0;height:auto;width:100%;margin:0 0 6px}
+ body[data-design="split"] .menu-card-head h3{margin-bottom:0}
+ body[data-design="gallery"] .hero.has-image{padding:10px 18px 30px}
+ body[data-design="gallery"] .hero-visual{aspect-ratio:4/5}
+ body[data-design="gallery"] .hero-overlay{display:block;padding:24px 6px 0}
+ body[data-design="gallery"] .hero-overlay h1{margin-bottom:14px}
+ body[data-design="gallery"] .hero-overlay>p{margin-bottom:12px}
+ body[data-design="gallery"] #about{text-align:left;padding-top:30px}
+ body[data-design="gallery"] #siteMenuList{grid-template-columns:1fr;gap:30px}
+ body[data-design="gallery"] #sitePortfolioList{grid-template-columns:1fr;gap:35px}
+ body[data-design="gallery"] .portfolio-card:first-child{grid-column:auto}
+ body[data-design="gallery"] #siteNewsList{grid-template-columns:1fr}
+}

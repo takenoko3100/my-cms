@@ -6,7 +6,7 @@ const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
-const SITE_DESIGN_NAMES = Object.freeze({"standard": "今までのデザイン", "natural": "ナチュラル", "japanese": "和モダン", "chic": "シック", "elegant": "エレガント", "pop": "ポップ", "minimal": "ミニマル", "visual": "ビジュアル", "clean": "クリーン", "craft": "クラフト", "bold": "ボールド"});
+const SITE_DESIGN_NAMES = Object.freeze({"standard": "今までのデザイン", "natural": "ナチュラル", "japanese": "和モダン", "chic": "シック", "elegant": "エレガント", "pop": "ポップ", "minimal": "ミニマル", "visual": "ビジュアル", "clean": "クリーン", "craft": "クラフト", "bold": "ボールド", "magazine":"マガジン", "split":"スプリット", "gallery":"ギャラリー"});
 let canManageSiteDesign = false;
 let currentCompanyId = null;
 let currentCompany = null;
@@ -402,7 +402,7 @@ fillCompanyForm();
 syncCompanySlugInUrl();
 updatePublicPageLink();
 renderSiteDesignSettings();
-window.sasuliePaletteEditor.render({company:currentCompany,client:supabaseClient,previewURL:getDesignPreviewUrl,onSaved(data){currentCompany=data;renderCompanyInfo();showToast("配色を保存しました");}});
+window.sasuliePaletteEditor.render({company:currentCompany,client:supabaseClient,previewURL:getDesignPreviewUrl,onSaved(data){currentCompany=data;renderCompanyInfo();renderDesignCardPreviews();showToast("配色を保存しました");}});
 renderMenuItems(); // Company and item requests may finish in either order.
 }
 /* ========================================
@@ -2533,7 +2533,7 @@ function renderDesignCardPreviews() {
       frame.setAttribute("sandbox", "allow-scripts allow-same-origin");
       frame.loading = "lazy";
       frame.addEventListener("load", () => sendDesignCardPreview(frame, design));
-      frame.src = `/design-card-preview.html?v=2&design=${encodeURIComponent(design)}`;
+      frame.src = `/design-card-preview.html?v=3&design=${encodeURIComponent(design)}`;
       container.appendChild(frame);
       if (typeof ResizeObserver !== "undefined") {
         if (!designPreviewResizeObserver) {
@@ -2556,7 +2556,8 @@ function sendDesignCardPreview(frame, design) {
     name: currentCompany.name || "",
     address: currentCompany.address || "",
     heroImage: currentCompany.hero_image_url || "",
-    businessType: currentCompany.business_type || "restaurant"
+    businessType: currentCompany.business_type || "restaurant",
+    palette: currentCompany.site_palette || "original"
   }, window.location.origin);
 }
 
@@ -2597,6 +2598,7 @@ async function saveSiteDesign() {
     }
     if (currentCompanyId !== companyId) return;
     currentCompany = data;
+    window.sasuliePaletteEditor.render({company:currentCompany,client:supabaseClient,previewURL:getDesignPreviewUrl,onSaved(saved){currentCompany=saved;renderCompanyInfo();renderDesignCardPreviews();showToast("配色を保存しました");}});
     renderSiteDesignSettings();
     updatePublicPageLink();
     showToast("公開サイトのデザインを保存しました");

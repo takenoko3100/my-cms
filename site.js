@@ -197,7 +197,7 @@ async function loadCompanyInfo() {
 
 
   // 保存済みのデザインへ。見本の確認ではDBを変更しない。
-  const extraDesigns = ["japanese", "chic", "elegant", "pop", "minimal", "visual", "clean", "craft", "bold"];
+  const extraDesigns = ["japanese", "chic", "elegant", "pop", "minimal", "visual", "clean", "craft", "bold","magazine","split","gallery"];
   if ((data.site_design === "natural" || extraDesigns.includes(data.site_design)) &&
       new URLSearchParams(window.location.search).get("design-preview") !== "standard") {
     const file = data.site_design === "natural" ? "natural-site.html" : "design-site.html";

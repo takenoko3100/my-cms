@@ -1,7 +1,7 @@
 /* Company-specific short URLs. Paths select a company; existing auth/RLS still decide access. */
 (() => {
   "use strict";
-  const allowed = new Set(["standard","natural","japanese","chic","elegant","pop","minimal","visual","clean","craft","bold"]);
+  const allowed = new Set(["standard","natural","japanese","chic","elegant","pop","minimal","visual","clean","craft","bold","magazine","split","gallery"]);
   const valid = value => typeof value === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value) && value.length <= 160;
   const parts = location.pathname.split("/").filter(Boolean);
   let context = null;

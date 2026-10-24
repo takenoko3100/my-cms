@@ -17,3 +17,7 @@ document.querySelectorAll("[data-preview]").forEach(button => button.addEventLis
 }));
 document.getElementById("closePreview").addEventListener("click", () => dialog.close());
 dialog.addEventListener("close", () => frame.removeAttribute("src"));
+
+const liveMiniCards=[...document.querySelectorAll('.live-mini')];
+function sizeLiveCards(){liveMiniCards.forEach(card=>{const frame=card.querySelector('iframe');frame.style.transform='scale('+card.clientWidth/1040+')';});}
+if(typeof ResizeObserver!=='undefined'){const liveSizes=new ResizeObserver(sizeLiveCards);liveMiniCards.forEach(card=>liveSizes.observe(card));}else window.addEventListener('resize',sizeLiveCards);sizeLiveCards();

@@ -16,7 +16,7 @@ const BUSINESS_TYPE_LABELS = {
   "retail": "物販・雑貨",
   "school": "教室・スクール"
 };
-const SITE_DESIGN_LABELS = Object.freeze({standard:"今までのデザイン",natural:"ナチュラル",japanese:"和モダン",chic:"シック",elegant:"エレガント",pop:"ポップ",minimal:"ミニマル",visual:"ビジュアル",clean:"クリーン",craft:"クラフト",bold:"ボールド"});
+const SITE_DESIGN_LABELS = Object.freeze({standard:"今までのデザイン",natural:"ナチュラル",japanese:"和モダン",chic:"シック",elegant:"エレガント",pop:"ポップ",minimal:"ミニマル",visual:"ビジュアル",clean:"クリーン",craft:"クラフト",bold:"ボールド", "magazine":"マガジン", "split":"スプリット", "gallery":"ギャラリー"});
 let operatorUserId = null;
 let ownCompanyIds = new Set();
 let membershipState = "loading";

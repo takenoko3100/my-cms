@@ -1,6 +1,6 @@
 (() => {
 "use strict";
-const allowed = ["standard","natural","japanese","chic","elegant","pop","minimal","visual","clean","craft","bold"];
+const allowed = ["standard","natural","japanese","chic","elegant","pop","minimal","visual","clean","craft","bold","magazine","split","gallery"];
 const design = new URLSearchParams(window.location.search).get("design");
 if (!allowed.includes(design)) return;
 document.body.dataset.design = design;
@@ -15,6 +15,7 @@ window.addEventListener("message", event => {
   if (event.source !== window.parent || event.origin !== parentOrigin || !event.data ||
       event.data.type !== "sasulie-design-preview" || event.data.design !== design) return;
   const data = event.data;
+  window.sasuliePalette.apply({site_design:design,site_palette:data.palette},{preview:false});
   document.getElementById("previewName").textContent = typeof data.name === "string" ? data.name.slice(0,300) : "";
   document.getElementById("previewNavName").textContent = typeof data.name === "string" ? data.name.slice(0,300) : "";
   const address = document.getElementById("previewAddress");
