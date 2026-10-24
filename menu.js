@@ -178,6 +178,7 @@ function renderCompany(
   document.body.dataset.theme =
     company.theme ||
     "default";
+  window.sasuliePalette.apply(company);
 
 }
 

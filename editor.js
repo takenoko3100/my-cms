@@ -402,6 +402,7 @@ fillCompanyForm();
 syncCompanySlugInUrl();
 updatePublicPageLink();
 renderSiteDesignSettings();
+window.sasuliePaletteEditor.render({company:currentCompany,client:supabaseClient,previewURL:getDesignPreviewUrl,onSaved(data){currentCompany=data;renderCompanyInfo();showToast("配色を保存しました");}});
 renderMenuItems(); // Company and item requests may finish in either order.
 }
 /* ========================================

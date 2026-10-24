@@ -1,0 +1,36 @@
+/* Overrides are scoped to an explicitly selected palette; typography and layout stay with each design. */
+body[data-site-palette]{background:var(--paper);color:var(--ink);color-scheme:light}
+body[data-site-palette][data-palette-mood="dark"]{color-scheme:dark}
+body[data-site-palette] :is(p,h1,h2,h3,h4,.site-logo,.site-nav-links a,.menu-card strong,.menu-price,.portfolio-meta a,.copyright){color:var(--ink)}
+body[data-site-palette] :is(.section-label,.hero-kicker,.portfolio-category,.portfolio-lead,.menu-category-label,.about-content p,.portfolio-description,.news p,.site-footer p,.menu-eyebrow,#company strong){color:var(--muted)}
+body[data-site-palette] :is(.site-nav,.category-nav){background:var(--paper);border-color:var(--line)}
+body[data-site-palette] :is(.site-footer,.menu-footer,.preview-note){background:var(--surface);color:var(--ink);border-color:var(--line)}
+body[data-site-palette] :is(.menu-card,.news,#about,#company>p,#contact,.portfolio-card,.contact-button,.menu-more-link,.hero-link,.menu-category-section,.menu-item,.category-nav a){border-color:var(--line)}
+body[data-site-palette] :is(.menu-category-label,.hero-kicker,.menu-more-link,.portfolio-meta a,.hero-link span,.menu-item-price){color:var(--accent)}
+body[data-site-palette] .contact-button{color:var(--ink);border-color:var(--accent);background:transparent}
+body[data-site-palette] .contact-button:hover{background:var(--surface)}
+body[data-site-palette] .menu-card,body[data-site-palette] .menu-item-card{color:var(--ink)}
+body[data-site-palette] :is(.hero-visual,.portfolio-visual,.portfolio-placeholder){background:var(--surface)}
+body[data-site-palette] :is(.hero-link,.site-nav-contact){border-color:var(--accent)}
+body[data-site-palette][data-design="pop"] .hero-link,body[data-site-palette][data-design="clean"] :is(.hero-link,.site-nav-contact),body[data-site-palette][data-design="bold"] .hero-link{background:var(--accent);color:var(--palette-button-ink)}
+body[data-site-palette][data-design="clean"] .menu-card{background:var(--surface);border-top-color:var(--accent)}
+body[data-site-palette][data-design="elegant"] .menu-card{border-color:var(--line)}
+body[data-site-palette][data-design="bold"] :is(.hero-word,.hero-kicker){color:var(--accent)}
+body[data-site-palette] .hero-visual img{background:transparent}
+/* Standard design has photograph overlays; keep their labels readable. */
+body[data-site-palette]:not([data-design]):not([data-palette-page="natural"]) .hero-overlay :is(h1,p){color:#fff}
+body[data-site-palette]:not([data-design]):not([data-palette-page="natural"]) .hero{background-color:var(--surface)}
+body[data-site-palette][data-design="chic"] .hero-overlay :is(h1,p),body[data-site-palette][data-design="visual"] .hero-overlay :is(h1,p){color:#fff}
+body[data-site-palette][data-design="chic"] .hero-kicker,body[data-site-palette][data-design="visual"] .hero-kicker{color:var(--accent)}
+body[data-site-palette][data-theme="visual-dark"] :is(.site-nav,.site-footer,#company>p,#siteMenuList .menu-card){border-color:var(--line)}
+body[data-site-palette][data-theme="visual-dark"] .menu-card{background:var(--surface)}
+body[data-site-palette][data-theme="visual-dark"] :is(.site-logo,.site-nav-links a,main h2,main h3,main p,.site-footer h2,.site-footer p){color:var(--ink)}
+body[data-site-palette][data-theme="visual-dark"] :is(.section-label,.portfolio-category,.portfolio-lead){color:var(--muted)}
+body[data-site-palette] :is(.category-nav a.active,.category-nav a:hover){background:var(--accent);color:var(--palette-button-ink)}
+body[data-site-palette] .menu-header{background:var(--surface);color:var(--ink)}
+.palette-preview-page #siteAdminAccessLink{display:none!important}
+
+body[data-site-palette] .full-menu-card{background:var(--surface);border-color:var(--line)}
+body[data-site-palette] :is(.menu-category-heading h2,.full-menu-body h3,.menu-description){color:var(--ink)}
+body[data-site-palette] .menu-category-heading p{color:var(--muted)}
+body[data-site-palette] .menu-price{color:var(--accent)}

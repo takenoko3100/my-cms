@@ -1,0 +1,38 @@
+/* A compact customer control. Public palette CSS is deliberately not loaded in the editor. */
+#sitePaletteSection{margin:24px auto 32px;color:#283a30;font-family:inherit}
+#sitePaletteSection[hidden]{display:none!important}
+#sitePaletteSection>h2{font-size:clamp(21px,4vw,27px);line-height:1.5;margin:6px 0 16px}
+#sitePaletteSection .section-label{font-size:11px;letter-spacing:.15em;color:#677665}
+#sitePaletteDisclosure{background:#fffefb;border:1px solid #d9e1d5;border-radius:18px;overflow:hidden}
+#sitePaletteDisclosure>summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:88px;padding:18px 22px;list-style:none}
+#sitePaletteDisclosure>summary::-webkit-details-marker{display:none}
+#sitePaletteDisclosure summary small{display:block;font-size:12px;color:#64705f;margin-bottom:5px}
+#sitePaletteSummary{font-size:17px;line-height:1.5}
+.palette-summary-toggle{font-size:13px;white-space:nowrap;color:#40543b}
+.palette-summary-toggle::after{content:' ＋'}
+#sitePaletteDisclosure[open] .palette-summary-toggle::after{content:' −'}
+.palette-panel{padding:0 22px 24px}
+.palette-help{font-size:13px;line-height:1.9;color:#52614f;margin:0 0 16px}
+#sitePaletteChoices{padding:0;margin:0 0 20px;border:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#sitePaletteChoices legend{font-size:13px;font-weight:600;margin-bottom:10px}
+.palette-choice{position:relative;display:flex;align-items:center;flex-direction:column;gap:9px;cursor:pointer;min-width:0;padding:13px 6px;border:1px solid #d6dfd1;border-radius:12px;background:#fff;box-sizing:border-box}
+.palette-choice-original{grid-column:1/-1;flex-direction:row;justify-content:center}
+.palette-choice input{position:absolute;inset:0;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.palette-choice:has(input:checked){outline:2px solid #3e6547;outline-offset:-2px;background:#eff5ec}
+.palette-choice:has(input:focus-visible){outline:3px solid #24528c;outline-offset:3px}
+.palette-choice:has(input:checked)::after{content:'✓';position:absolute;right:6px;top:3px;font-size:12px;color:#2e5437;font-weight:700}
+.palette-swatches{display:flex;gap:2px;border:1px solid #d5dbd0;border-radius:20px;padding:2px;background:#fff}
+.palette-swatches i{width:20px;height:20px;border-radius:50%;display:block}
+.palette-choice-name{font-size:12px;font-weight:600;line-height:1.5;text-align:center}
+#sitePaletteChoices:disabled .palette-choice{opacity:.6;cursor:default}
+.palette-preview-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;line-height:1.6;margin-bottom:8px}
+#sitePalettePreviewLink{color:#34593e;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+#sitePalettePreview{display:block;width:100%;height:410px;border:1px solid #d9e0d5;border-radius:12px;background:#f5f6f2;box-sizing:border-box}
+.palette-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+.palette-actions button{font:inherit;font-size:13px;border-radius:30px;padding:12px 19px;border:1px solid #cbd8c5;cursor:pointer;min-height:44px;background:#fff;color:#36513c}
+.palette-actions #saveSitePalette{background:#345942;color:#fff;border-color:#345942}
+.palette-actions button:disabled{opacity:.5;cursor:default}
+#sitePaletteStatus{font-size:12px;line-height:1.8;min-height:2em;margin:10px 0 0;color:#405d46}
+#sitePaletteStatus.is-error{color:#a33232}
+@media(min-width:780px){#sitePaletteChoices{grid-template-columns:repeat(6,minmax(0,1fr))}#sitePalettePreview{height:470px}}
+@media(max-width:420px){.palette-panel{padding:0 14px 18px}#sitePaletteDisclosure>summary{padding:16px}.palette-summary-toggle{font-size:12px}#sitePalettePreview{height:340px}.palette-preview-heading{font-size:11px}}

@@ -322,6 +322,7 @@ function renderCompanyInfo(
     data.theme ||
       "default"
   );
+  window.sasuliePalette.apply(data);
 
   const menuMoreWrap =
   document.getElementById(
