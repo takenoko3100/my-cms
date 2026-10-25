@@ -30,9 +30,10 @@
   <meta name="robots" content="noindex, nofollow">
 
   <link rel="stylesheet" href="/editor.css?v=5">
+  <link rel="stylesheet" href="/account-context.css?v=1">
   <link rel="stylesheet" href="/editor-design.css?v=9">
   <script src="/company-urls.js?v=2"></script>
-  <script src="/company-settings.js?v=1"></script>
+  <script src="/company-settings.js?v=2"></script>
   <link rel="stylesheet" href="/palette-editor.css?v=1">
   <script src="/site-palette.js?v=1"></script>
   <script src="/palette-editor.js?v=1"></script>
@@ -90,6 +91,17 @@
   </header>
 
   <main class="editor-page">
+    <section class="sasulie-account-panel" id="editorAccountPanel" aria-label="ログインと編集先" hidden>
+      <dl class="sasulie-account-details">
+        <div><dt>編集中の会社・店舗</dt><dd id="editingCompanyName">確認中…</dd></div>
+        <div><dt>ログイン中のメールアドレス</dt><dd id="editingAccountEmail">確認中…</dd></div>
+      </dl>
+      <div class="sasulie-account-actions">
+        <span class="sasulie-account-role" id="editingAccountRole"></span>
+        <a class="sasulie-account-back" id="clientListLink" href="/admin" hidden>← 顧客一覧へ戻る</a>
+      </div>
+    </section>
+
     <section id="siteDesignAdminSection" class="visual-section content-section design-settings" hidden aria-labelledby="designSettingsTitle">
       <p class="section-label">DESIGN</p>
       <h2 id="designSettingsTitle">公開サイトのデザイン</h2>
@@ -1251,7 +1263,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="/editor.js?v=23"></script>
+  <script src="/editor.js?v=24"></script>
 
 </body>
 </html>

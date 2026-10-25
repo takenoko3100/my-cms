@@ -8,6 +8,7 @@ const supabaseClient = supabase.createClient(
 );
 const SITE_DESIGN_NAMES = Object.freeze({"standard": "今までのデザイン", "natural": "ナチュラル", "japanese": "和モダン", "chic": "シック", "elegant": "エレガント", "pop": "ポップ", "minimal": "ミニマル", "visual": "ビジュアル", "clean": "クリーン", "craft": "クラフト", "bold": "ボールド", "magazine":"マガジン", "split":"スプリット", "gallery":"ギャラリー"});
 let canManageSiteDesign = false;
+let currentEditorEmail = "";
 let currentCompanyId = null;
 let currentCompany = null;
 let menuItems = [];
@@ -147,7 +148,9 @@ async function init() {
   if (!session) {
     return;
   }
+  currentEditorEmail = session.user.email || "";
   await loadDesignAdminPermission();
+  renderEditorAccount();
   const companyId = await resolveCompanyId(session.user.id);
   if (!companyId) {
     alert("管理できる店舗が設定されていません。");
@@ -161,6 +164,17 @@ async function init() {
   loadPortfolioItems(),
   loadNews()
 ]);
+}
+// 表示用。操作権限の判定は既存のcreator_adminsとRLSに従う。
+function renderEditorAccount() {
+  const panel = document.getElementById("editorAccountPanel");
+  if (!panel) return;
+  setText("editingAccountEmail", currentEditorEmail || "メールアドレス未設定");
+  setText("editingCompanyName", currentCompany?.name || "会社・店舗が未選択です");
+  setText("editingAccountRole", canManageSiteDesign ? "運営者アカウント" : "顧客アカウント");
+  const back = document.getElementById("clientListLink");
+  if (back) back.hidden = !canManageSiteDesign;
+  panel.hidden = false;
 }
 function getLoginUrl() {
   const currentUrl = new URL(window.location.href);
@@ -369,6 +383,7 @@ async function loadCompanyInfo() {
   renderCompanyInfo();
 }
 function renderCompanyInfo() {
+  renderEditorAccount();
   if (!currentCompany) {
     return;
   }

@@ -1,0 +1,29 @@
+.sasulie-account-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  margin: 0 0 24px;
+  padding: 18px 20px;
+  border: 1px solid #dce2d5;
+  border-radius: 16px;
+  background: #fffefa;
+  color: #30372d;
+  box-sizing: border-box;
+}
+.sasulie-account-panel[hidden], .sasulie-account-back[hidden] { display: none !important; }
+.sasulie-account-details { display: grid; gap: 10px; min-width: 0; margin: 0; }
+.sasulie-account-details div { min-width: 0; }
+.sasulie-account-details dt { margin: 0 0 3px; font-size: 11px; color: #606a58; line-height: 1.6; }
+.sasulie-account-details dd { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.6; overflow-wrap: anywhere; }
+.sasulie-account-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
+.sasulie-account-role { padding: 4px 10px; border-radius: 20px; background: #eef2e9; color: #40543e; font-size: 11px; line-height: 1.6; }
+.sasulie-account-back { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 14px; border: 1px solid #ccd5c3; border-radius: 12px; color: #40543e; background: #fff; font-size: 13px; font-weight: 600; text-decoration: none; box-sizing: border-box; }
+.sasulie-account-back:hover { background: #eef2e9; }
+.sasulie-account-back:focus-visible { outline: 3px solid #71886b; outline-offset: 3px; }
+.operator-status { overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .sasulie-account-panel { flex-direction: column; align-items: stretch; gap: 14px; padding: 16px; }
+  .sasulie-account-actions { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+}

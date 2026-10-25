@@ -48,7 +48,7 @@ async function init() {
     return;
   }
   operatorUserId = session.user.id;
-  document.getElementById("operatorStatus").textContent = session.user.email ? `運営者：${session.user.email}` : "運営者としてログイン中";
+  document.getElementById("operatorStatus").textContent = session.user.email ? `ログイン中（運営者）：${session.user.email}` : "運営者としてログイン中";
   document.body.classList.remove("auth-pending");
   bindEvents();
   bindWorkspaceEvents();
