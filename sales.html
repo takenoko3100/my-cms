@@ -8,21 +8,162 @@
 <link rel="stylesheet" href="/sales.css?v=6">
 <script src="/sales.js?v=6" defer></script>
 <script src="/company-urls.js?v=2"></script>
+
+<style>
+/* Pricing and support: kept here so only sales.html needs replacing. */
+@media(max-width:700px){.header nav>a[href="#support"]{display:none}}
+.hero-price small{display:block;margin:10px 0 0;line-height:1.8}
+#price .section-heading>p:last-child{max-width:650px;margin-left:auto;margin-right:auto;color:#53644c}
+#price .price-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:stretch}
+#price .price-card{padding:30px 26px;min-width:0;display:flex;flex-direction:column}
+#price .price-top{min-height:83px}
+#price .price-top>h3{font-size:19px;margin-bottom:14px}
+#price .amount{font-size:44px;line-height:1.15;margin-bottom:10px}
+#price .amount>span{display:block;font-size:12px;line-height:1.8;margin:8px 0 0}
+#price .tax-excluded{font-size:11px;margin:0 0 21px;color:#5d6f50;line-height:1.8}
+#price .monthly .tax-excluded{color:#d5dfcc}
+#price .price-desc{min-height:66px;color:#53644c}
+#price .monthly .price-desc{color:#d5dfcc}
+#price .price-card ul{flex:1}
+#price .price-card .small-note{color:#5d6f50}
+#price .monthly .small-note{color:#d5dfcc}
+#price .annual-plan{border-color:#95a887;background:#f8faf2}
+.saving-note{font-size:12px;line-height:1.8;font-weight:600;color:#36533a;margin:0 0 19px}
+.pricing-conditions{max-width:850px;margin:26px auto 0;text-align:center;font-size:11px;line-height:2;color:#53644c}
+#price .options{align-items:start}
+#price .options p{color:#53644c}
+#price .options h3{margin-bottom:0}
+.support-section{border-bottom:1px solid var(--line)}
+.support-section .section-heading>p:last-child{font-size:12px;color:#53644c;max-width:360px}
+.support-section .feature p{color:#53644c}
+.support-section .support-note{font-size:11px;color:#53644c;margin-bottom:0}
+.faqs details>p{color:#53644c}
+.faqs details>p a{text-decoration:underline;text-underline-offset:4px}
+@media(max-width:1000px){
+  #price .price-card{padding:25px 20px}
+  #price .amount{font-size:38px}
+  #price .price-top>h3{font-size:17px}
+}
+@media(max-width:850px){
+  #price .price-grid{grid-template-columns:1fr;max-width:580px;margin-left:auto;margin-right:auto}
+  #price .price-top,#price .price-desc{min-height:0}
+  #price .price-card{padding:30px}
+  #price .amount{font-size:46px}
+  #price .price-top>h3{font-size:20px}
+}
+@media(max-width:700px){
+  #price .price-card{padding:28px 24px}
+  .pricing-conditions{text-align:left}
+  #price .section-heading>p:last-child{margin-left:0}
+  #price .options h3{margin-bottom:12px}
+  .hero-price small{margin-left:0}
+  .support-section .section-heading>p:last-child{max-width:none}
+}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">本文へ進む</a>
 <div class="announcement">小さなお店と事業のためのホームページ制作 <span>開発・準備中 ／ 制作依頼の受付前</span></div>
-<header class="header"><a class="logo" href="#top" aria-label="sasulie（サスリエ）トップ">sasulie<span>SMALL BUSINESS, YOUR OWN SITE.</span></a><nav aria-label="メインナビゲーション"><a href="#service">できること</a><a href="#designs">デザイン</a><a href="#price">料金</a><a class="nav-cta" href="#contact">公開予定を見る <span aria-hidden="true">↗</span></a></nav></header>
+<header class="header"><a class="logo" href="#top" aria-label="sasulie（サスリエ）トップ">sasulie<span>SMALL BUSINESS, YOUR OWN SITE.</span></a><nav aria-label="メインナビゲーション"><a href="#service">できること</a><a href="#designs">デザイン</a><a href="#price">料金</a><a href="#support">サポート</a><a class="nav-cta" href="#contact">公開予定を見る <span aria-hidden="true">↗</span></a></nav></header>
 <main id="main">
-<section class="hero" id="top"><div class="hero-copy"><p class="eyebrow">あなたの仕事に、あなたのホームページを。</p><h1>つくるを任せて、<br>更新は<span>あなたの手で。</span></h1><p class="hero-lead">好きなデザインを選んだら、公開まで一緒に。<br>お知らせも、メニューも、スマホから。<br>小さな事業にちょうどいいホームページを。</p><div class="hero-actions"><a class="button dark" href="#designs">13のデザインを見る <span aria-hidden="true">↗</span></a><a class="text-link" href="#try">更新の流れを体験 ↓</a></div><p class="prelaunch-hero-note">現在は開発・準備中です。制作依頼・見積もり・契約は受け付けていません。</p><p class="hero-price">制作 <b>50,000</b>円 <i>＋</i> 月額 <b>1,500</b>円 <small>税込・検討中の料金案</small></p></div><div class="hero-visual"><div class="visual-caption"><span>A WEBSITE THAT FEELS LIKE YOU.</span><span>01 — 13</span></div><a class="desktop-preview" href="/cms-design-samples/natural.html" aria-label="ナチュラルのデザイン見本を開く"><div class="browser-top"><i></i><i></i><i></i><span>喫茶 こもれび / DESIGN SAMPLE</span></div><div class="desktop-content"><div><small>KOMOREBI COFFEE</small><h2>日々のすきまに、<br>やさしい時間。</h2><p>一杯と、ひと息。</p><span>OUR MENU ↗</span></div><img src="/cms-design-samples/assets/cafe.jpg" alt="コーヒーを淹れる風景を使ったカフェのデザイン例" width="700" height="850"></div></a><a class="floating-preview" href="/cms-design-samples/visual.html" aria-label="ビジュアルのデザイン見本を開く"><img src="/cms-design-samples/assets/visual.jpg" alt="湖の風景を使った写真家のデザイン例" width="400" height="500"><div><small>LUMEN STUDIO</small><p>光が残す、<br>その一瞬。</p><span>PHOTOGRAPHY & FILM</span></div></a><div class="visual-bottom"><span>選ぶ楽しさ。続ける気軽さ。</span><span>DESIGN COLLECTION</span></div></div></section>
+<section class="hero" id="top"><div class="hero-copy"><p class="eyebrow">あなたの仕事に、あなたのホームページを。</p><h1>つくるを任せて、<br>更新は<span>あなたの手で。</span></h1><p class="hero-lead">好きなデザインを選んだら、公開まで一緒に。<br>お知らせも、メニューも、スマホから。<br>小さな事業にちょうどいいホームページを。</p><div class="hero-actions"><a class="button dark" href="#designs">13のデザインを見る <span aria-hidden="true">↗</span></a><a class="text-link" href="#try">更新の流れを体験 ↓</a></div><p class="prelaunch-hero-note">現在は開発・準備中です。制作依頼・見積もり・契約は受け付けていません。</p><p class="hero-price">テンプレート制作 <b>0</b>円 <i>＋</i> 月額 <b>1,650</b>円 <small>税込・サービス開始後の予定料金</small></p></div><div class="hero-visual"><div class="visual-caption"><span>A WEBSITE THAT FEELS LIKE YOU.</span><span>01 — 13</span></div><a class="desktop-preview" href="/cms-design-samples/natural.html" aria-label="ナチュラルのデザイン見本を開く"><div class="browser-top"><i></i><i></i><i></i><span>喫茶 こもれび / DESIGN SAMPLE</span></div><div class="desktop-content"><div><small>KOMOREBI COFFEE</small><h2>日々のすきまに、<br>やさしい時間。</h2><p>一杯と、ひと息。</p><span>OUR MENU ↗</span></div><img src="/cms-design-samples/assets/cafe.jpg" alt="コーヒーを淹れる風景を使ったカフェのデザイン例" width="700" height="850"></div></a><a class="floating-preview" href="/cms-design-samples/visual.html" aria-label="ビジュアルのデザイン見本を開く"><img src="/cms-design-samples/assets/visual.jpg" alt="湖の風景を使った写真家のデザイン例" width="400" height="500"><div><small>LUMEN STUDIO</small><p>光が残す、<br>その一瞬。</p><span>PHOTOGRAPHY & FILM</span></div></a><div class="visual-bottom"><span>選ぶ楽しさ。続ける気軽さ。</span><span>DESIGN COLLECTION</span></div></div></section>
 <div class="principles"><p><span>01</span>選べる13のデザイン</p><p><span>02</span>公開まで制作をお手伝い</p><p><span>03</span>スマホ・PCから自分で更新</p></div>
-<section class="section service" id="service"><div class="section-heading"><p class="eyebrow">MADE FOR YOUR EVERYDAY</p><h2>本業のそばで、<br>無理なく続くサイトに。</h2></div><div class="service-body"><p class="section-lead">お店のことを知ってほしい。<br>でも、ホームページに時間はかけられない。<br>そんな人の「最初」と「その後」を支えます。</p><div class="feature"><span>01 / START</span><h3>ゼロから悩まず、完成形から選ぶ。</h3><p>好みの見本を選び、事業の情報と写真を用意。こちらで内容を整理し、ページに組み立てます。</p></div><div class="feature"><span>02 / UPDATE</span><h3>変えたいときに、自分で変えられる。</h3><p>文章・写真・お知らせを管理画面から更新。メニューの価格や営業時間の変更にも使えます。</p></div><div class="feature"><span>03 / KEEP</span><h3>必要な費用を、分かりやすく。</h3><p>初期制作費と月額利用・保守料を分けて表示。追加の制作は、作業前に内容と料金を確認します。</p></div></div></section>
+<section class="section service" id="service"><div class="section-heading"><p class="eyebrow">MADE FOR YOUR EVERYDAY</p><h2>本業のそばで、<br>無理なく続くサイトに。</h2></div><div class="service-body"><p class="section-lead">お店のことを知ってほしい。<br>でも、ホームページに時間はかけられない。<br>そんな人の「最初」と「その後」を支えます。</p><div class="feature"><span>01 / START</span><h3>ゼロから悩まず、完成形から選ぶ。</h3><p>好みの見本を選び、事業の情報と写真を用意。こちらで内容を整理し、ページに組み立てます。</p></div><div class="feature"><span>02 / UPDATE</span><h3>変えたいときに、自分で変えられる。</h3><p>文章・写真・お知らせを管理画面から更新。メニューの価格や営業時間の変更にも使えます。</p></div><div class="feature"><span>03 / KEEP</span><h3>必要な費用を、分かりやすく。</h3><p>テンプレート制作は初期0円。公開後の維持管理と通常の更新代行は、月額サポートに。追加制作は、作業前に内容と料金を確認します。</p></div></div></section>
 <section class="design-section" id="designs"><div class="section-heading design-heading"><div><p class="eyebrow">CHOOSE YOUR ATMOSPHERE</p><h2>あなたらしいのは、<br>どのデザイン？</h2></div><p>やわらかく。凛と。大胆に。<br>写真や文字の見せ方から、選んでみてください。<br>新しい3種類では、6つの配色も試せます。</p></div><div class="design-cards"><a href="/cms-design-samples/natural.html" class="design-card"><div class="design-image warm"><img src="/cms-design-samples/assets/cafe.jpg" loading="lazy" alt="ナチュラルのカフェ見本" width="600" height="700"><span>日々のすきまに、<br>やさしい時間。</span></div><div><span>01 / NATURAL</span><h3>ナチュラル <b aria-hidden="true">↗</b></h3><p>カフェ・雑貨店に</p></div></a><a href="/cms-design-samples/visual.html" class="design-card"><div class="design-image photo"><img src="/cms-design-samples/assets/visual.jpg" loading="lazy" alt="ビジュアルの作品紹介見本" width="600" height="700"><span>光が残す、<br>その一瞬。</span></div><div><span>07 / VISUAL</span><h3>ビジュアル <b aria-hidden="true">↗</b></h3><p>写真・映像・作品紹介に</p></div></a><a href="/cms-design-samples/clean.html" class="design-card"><div class="design-image clean"><img src="/cms-design-samples/assets/company.jpg" loading="lazy" alt="クリーンの会社紹介見本" width="600" height="700"><span>身近な相談が、<br>次の一歩に。</span></div><div><span>08 / CLEAN</span><h3>クリーン <b aria-hidden="true">↗</b></h3><p>会社・事業の紹介に</p></div></a></div><div class="design-bottom"><p>掲載例は架空の店舗・会社のデザイン見本です。<br>管理画面への連携は、導入時の制作作業になります。</p><a href="/cms-design-samples/designs.html" class="button outline">全13種類を見比べる <span aria-hidden="true">↗</span></a></div></section>
 <section class="section try" id="try"><div class="try-copy"><p class="eyebrow">A LITTLE UPDATE, ANYTIME</p><h2>「変えたい」を、<br>その場で。</h2><p>お知らせを入力して、表示を確認。<br>まずは、更新の流れを体験してみてください。</p><div class="try-editor"><label for="demoTitle">お知らせのタイトル</label><input id="demoTitle" maxlength="45" value="季節のメニューができました" autocomplete="off"><label for="demoBody">本文</label><textarea id="demoBody" maxlength="160" rows="3">旬の素材を使った、新しいメニューをご用意しました。ぜひお立ち寄りください。</textarea><button class="button dark" id="demoApply" type="button">サンプルに反映する <span aria-hidden="true">↗</span></button><p class="demo-status" id="demoStatus" role="status"></p></div><p class="small-note">これはこのページ内だけで動く体験用デモです。実際の管理画面とは見た目が異なり、入力内容の送信・保存・公開はされません。</p></div><div class="phone-area"><div class="phone"><div class="phone-speaker"></div><div class="phone-top">喫茶 こもれび <span>☰</span></div><img src="/cms-design-samples/assets/cafe.jpg" loading="lazy" alt="デモサイトのコーヒー写真" width="500" height="450"><div class="phone-news"><small>NEWS</small><h3>お知らせ</h3><span class="phone-label">更新サンプル</span><h4 id="demoPreviewTitle">季節のメニューができました</h4><p id="demoPreviewBody">旬の素材を使った、新しいメニューをご用意しました。ぜひお立ち寄りください。</p></div></div><span class="phone-caption">画像・文章・お知らせを、あなたのペースで。</span></div></section>
-<section class="price-section" id="price"><div class="section-heading"><p class="eyebrow">SIMPLE PRICING</p><h2>はじめる費用も、<br>続ける費用も。</h2><p>販売開始に向けて検討中の料金・提供内容です。現在は申し込みできません。正式な料金・条件・開始時期は、決まり次第このページでご案内します。</p></div><div class="price-grid"><article class="price-card"><div class="price-top"><span>はじめに、一度だけ</span><h3>初期制作 <small class="plan-draft">検討中</small></h3></div><p class="amount">50,000<span>円（税込）</span></p><p class="price-desc">テンプレートを使った、基本サイト1件の制作。</p><ul><li>デザイン見本から1つ選択</li><li>支給された文章・写真の初期登録</li><li>文章の読みやすさの調整</li><li>スマホ・PC表示とリンクの確認</li><li>公開設定・初回の操作説明</li><li>公開前の修正をまとめて2回</li></ul><p class="small-note">紹介・サービスやメニュー・基本情報・お問い合わせ先・お知らせを基本構成に。掲載量や対応範囲は見積もり時に確認します。</p></article><article class="price-card monthly"><div class="price-top"><span>公開後、毎月</span><h3>利用・保守 <small class="plan-draft">検討中</small></h3></div><p class="amount">1,500<span>円／月（税込）</span></p><p class="price-desc">自分で更新しながら、サイトを使い続ける。</p><ul><li>基本プランのサイト公開・管理画面の利用</li><li>自分で文章・写真・お知らせを更新</li><li>サービス側のシステム保守・不具合対応</li><li>使い方の質問受付</li></ul><p class="small-note">更新代行・デザイン変更は含みません。対応時間・保存容量・契約や解約の条件などは、受付開始前に明示します。</p><div class="annual"><span>基本料金の合計</span><p>初年度 <b>68,000円</b> ／ 2年目以降 <b>年18,000円</b></p><small>月額12か月分で計算。独自ドメイン・オプションは別途。</small></div></article></div><div class="options"><h3>必要な分だけ、追加で。</h3><p>独自ドメインの取得・設定、更新代行、特注デザイン、文章作成、撮影・動画制作などは、対応可否を確認して個別に見積もります。</p><span>追加作業は、内容と料金に合意してから。</span></div></section>
-<section class="section flow" id="flow"><div class="section-heading"><p class="eyebrow">PLANNED SERVICE FLOW</p><h2>公開まで、<br>一緒にひとつずつ。</h2><p>サービス開始後に予定している流れです。</p></div><ol><li><span>01</span><div><h3>イメージと目的を相談</h3><p>どんな事業か、誰に何を伝えたいかを伺います。</p></div></li><li><span>02</span><div><h3>デザインと掲載内容を決定</h3><p>見本を選び、料金・作業範囲を確認。必要な写真や情報をご案内します。</p></div></li><li><span>03</span><div><h3>制作・確認・修正</h3><p>こちらでページを作成。スマホでも見ながら、内容を確認します。</p></div></li><li><span>04</span><div><h3>公開して、自分で更新</h3><p>操作説明を受けてスタート。新しい情報を、ご自身のタイミングで。</p></div></li></ol></section>
-<section class="faq-section"><div class="section-heading"><p class="eyebrow">QUESTIONS</p><h2>気になること。</h2></div><div class="faqs"><details><summary>パソコンがなくても使えますか？</summary><p>スマホのブラウザから管理画面を開いて更新できます。導入前に、ご利用端末で操作を確認します。</p></details><details><summary>写真や文章は何を用意すればいいですか？</summary><p>事業紹介、サービス内容や料金、営業時間、連絡先などの基本情報と、使用できる写真をご用意ください。必要な項目はこちらからご案内します。取材からの文章作成や撮影は別途相談になります。</p></details><details><summary>テンプレートなら、どこまで変えられますか？</summary><p>基本は選んだデザインの構成を使い、文章や写真を差し替えます。配色やレイアウトの変更は内容を確認し、追加制作になる場合は事前に見積もります。</p></details><details><summary>予約やネット販売もできますか？</summary><p>現在の基本プランに、予約受付・決済・ネット販売機能は含まれていません。外部サービスへのリンクなど、ご希望に応じて対応方法を相談します。</p></details><details><summary>ドメイン代は月額料金に含まれますか？</summary><p>基本はサービスの公開URLを使います。独自ドメインをご希望の場合、取得・更新の実費や初回設定の作業費は別途になります。</p></details><details><summary>今すぐ申し込めますか？ 解約したらどうなりますか？</summary><p>現在は開発・準備中のため、制作依頼・見積もり・契約は受け付けていません。受付開始前に、提供者情報、正式料金、支払い方法、契約・解約条件、解約後の公開停止やデータの扱いを明示します。開始時期は未定です。</p></details></div></section>
+<section class="price-section" id="price" aria-labelledby="priceTitle">
+  <div class="section-heading">
+    <p class="eyebrow">SIMPLE PRICING</p>
+    <h2 id="priceTitle">はじめやすく、<br>無理なく続ける。</h2>
+    <p>サービス開始後に予定している料金・提供内容です。<br>現在は準備中のため、お申し込み・お支払いはできません。<br>正式な料金・条件は、受付開始前にご案内します。</p>
+  </div>
+  <div class="price-grid">
+    <article class="price-card">
+      <div class="price-top"><span>好きな見本から、はじめる</span><h3>テンプレート制作</h3></div>
+      <p class="amount">0<span>円 ／ 初期制作費</span></p>
+      <p class="tax-excluded">月払い・年払いサポートをご利用の場合</p>
+      <p class="price-desc">選んだデザインに、お店や事業の情報を載せて公開まで。</p>
+      <ul>
+        <li>デザイン見本から1つ選択</li>
+        <li>ご提供いただいた文章・写真の初期登録</li>
+        <li>スマホ・PC表示とリンクの確認</li>
+        <li>公開設定・初回の操作説明</li>
+      </ul>
+      <p class="small-note">基本は選んだデザインの構成を使用します。初期登録の量・修正範囲は、制作前に確認します。</p>
+    </article>
+    <article class="price-card monthly">
+      <div class="price-top"><span>毎月、気軽に続ける</span><h3>月払いサポート</h3></div>
+      <p class="amount">1,650<span>円 ／ 月（税込）</span></p>
+      <p class="tax-excluded">税抜 1,500円 ／ 月</p>
+      <p class="price-desc">サイトの維持管理も、日々の更新の相談も。</p>
+      <ul>
+        <li>サイト公開・管理画面の利用</li>
+        <li>スマホ・PCから自分で更新</li>
+        <li>システムの保守・不具合対応</li>
+        <li>操作相談・通常の更新代行</li>
+      </ul>
+      <p class="small-note">更新代行は月30分程度が目安です。最低利用期間・解約違約金なし。支払済みの利用期間が終わるまで使えます。</p>
+    </article>
+    <article class="price-card annual-plan">
+      <div class="price-top"><span>1年分をまとめて、15％お得に</span><h3>年払いサポート</h3></div>
+      <p class="amount">16,830<span>円 ／ 年（税込・一括払い）</span></p>
+      <p class="tax-excluded">税抜 15,300円 ／ 年</p>
+      <p class="price-desc">月払いと同じサポートを、1年間まとめて。</p>
+      <ul>
+        <li>月払いと同じ機能・サポート</li>
+        <li>12か月分のサポート料金を15％割引</li>
+        <li>月払い12か月分より年2,970円お得（税込）</li>
+      </ul>
+      <p class="small-note">顧客都合の途中解約は返金なし。契約開始日から1年間の満了日まで利用でき、次年度の更新を停止します。</p>
+    </article>
+  </div>
+  <p class="pricing-conditions">テンプレート制作0円はサポート契約を前提とした予定料金です。<br>年払いの割引対象はサポート料金のみ。独自ドメイン実費・追加制作費は別途です。</p>
+  <div class="options">
+    <h3>こだわりたい部分は、<br>必要な分だけ。</h3>
+    <p>特注デザインやサイト全体のリニューアル、新しいページ・機能の追加は個別見積もりです。撮影・動画編集・文章の新規作成も別途ご相談ください。内容・対応可否・税込総額を確認し、ご同意いただいてから作業します。</p>
+    <span>追加料金を、事前のご案内なく請求することはありません。</span>
+  </div>
+  <div class="options">
+    <h3>独自ドメインも、<br>ご相談ください。</h3>
+    <p>sasulieの共通URLは、ドメイン実費の追加なしで利用できます。独自ドメインをご希望の場合は、取得・更新の実費を年額で別途ご案内します。取得・接続・更新の手続きや管理方法も、事前に確認します。</p>
+    <span>ドメインは顧客名義で登録する方針です。メールボックスの提供は別途相談となります。</span>
+  </div>
+</section>
+
+<section class="section service support-section" id="support" aria-labelledby="supportTitle">
+  <div class="section-heading">
+    <p class="eyebrow">A LITTLE HELP, WHEN YOU NEED IT</p>
+    <h2 id="supportTitle">自分で更新。<br>困ったときは、一緒に。</h2>
+    <p>サービス開始後に予定しているサポートです。月払い・年払い、どちらも同じ範囲でお手伝いします。</p>
+  </div>
+  <div class="service-body">
+    <div class="feature"><span>01 / EVERYDAY UPDATES</span><h3>いつもの更新を、少しお手伝い。</h3><p>文章・写真・料金・営業時間・お知らせなど、今ある編集機能でできる通常の更新を代行します。文章や写真などの素材は、ご用意をお願いします。</p></div>
+    <div class="feature"><span>02 / SUPPORT SCOPE</span><h3>更新代行は、月30分程度を目安に。</h3><p>操作のご相談と、日々の小さな変更に対応します。作業量の多いご依頼は、着手前に納期や追加料金をご相談します。</p></div>
+    <div class="feature"><span>03 / OUR PACE</span><h3>平日を中心に、順番に対応。</h3><p>メール・Instagram DMはいつでも送れます。通常の更新は、素材と依頼内容がそろってから3〜5営業日を目標に対応します。営業日は土日・祝日を除く平日です。</p></div>
+    <p class="support-note">ご依頼ごとの納期は、内容を確認してお伝えします。即日対応・24時間対応は含まれません。大幅な変更や追加制作は、別途お見積もりします。</p>
+  </div>
+</section>
+
+<section class="section flow" id="flow"><div class="section-heading"><p class="eyebrow">PLANNED SERVICE FLOW</p><h2>公開まで、<br>一緒にひとつずつ。</h2><p>サービス開始後に予定している流れです。</p></div><ol><li><span>01</span><div><h3>イメージと目的を相談</h3><p>どんな事業か、誰に何を伝えたいかを伺います。</p></div></li><li><span>02</span><div><h3>デザインと掲載内容を決定</h3><p>見本を選び、料金・作業範囲を確認。必要な写真や情報をご案内します。</p></div></li><li><span>03</span><div><h3>制作・確認・修正</h3><p>こちらでページを作成。スマホでも見ながら、内容を確認します。</p></div></li><li><span>04</span><div><h3>公開して、自分のペースで更新</h3><p>操作説明を受けてスタート。ご自身での更新も、日々の小さな更新のご相談も。</p></div></li></ol></section>
+<section class="faq-section" id="faq" aria-labelledby="faqTitle">
+  <div class="section-heading"><p class="eyebrow">QUESTIONS</p><h2 id="faqTitle">気になること。</h2></div>
+  <div class="faqs">
+    <details><summary>今すぐ申し込めますか？</summary><p>現在は開発・準備中のため、制作依頼・見積もり・契約は受け付けていません。サービス開始時期は未定です。受付開始前に正式な料金・提供内容・契約条件をご案内します。</p></details>
+    <details><summary>テンプレート制作は、本当に初期0円ですか？</summary><p>月払い・年払いサポートをご利用いただく場合、既存のデザインを選ぶ基本サイトの初期制作費は0円の予定です。サポート料金と、希望する場合の独自ドメイン実費は別途かかります。特注デザインや追加機能は個別見積もりです。</p></details>
+    <details><summary>パソコンがなくても使えますか？</summary><p>スマホのブラウザから管理画面を開いて更新できます。導入前に、ご利用端末で操作を確認します。</p></details>
+    <details><summary>写真や文章は何を用意すればいいですか？</summary><p>事業紹介、サービス内容や料金、営業時間、連絡先などの基本情報と、掲載の権利・許可がある写真をご用意ください。必要な項目はこちらからご案内します。取材からの文章作成や撮影は別途相談になります。</p></details>
+    <details><summary>デザインや色は、自分で変更できますか？</summary><p>基本は選んだデザインの構成を使います。対応している配色は管理画面から選び、保存して反映できます。デザイン全体の切り替え・レイアウト変更はご相談ください。サイト全体のリニューアルや特注制作は別途見積もりです。</p></details>
+    <details><summary>更新をお願いすることもできますか？</summary><p>はい。文章・写真・料金・お知らせなど、既存の編集機能でできる通常の更新代行をサポートに含める予定です。月30分程度を目安とし、必要な素材はご用意いただきます。大幅な変更や作業量を超えるご依頼は、事前に費用と納期をご相談します。</p></details>
+    <details><summary>連絡や更新には、どのくらい時間がかかりますか？</summary><p>ご連絡はメール・Instagram DMでいつでも受け付け、確認・作業は平日を中心に順次行います。通常更新は素材と内容がそろってから3〜5営業日を目標に、納期を個別にご案内します。即日対応・24時間対応は行っていません。</p></details>
+    <details><summary>月払いは、いつでも解約できますか？</summary><p>最低利用期間・解約違約金を設けず、いつでも解約のご連絡を受け付ける予定です。支払済みの利用期間が終わるまでは利用できます。最終利用日を確認し、期間終了後は公開サイトと編集機能の提供を停止します。具体的な支払い・解約手続きは、受付開始前にご案内します。</p></details>
+    <details><summary>年払いを途中で解約すると、どうなりますか？</summary><p>顧客都合の途中解約では、支払済みの年額料金は返金しない予定です。解約を申し込んだあとも、契約開始日から1年間の満了日まで、公開サイト・編集機能・契約内のサポートを利用でき、次年度の更新を停止します。例えば4月1日開始なら翌年3月31日までです。</p></details>
+    <details><summary>独自ドメインの取得や管理も頼めますか？</summary><p>取得・接続・更新の手続きもご相談いただけます。ドメインは顧客名義で登録し、取得・更新の実費は年額で別途ご案内する予定です。ご希望のドメインの価格・更新費用・管理方法は、事前に確認します。メールボックスの提供は別途相談となります。</p></details>
+    <details><summary>解約すると、独自ドメインもなくなりますか？</summary><p>サイトの提供とドメインの契約は分けて扱います。サイト解約だけを理由に、ドメインを自動で失効・削除することはありません。更新の継続や管理の引き継ぎについて、別途確認します。ドメインを継続する場合の更新費用は必要です。</p></details>
+    <details><summary>予約やネット販売もできますか？</summary><p>基本プランに、予約受付・決済・ネット販売機能は含まれていません。外部サービスへのリンクなど、ご希望に応じて対応方法を相談します。追加制作が必要な場合は、対応可否・費用を事前にご案内します。</p></details>
+    <details><summary>あとからホームページをリニューアルできますか？</summary><p>はい。全体の大幅なデザイン変更やページ・機能の追加は、日々の更新代行とは別に個別見積もりで対応します。内容と税込総額を確認し、ご同意いただいてから進めます。年払いサポートの15％割引は追加制作費には適用されません。</p></details>
+  </div>
+</section>
 <section class="contact-section" id="contact"><div><p class="eyebrow">GROWING, LITTLE BY LITTLE</p><h2>ただいま、<br>ひとつずつ準備中。</h2><p>使いやすい管理画面と、選べるデザイン。<br>安心して使ってもらえるよう、試しながら整えています。</p><p class="contact-notice">現在、制作依頼・見積もり・契約は受け付けていません。<br>サービス開始時期は未定です。</p></div><div class="email-card"><p class="eyebrow">FOLLOW THE PROCESS</p><h3>完成までの記録を、少しずつ。</h3><p>Instagramでは、デザイン見本や開発の様子を紹介していく予定です。</p><a class="button dark" href="https://www.instagram.com/sasulie.web/" target="_blank" rel="noopener noreferrer">Instagramを見る <span aria-hidden="true">↗</span></a><p class="instagram-handle">@sasulie.web</p><p class="small-note">正式な提供内容や受付開始のお知らせは、このサイトとInstagramに掲載予定です。</p><a class="button outline" href="/cms-design-samples/designs.html">デザイン見本を見てみる <span aria-hidden="true">↗</span></a></div></section>
-</main><footer><a class="logo" href="#top">sasulie<span>あなたの仕事に、あなたのホームページを。</span></a><div><a href="/cms-design-samples/designs.html">デザイン一覧 ↗</a><a href="#price">料金</a><a href="#contact">公開予定</a><a href="https://www.instagram.com/sasulie.web/" target="_blank" rel="noopener noreferrer">Instagram ↗</a></div><p>開発・準備ページ ／ 制作依頼・見積もり・契約の受付前です。料金・提供条件は検討中です。</p><small>sasulie</small></footer>
+</main><footer><a class="logo" href="#top">sasulie<span>あなたの仕事に、あなたのホームページを。</span></a><div><a href="/cms-design-samples/designs.html">デザイン一覧 ↗</a><a href="#price">料金</a><a href="#support">サポート</a><a href="#faq">よくある質問</a><a href="#contact">公開予定</a><a href="https://www.instagram.com/sasulie.web/" target="_blank" rel="noopener noreferrer">Instagram ↗</a></div><p>開発・準備ページ ／ 制作依頼・見積もり・契約の受付前です。料金・提供条件は検討中です。</p><small>sasulie</small></footer>
 <noscript><p class="noscript">更新体験デモにはJavaScriptが必要です。デザイン見本やサービス説明はそのままご覧いただけます。</p></noscript>
 </body></html>
