@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>顧客管理 | sasulie</title>
-  <link rel="stylesheet" href="/client-admin.css?v=company-settings-1">
+  <link rel="stylesheet" href="/client-admin.css?v=contracts-1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/client-admin.js?v=account-context-1" defer></script>
+  <script src="/client-admin.js?v=contracts-1" defer></script>
   <script src="/company-urls.js?v=2"></script>
   <script src="/company-settings.js?v=2"></script>
   <link rel="stylesheet" href="/account-context.css?v=1">
@@ -71,12 +71,18 @@
         <button id="createAnotherButton" class="secondary-button" type="button">続けて登録する</button>
       </section>
 
+      <section class="contract-overview" aria-labelledby="contractsOverviewTitle">
+        <div><p class="eyebrow">CONTRACT RECORDS</p><h2 id="contractsOverviewTitle">契約期間を、ひと目で。</h2><p>運営者だけが見られる契約メモです。新しい顧客も、最初は「未登録」から始められます。</p></div>
+        <p class="contract-scope-note">この画面は記録用です。「利用終了」や終了日を保存しても、サイト公開・編集・請求は自動で停止しません。</p>
+        <p id="contractLoadStatus" role="status" aria-live="polite">契約情報を確認しています。</p>
+      </section>
       <section class="client-section" id="clientsSection" aria-labelledby="clientsTitle">
         <div class="client-section-header"><div><p class="eyebrow">YOUR CLIENTS</p><h2 id="clientsTitle">顧客一覧 <span id="clientCount" class="client-count">読み込み中</span></h2></div><button class="secondary-button refresh-button" id="refreshClientsButton" type="button">↻ 一覧を更新</button></div>
         <div class="toolbar">
           <div class="search-field"><label class="sr-only" for="clientSearch">会社名・サイト識別名で検索</label><span aria-hidden="true">⌕</span><input type="search" id="clientSearch" placeholder="会社名・サイト識別名で検索" autocomplete="off"></div>
           <div><label class="sr-only" for="clientTypeFilter">業種で絞り込む</label><select id="clientTypeFilter"><option value="">すべての業種</option><option value="restaurant">飲食店</option><option value="hospital">病院・クリニック</option><option value="video_editing">動画・映像制作</option><option value="auto_repair">自動車整備</option><option value="salon">美容室・サロン</option><option value="retail">物販・雑貨</option><option value="school">教室・スクール</option></select></div>
-          <div><label class="sr-only" for="clientSort">並び順</label><select id="clientSort"><option value="newest">登録が新しい順</option><option value="oldest">登録が古い順</option><option value="name">会社名順</option></select></div>
+          <div><label class="sr-only" for="contractStatusFilter">契約状況で絞り込む</label><select id="contractStatusFilter" disabled><option value="">すべての契約状況</option><option value="unregistered">契約未登録</option><option value="active">利用中</option><option value="ending">終了予定</option><option value="ended">利用終了</option><option value="overdue">期間終了・要確認</option></select></div>
+          <div class="sort-field"><label class="sr-only" for="clientSort">並び順</label><select id="clientSort"><option value="newest">登録が新しい順</option><option value="oldest">登録が古い順</option><option value="name">会社名順</option><option value="contractEnd">利用終了日が近い順</option></select></div>
         </div>
         <p class="list-description" id="listDescription" role="status" aria-live="polite">顧客情報を読み込んでいます。</p>
         <div id="clientList" class="client-list" aria-busy="true"><div class="client-loading">顧客一覧を読み込み中…</div></div>
@@ -111,6 +117,30 @@
       </section>
       <button id="saveClientButton" class="primary-button" type="button">変更を保存</button>
       <details class="danger-zone"><summary>顧客の削除</summary><p class="help-text">削除した顧客は元に戻せません。</p><button id="deleteClientButton" class="danger-button" type="button">この顧客を削除</button></details>
+    </div>
+  </div>
+
+  <div id="contractModal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-contract-modal></div>
+    <div class="modal-panel contract-panel" role="dialog" aria-modal="true" aria-labelledby="contractModalTitle" tabindex="-1">
+      <div class="modal-header"><div><p class="eyebrow">CONTRACT RECORD</p><h2 id="contractModalTitle">契約情報を管理</h2><p id="contractCompanyName" class="contract-company-name"></p></div><button id="closeContractButton" class="icon-button modal-close" type="button" aria-label="契約管理を閉じる">×</button></div>
+      <p class="contract-scope-note">契約情報の記録だけを行います。保存しても、サイト公開・編集・請求の状態は変わりません。</p>
+      <form id="contractForm">
+        <fieldset id="contractFields" disabled>
+          <div class="form-grid">
+            <div class="form-group"><label for="contractPlan">支払いプラン</label><select id="contractPlan" required><option value="">選択してください</option><option value="monthly">月払い</option><option value="annual">年払い</option></select></div>
+            <div class="form-group"><label for="contractStatus">利用状況（記録）</label><select id="contractStatus" required><option value="active">利用中</option><option value="ending">終了予定</option><option value="ended">利用終了</option></select></div>
+            <div class="form-group"><label for="contractStart">今回の契約開始日</label><input id="contractStart" type="date" min="0001-01-01" max="9999-12-31" required></div>
+            <div class="form-group"><label for="contractEnd">今回の利用終了日</label><input id="contractEnd" type="date" min="0001-01-01" max="9999-12-31" aria-describedby="contractEndHelp" required><p class="help-text" id="contractEndHelp">この日を含めて利用できる期間として記録します。日付は日本時間です。</p></div>
+          </div>
+          <button id="suggestAnnualEndButton" type="button" class="secondary-button" hidden>年払いの終了日を入力する</button>
+          <p id="contractPeriodHelp" class="help-text" aria-live="polite">月払いは、支払いの対象となる期間を入力してください。</p>
+          <p class="help-text">解約の連絡を受けたら「終了予定」、提供終了を確認したら「利用終了」として記録できます。更新時は、今回の契約期間を新しい日付に変更してください。</p>
+        </fieldset>
+        <p id="contractFeedback" class="operation-feedback" role="status" aria-live="polite"></p>
+        <div class="contract-form-actions"><button id="cancelContractButton" class="secondary-button" type="button">閉じる</button><button id="saveContractButton" class="primary-button" type="submit" disabled>契約情報を保存</button></div>
+      </form>
+      <p class="help-text">ここには各社の現在の契約期間を1件ずつ保存します。決済・入金の確認や、過去の契約履歴を管理する機能ではありません。テスト会社で動作確認してから使ってください。</p>
     </div>
   </div>
   <div id="toastMessage" class="toast" role="status" aria-live="polite"></div>
