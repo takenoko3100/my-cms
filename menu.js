@@ -21,6 +21,8 @@ let currentCompany = null;
 ======================================== */
 
 async function initMenuPage() {
+  if (!await window.serviceAccess.check(supabaseClient,{slug:getCompanySlug()})) return;
+
 
   const company =
     await loadCompany();
@@ -178,7 +180,6 @@ function renderCompany(
   document.body.dataset.theme =
     company.theme ||
     "default";
-  window.sasuliePalette.apply(company);
 
 }
 

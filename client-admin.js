@@ -959,7 +959,7 @@ function bindDisplaySettings() {
 }
 
 // Operator-only contract records. No public/editor cutoff or billing changes.
-const CONTRACT_FIELDS = "company_id,billing_plan,service_status,start_date,end_date,updated_at";
+const CONTRACT_FIELDS = "company_id,billing_plan,service_status,start_date,end_date,updated_at,gate_enabled";
 const CONTRACT_PLANS = Object.freeze({monthly:"月払い",annual:"年払い"});
 const CONTRACT_STATUSES = Object.freeze({active:"利用中",ending:"終了予定",ended:"利用終了"});
 let contractRecords = new Map();
@@ -1023,7 +1023,7 @@ async function loadContracts() {
       for(const record of data||[])next.set(String(record.company_id),record);
     }
     contractRecords=next;contractsState="ready";filter.disabled=false;
-    status.textContent=`契約登録 ${next.size}件 ／ 未登録 ${clients.filter(c=>!next.has(String(c.id))).length}件。日付は日本時間・終了日当日までの記録です。`;
+    status.textContent=`契約登録 ${next.size}件 ／ 未登録 ${clients.filter(c=>!next.has(String(c.id))).length}件。日付は日本時間・終了日当日までです。停止機能のオン・オフも確認してください。`;
   } catch(error) {
     console.error("契約情報の取得エラー:",error);
     contractsState="error";filter.value="";
@@ -1051,6 +1051,9 @@ function createContractSummary(companyId) {
   const dates=document.createElement("p");dates.className="contract-dates";
   dates.textContent=`${contractDateLabel(record.start_date)} 〜 ${contractDateLabel(record.end_date)}（当日まで）`;
   box.append(badge,plan,dates);
+  const gateLabel=document.createElement("p");gateLabel.className="contract-gate-label";
+  gateLabel.textContent=record.gate_enabled ? (gateWouldStop(record) ? "公開・編集：停止対象" : "公開・編集：終了日に停止（オン）") : "公開・編集：自動停止オフ（記録のみ）";
+  box.appendChild(gateLabel);
   const left=contractDaysLeft(record);
   if(record.service_status!=="ended" && left!==null && left<=30) {
     const notice=document.createElement("p");notice.className="contract-deadline";
@@ -1065,6 +1068,7 @@ function contractError(message) {
   feedback.textContent=message;feedback.classList.add("is-error");
 }
 function updateContractPeriodHelp() {
+  updateServiceGatePreview();
   const plan=document.getElementById("contractPlan").value;
   const start=document.getElementById("contractStart").value;
   const expected=annualEndDate(start);
@@ -1092,6 +1096,7 @@ function openContractModal(companyId) {
   document.getElementById("contractStatus").value=contractOriginal?.service_status||"active";
   document.getElementById("contractStart").value=contractOriginal?.start_date||"";
   document.getElementById("contractEnd").value=contractOriginal?.end_date||"";
+  document.getElementById("contractGateEnabled").checked=contractOriginal?.gate_enabled===true;
   const feedback=document.getElementById("contractFeedback");feedback.classList.remove("is-error");feedback.textContent="";
   document.getElementById("contractFields").disabled=contractsState!=="ready";
   document.getElementById("saveContractButton").disabled=contractsState!=="ready";
@@ -1122,10 +1127,16 @@ async function saveContract(event) {
   const service_status=document.getElementById("contractStatus").value;
   const start_date=document.getElementById("contractStart").value;
   const end_date=document.getElementById("contractEnd").value;
+  const gate_enabled=document.getElementById("contractGateEnabled").checked;
   if(!Object.hasOwn(CONTRACT_PLANS,billing_plan)||!Object.hasOwn(CONTRACT_STATUSES,service_status)||!dateParts(start_date)||!dateParts(end_date)) {
     contractError("プラン・利用状況・日付を確認してください。");return;
   }
   if(end_date<start_date) {contractError("利用終了日は、契約開始日以降の日付にしてください。");document.getElementById("contractEnd").focus();return;}
+  const nextGate={gate_enabled,service_status,end_date};
+  if (gateWouldStop(nextGate) && !gateWouldStop(contractOriginal)) {
+    const company=clients.find(c=>String(c.id)===id);
+    if (!window.confirm(`「${company?.name || "この会社"}」の公開サイトと編集機能を停止します。\n\n保存するとすぐに停止対象になります。請求の停止は別途必要です。\nこの内容で保存しますか？`)) return;
+  }
   contractSaving=true;
   const button=document.getElementById("saveContractButton");setBusy(button,true,"保存中…");
   document.getElementById("contractFields").disabled=true;
@@ -1135,7 +1146,7 @@ async function saveContract(event) {
   let saved=false;
   try {
     await requireCreatorIdentity();
-    const changes={billing_plan,service_status,start_date,end_date};
+    const changes={billing_plan,service_status,start_date,end_date,gate_enabled};
     let result;
     if(contractOriginal) {
       result=await supabaseClient.from("client_contracts").update(changes).eq("company_id",id).eq("updated_at",contractOriginal.updated_at).select(CONTRACT_FIELDS).maybeSingle();
@@ -1163,8 +1174,8 @@ async function saveContract(event) {
   }
   if(saved) {
     renderClients();closeContractModal();
-    document.getElementById("contractLoadStatus").textContent=`契約登録 ${contractRecords.size}件 ／ 未登録 ${clients.filter(c=>!contractRecords.has(String(c.id))).length}件。日付は日本時間・終了日当日までの記録です。`;
-    showToast("契約情報を保存しました。公開・編集・請求の状態は変わりません。");
+    document.getElementById("contractLoadStatus").textContent=`契約登録 ${contractRecords.size}件 ／ 未登録 ${clients.filter(c=>!contractRecords.has(String(c.id))).length}件。日付は日本時間・終了日当日までです。停止機能のオン・オフも確認してください。`;
+    showToast("契約情報と停止設定を保存しました。請求の変更は別途必要です。");
   }
 }
 function bindContractEvents() {
@@ -1174,7 +1185,7 @@ function bindContractEvents() {
   document.getElementById("cancelContractButton").addEventListener("click",closeContractModal);
   document.querySelector("[data-close-contract-modal]").addEventListener("click",closeContractModal);
   document.addEventListener("keydown",event=>{if(event.key==="Escape")closeContractModal();});
-  for(const id of ["contractPlan","contractStart","contractEnd"])document.getElementById(id).addEventListener("change",updateContractPeriodHelp);
+  for(const id of ["contractPlan","contractStart","contractEnd","contractStatus","contractGateEnabled"])document.getElementById(id).addEventListener("change",updateContractPeriodHelp);
   document.getElementById("suggestAnnualEndButton").addEventListener("click",()=>{
     if(contractSaving||document.getElementById("contractPlan").value!=="annual")return;
     const end=annualEndDate(document.getElementById("contractStart").value);
@@ -1188,4 +1199,20 @@ function bindContractEvents() {
     if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
     else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
   });
+}
+
+function gateWouldStop(record) {
+  return Boolean(record?.gate_enabled && (record.service_status==="ended" || (dateParts(record.end_date) && record.end_date<japanToday())));
+}
+function updateServiceGatePreview() {
+  const enabled=document.getElementById("contractGateEnabled").checked;
+  const status=document.getElementById("contractStatus").value;
+  const end=document.getElementById("contractEnd").value;
+  const preview=document.getElementById("serviceGatePreview");
+  const stop=gateWouldStop({gate_enabled:enabled,service_status:status,end_date:end});
+  preview.dataset.stops=String(stop);
+  preview.textContent=!enabled ? "停止機能はオフです。契約情報を記録するだけで、公開・編集は止まりません。"
+    : stop ? "保存するとすぐに、この会社の公開・編集が停止対象になります。"
+    : dateParts(end) ? `${contractDateLabel(end)}（日本時間）の終わりまでは利用でき、翌日から公開・編集を停止します。`
+    : "利用終了日を入力すると、停止する日を確認できます。";
 }

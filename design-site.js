@@ -161,6 +161,8 @@ companyTitle: "ご依頼について",
 ======================================== */
 
 async function initSite() {
+  if (!await window.serviceAccess.check(supabaseClient,{slug:getCompanySlug()})) return;
+
   try {
 
   const loaded =
@@ -1831,7 +1833,8 @@ function setText(
    編集・保存の権限は編集画面とSupabase側で確認する。
 ======================================== */
 
-(() => {
+(async () => {
+  if (!await window.serviceAccess.ready) return;
   if (document.getElementById("siteAdminAccessLink")) return;
 
   const link = document.createElement("a");

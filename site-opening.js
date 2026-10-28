@@ -1,6 +1,7 @@
-﻿/* CÈDREの公開サイト専用オープニング。認証やデータベースは変更しない。 */
-(() => {
+/* CÈDREの公開サイト専用オープニング。認証やデータベースは変更しない。 */
+(async () => {
   "use strict";
+  if (!await window.serviceAccess.ready) return;
 
   const dialog = document.getElementById("siteOpening");
   const video = document.getElementById("siteOpeningVideo");

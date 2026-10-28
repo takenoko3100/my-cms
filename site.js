@@ -1,4 +1,4 @@
-﻿const SUPABASE_URL =
+const SUPABASE_URL =
   "https://cshieomhxpuaclggicle.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
@@ -133,6 +133,8 @@ companyTitle: "ご依頼について",
 ======================================== */
 
 async function initSite() {
+  if (!await window.serviceAccess.check(supabaseClient,{slug:getCompanySlug()})) return;
+
 
   const loaded =
     await loadCompanyInfo();
@@ -1811,7 +1813,8 @@ function setText(
    編集・保存の権限は編集画面とSupabase側で確認する。
 ======================================== */
 
-(() => {
+(async () => {
+  if (!await window.serviceAccess.ready) return;
   if (document.getElementById("siteAdminAccessLink")) return;
 
   const link = document.createElement("a");

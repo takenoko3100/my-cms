@@ -151,11 +151,16 @@ async function init() {
   currentEditorEmail = session.user.email || "";
   await loadDesignAdminPermission();
   renderEditorAccount();
+  const serviceSlug=window.sasulieURLs.company();
+  const serviceContext={editor:true,operator:canManageSiteDesign};
+  if (serviceSlug && !await window.serviceAccess.check(supabaseClient,{...serviceContext,slug:serviceSlug})) return;
   const companyId = await resolveCompanyId(session.user.id);
   if (!companyId) {
+    if (!serviceSlug) await window.serviceAccess.check(supabaseClient,serviceContext);
     alert("管理できる店舗が設定されていません。");
     return;
   }
+  if (!serviceSlug && !await window.serviceAccess.check(supabaseClient,{...serviceContext,companyId})) return;
   currentCompanyId = companyId;
   bindEvents();
   await Promise.all([

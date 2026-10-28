@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>顧客管理 | sasulie</title>
-  <link rel="stylesheet" href="/client-admin.css?v=contracts-1">
+  <link rel="stylesheet" href="/client-admin.css?v=service-access-1">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/client-admin.js?v=contracts-1" defer></script>
+  <script src="/client-admin.js?v=service-access-1" defer></script>
   <script src="/company-urls.js?v=2"></script>
   <script src="/company-settings.js?v=2"></script>
   <link rel="stylesheet" href="/account-context.css?v=1">
@@ -73,7 +73,7 @@
 
       <section class="contract-overview" aria-labelledby="contractsOverviewTitle">
         <div><p class="eyebrow">CONTRACT RECORDS</p><h2 id="contractsOverviewTitle">契約期間を、ひと目で。</h2><p>運営者だけが見られる契約メモです。新しい顧客も、最初は「未登録」から始められます。</p></div>
-        <p class="contract-scope-note">この画面は記録用です。「利用終了」や終了日を保存しても、サイト公開・編集・請求は自動で停止しません。</p>
+        <p class="contract-scope-note">停止機能をオンにした会社だけ、利用終了日の翌日（日本時間）から公開・編集を停止します。「利用終了」での保存は即時停止です。請求は自動で止まりません。</p>
         <p id="contractLoadStatus" role="status" aria-live="polite">契約情報を確認しています。</p>
       </section>
       <section class="client-section" id="clientsSection" aria-labelledby="clientsTitle">
@@ -124,7 +124,7 @@
     <div class="modal-backdrop" data-close-contract-modal></div>
     <div class="modal-panel contract-panel" role="dialog" aria-modal="true" aria-labelledby="contractModalTitle" tabindex="-1">
       <div class="modal-header"><div><p class="eyebrow">CONTRACT RECORD</p><h2 id="contractModalTitle">契約情報を管理</h2><p id="contractCompanyName" class="contract-company-name"></p></div><button id="closeContractButton" class="icon-button modal-close" type="button" aria-label="契約管理を閉じる">×</button></div>
-      <p class="contract-scope-note">契約情報の記録だけを行います。保存しても、サイト公開・編集・請求の状態は変わりません。</p>
+      <p class="contract-scope-note">停止機能がオフなら記録のみ。オンにすると、利用終了日の翌日から公開・編集を停止します。「利用終了」はすぐに停止します。請求の停止は別途必要です。</p>
       <form id="contractForm">
         <fieldset id="contractFields" disabled>
           <div class="form-grid">
@@ -132,6 +132,11 @@
             <div class="form-group"><label for="contractStatus">利用状況（記録）</label><select id="contractStatus" required><option value="active">利用中</option><option value="ending">終了予定</option><option value="ended">利用終了</option></select></div>
             <div class="form-group"><label for="contractStart">今回の契約開始日</label><input id="contractStart" type="date" min="0001-01-01" max="9999-12-31" required></div>
             <div class="form-group"><label for="contractEnd">今回の利用終了日</label><input id="contractEnd" type="date" min="0001-01-01" max="9999-12-31" aria-describedby="contractEndHelp" required><p class="help-text" id="contractEndHelp">この日を含めて利用できる期間として記録します。日付は日本時間です。</p></div>
+          </div>
+          <div class="service-gate-setting">
+            <label class="service-gate-label" for="contractGateEnabled"><input id="contractGateEnabled" type="checkbox"><span>終了日に公開・編集を停止する</span></label>
+            <p class="help-text">まずはテスト会社だけで確認してください。オフに戻すと、公開・編集の停止を解除できます。</p>
+            <p id="serviceGatePreview" class="service-gate-preview" role="status" aria-live="polite"></p>
           </div>
           <button id="suggestAnnualEndButton" type="button" class="secondary-button" hidden>年払いの終了日を入力する</button>
           <p id="contractPeriodHelp" class="help-text" aria-live="polite">月払いは、支払いの対象となる期間を入力してください。</p>
