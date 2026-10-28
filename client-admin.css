@@ -174,3 +174,15 @@ input::placeholder { color:#98a197; }
 .service-gate-preview{font-size:12px;line-height:1.9;color:#48623e;margin:8px 0 0}
 .service-gate-preview[data-stops="true"]{color:#8b5733;font-weight:600}
 .client-contract-summary .contract-gate-label{font-size:11px;color:#576c4d;margin:9px 0 0}
+
+/* Confirm immediate company cutoff inside the form, without native dialogs. */
+.contract-stop-confirmation{margin:22px 0 18px;padding:19px;border:1px solid #d5bd9f;border-radius:12px;background:#fbf6ee;color:#644d32;scroll-margin-block:18px}
+.contract-stop-confirmation[hidden],.contract-form-actions[hidden]{display:none!important}
+.contract-stop-confirmation h3{margin:0 0 12px;font-size:16px;line-height:1.8;color:#705136;outline:none}
+.contract-stop-confirmation p{font-size:12px;line-height:1.9;margin:10px 0 0;overflow-wrap:anywhere}
+.contract-stop-summary{font-weight:600}
+.contract-stop-actions{display:flex;gap:12px;margin-top:18px}
+.contract-stop-actions button{flex:1;min-height:48px;line-height:1.7}
+.contract-stop-actions .primary-button{background:#805836;border-color:#805836}
+.contract-stop-actions .primary-button:hover{background:#68472c}
+@media(max-width:600px){.contract-stop-confirmation{padding:16px}.contract-stop-actions{flex-direction:column-reverse}.contract-stop-actions button{width:100%}}

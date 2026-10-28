@@ -968,6 +968,7 @@ let contractCompanyId = null;
 let contractOriginal = null;
 let contractSaving = false;
 let contractConflict = false;
+let pendingContractStopKey = null;
 let contractPreviousFocus = null;
 let contractInertStates = [];
 
@@ -1068,6 +1069,7 @@ function contractError(message) {
   feedback.textContent=message;feedback.classList.add("is-error");
 }
 function updateContractPeriodHelp() {
+  resetContractStopConfirmation();
   updateServiceGatePreview();
   const plan=document.getElementById("contractPlan").value;
   const start=document.getElementById("contractStart").value;
@@ -1087,6 +1089,7 @@ function openContractModal(companyId) {
   if(contractSaving)return;
   const client=clients.find(c=>String(c.id)===String(companyId));if(!client)return;
   if(document.getElementById("editClientModal").classList.contains("open"))closeEditClientModal();
+  resetContractStopConfirmation();
   contractPreviousFocus=document.activeElement;
   contractCompanyId=String(client.id);
   contractOriginal=contractRecords.get(contractCompanyId)||null;
@@ -1111,13 +1114,14 @@ function closeContractModal() {
   if(contractSaving)return;
   const modal=document.getElementById("contractModal");if(!modal.classList.contains("open"))return;
   const companyId=contractCompanyId;
+  resetContractStopConfirmation();
   modal.classList.remove("open");modal.setAttribute("aria-hidden","true");
   for(const item of contractInertStates)item.el.inert=item.inert;
   contractInertStates=[];contractCompanyId=null;contractOriginal=null;
   const fallback=[...document.querySelectorAll(".client-card")].find(c=>c.dataset.companyId===companyId)?.querySelector(".contract-open-button");
   if(contractPreviousFocus?.isConnected)contractPreviousFocus.focus();else (fallback||document.getElementById("refreshClientsButton")).focus();
 }
-async function saveContract(event) {
+async function saveContract(event,confirmedStopKey=null) {
   event.preventDefault();
   if(contractSaving||contractConflict||contractsState!=="ready"||!contractCompanyId)return;
   if(!document.getElementById("contractForm").reportValidity())return;
@@ -1133,10 +1137,12 @@ async function saveContract(event) {
   }
   if(end_date<start_date) {contractError("利用終了日は、契約開始日以降の日付にしてください。");document.getElementById("contractEnd").focus();return;}
   const nextGate={gate_enabled,service_status,end_date};
-  if (gateWouldStop(nextGate) && !gateWouldStop(contractOriginal)) {
-    const company=clients.find(c=>String(c.id)===id);
-    if (!window.confirm(`「${company?.name || "この会社"}」の公開サイトと編集機能を停止します。\n\n保存するとすぐに停止対象になります。請求の停止は別途必要です。\nこの内容で保存しますか？`)) return;
+  const stopKey=JSON.stringify([id,billing_plan,service_status,start_date,end_date,gate_enabled]);
+  if (gateWouldStop(nextGate) && !gateWouldStop(contractOriginal) && confirmedStopKey!==stopKey) {
+    showContractStopConfirmation(stopKey,{id,billing_plan,service_status,start_date,end_date});
+    return;
   }
+  resetContractStopConfirmation();
   contractSaving=true;
   const button=document.getElementById("saveContractButton");setBusy(button,true,"保存中…");
   document.getElementById("contractFields").disabled=true;
@@ -1181,6 +1187,15 @@ async function saveContract(event) {
 function bindContractEvents() {
   document.getElementById("contractStatusFilter").addEventListener("change",renderClients);
   document.getElementById("contractForm").addEventListener("submit",saveContract);
+  document.getElementById("confirmContractStopButton").addEventListener("click",event=>{
+    if(!pendingContractStopKey || contractSaving || contractConflict)return;
+    void saveContract(event,pendingContractStopKey);
+  });
+  document.getElementById("cancelContractStopButton").addEventListener("click",()=>{
+    resetContractStopConfirmation();
+    document.getElementById("saveContractButton").focus();
+  });
+  document.getElementById("contractFields").addEventListener("input",()=>resetContractStopConfirmation());
   document.getElementById("closeContractButton").addEventListener("click",closeContractModal);
   document.getElementById("cancelContractButton").addEventListener("click",closeContractModal);
   document.querySelector("[data-close-contract-modal]").addEventListener("click",closeContractModal);
@@ -1215,4 +1230,26 @@ function updateServiceGatePreview() {
     : stop ? "保存するとすぐに、この会社の公開・編集が停止対象になります。"
     : dateParts(end) ? `${contractDateLabel(end)}（日本時間）の終わりまでは利用でき、翌日から公開・編集を停止します。`
     : "利用終了日を入力すると、停止する日を確認できます。";
+}
+
+// In-page confirmation works even when browser confirm() dialogs are blocked.
+function resetContractStopConfirmation() {
+  pendingContractStopKey=null;
+  const panel=document.getElementById("contractStopConfirmation");
+  const actions=document.getElementById("contractFormActions");
+  if(panel)panel.hidden=true;
+  if(actions)actions.hidden=false;
+}
+function showContractStopConfirmation(key,values) {
+  const company=clients.find(c=>String(c.id)===values.id);
+  const summary=document.getElementById("contractStopSummary");
+  summary.textContent=`対象：${company?.name || "この会社"} ／ ${CONTRACT_PLANS[values.billing_plan]} ／ ${CONTRACT_STATUSES[values.service_status]} ／ ${contractDateLabel(values.start_date)} 〜 ${contractDateLabel(values.end_date)}`;
+  pendingContractStopKey=key;
+  const feedback=document.getElementById("contractFeedback");
+  feedback.textContent="";feedback.classList.remove("is-error");
+  const panel=document.getElementById("contractStopConfirmation");
+  panel.hidden=false;
+  document.getElementById("contractFormActions").hidden=true;
+  document.getElementById("contractStopTitle").focus({preventScroll:true});
+  panel.scrollIntoView({block:"nearest",behavior:"auto"});
 }

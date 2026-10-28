@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>顧客管理 | sasulie</title>
-  <link rel="stylesheet" href="/client-admin.css?v=service-access-1">
+  <link rel="stylesheet" href="/client-admin.css?v=service-access-2">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/client-admin.js?v=service-access-1" defer></script>
+  <script src="/client-admin.js?v=service-access-2" defer></script>
   <script src="/company-urls.js?v=2"></script>
   <script src="/company-settings.js?v=2"></script>
   <link rel="stylesheet" href="/account-context.css?v=1">
@@ -143,7 +143,13 @@
           <p class="help-text">解約の連絡を受けたら「終了予定」、提供終了を確認したら「利用終了」として記録できます。更新時は、今回の契約期間を新しい日付に変更してください。</p>
         </fieldset>
         <p id="contractFeedback" class="operation-feedback" role="status" aria-live="polite"></p>
-        <div class="contract-form-actions"><button id="cancelContractButton" class="secondary-button" type="button">閉じる</button><button id="saveContractButton" class="primary-button" type="submit" disabled>契約情報を保存</button></div>
+        <section id="contractStopConfirmation" class="contract-stop-confirmation" aria-labelledby="contractStopTitle" hidden>
+          <h3 id="contractStopTitle" tabindex="-1">公開・編集を停止して保存しますか？</h3>
+          <p id="contractStopSummary" class="contract-stop-summary"></p>
+          <p>保存すると、この会社の公開サイトと編集機能が停止対象になります。請求の停止は別途必要です。</p>
+          <div class="contract-stop-actions"><button id="cancelContractStopButton" type="button" class="secondary-button">戻って見直す</button><button id="confirmContractStopButton" type="button" class="primary-button">停止して保存</button></div>
+        </section>
+        <div id="contractFormActions" class="contract-form-actions"><button id="cancelContractButton" class="secondary-button" type="button">閉じる</button><button id="saveContractButton" class="primary-button" type="submit" disabled>契約情報を保存</button></div>
       </form>
       <p class="help-text">ここには各社の現在の契約期間を1件ずつ保存します。決済・入金の確認や、過去の契約履歴を管理する機能ではありません。テスト会社で動作確認してから使ってください。</p>
     </div>
