@@ -3,3 +3,18 @@
 @media(max-width:850px){.site-nav-links{gap:17px}.site-logo{font-size:21px}.hero.has-image{min-height:550px;padding-bottom:65px}.hero-visual{height:450px}.hero-overlay h1{font-size:39px}.hero-overlay{padding-left:0}main>section{padding-top:60px;padding-bottom:60px}h2{font-size:27px}#siteMenuList{gap:20px}.menu-card h3{font-size:17px}#company>p:not(.section-label){grid-template-columns:80px 1fr;gap:12px}#about,#company{gap:7%}}
 @media(max-width:600px){.preview-note{font-size:9px;padding:9px 15px}.site-nav{padding:25px 24px 15px}.site-nav-inner{display:block}.site-logo{display:block;font-size:23px;max-width:100%}.site-nav-links{justify-content:flex-start;gap:5px 20px;margin-top:18px}.site-nav-links a{font-size:10px;padding:7px 0}.hero,.hero.has-image{display:flex;flex-direction:column;padding:30px 24px 50px;gap:30px;min-height:0;align-items:stretch}.hero-overlay{padding:0 8px}.hero-overlay h1{font-size:38px;line-height:1.65;margin-bottom:22px}.hero-kicker{font-size:9px;letter-spacing:.1em;margin-bottom:19px}.hero-overlay>p:not(.hero-kicker){font-size:11px;margin-bottom:15px}.hero-visual{height:390px;width:100%;border-radius:200px 200px 0 0}.hero-link{font-size:11px;gap:35px}.hero:not(.has-image){padding-top:50px;padding-bottom:60px}main{padding:0 24px}main>section{padding:48px 0}.section-label{font-size:10px;margin-bottom:12px}h2{font-size:27px;line-height:1.7;margin-bottom:24px}#about{display:block}#about .about-heading h2{margin-bottom:25px}.about-content p{font-size:13px;line-height:2.2}#siteMenuList{grid-template-columns:1fr;gap:30px;margin-top:30px}.menu-card{padding-top:20px}.menu-card h3{font-size:20px;margin-bottom:18px}.menu-card img{margin:18px 0}.menu-card>p{font-size:12px}#sitePortfolioList{grid-template-columns:1fr;gap:30px}#company{display:block}#company>p:not(.section-label){grid-template-columns:85px 1fr;gap:14px;font-size:12px;padding:18px 0}#access iframe{height:280px}.contact-button{font-size:11px;padding:14px 22px}#siteNewsList{grid-template-columns:1fr;gap:8px}.news h3{font-size:18px}.news p{font-size:12px}.site-footer{padding:35px 24px 90px}.site-footer h2{font-size:22px}.site-footer p{font-size:10px}.load-status{font-size:12px;padding:25px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+
+/* tsuzuri-note: introduction heading above the copy on every screen size. */
+body[data-company-slug="tsuzuri-note"] #about {
+  display: block;
+}
+body[data-company-slug="tsuzuri-note"] #about > .about-heading,
+body[data-company-slug="tsuzuri-note"] #about > .about-content {
+  max-width: 48rem;
+  min-width: 0;
+  margin-inline: auto;
+}
+body[data-company-slug="tsuzuri-note"] #about .about-heading h2 {
+  margin-bottom: 28px;
+}

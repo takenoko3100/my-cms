@@ -254,6 +254,9 @@ function renderCompanyInfo(
   data
 ) {
 
+  // Scope presentation to the company actually loaded from the database.
+  document.body.dataset.companySlug = data.slug || "";
+
   setText(
     "siteCompanyName",
     data.name ?? ""
