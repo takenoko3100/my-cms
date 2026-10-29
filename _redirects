@@ -23,3 +23,9 @@
 /c/:company/_design/natural/ /natural-site 200
 /c/:company/_design/:design /design-site 200
 /c/:company/_design/:design/ /design-site 200
+
+# tsuzuri-note product/order guide pages; no checkout or payment endpoints.
+/c/tsuzuri-note/products /products 200
+/c/tsuzuri-note/products/ /products 200
+/c/tsuzuri-note/order /order 200
+/c/tsuzuri-note/order/ /order 200

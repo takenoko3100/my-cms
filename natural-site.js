@@ -545,6 +545,8 @@ if (
     }
   }
 
+  applyTsuzuriShopPresentation(data);
+
   if (data.name) {
     document.title =
       data.name;
@@ -779,8 +781,7 @@ async function loadMenuItems() {
   }
 
   const itemsToShow =
-  currentCompany?.business_type ===
-  "restaurant"
+  (currentCompany?.business_type === "restaurant" || currentCompany?.slug === "tsuzuri-note")
     ? [
         ...data.filter(
           (item) =>
@@ -967,6 +968,14 @@ async function loadMenuItems() {
 
       }
 
+
+      if (currentCompany?.slug === "tsuzuri-note") {
+        const more = document.createElement("a");
+        more.className = "tsuzuri-item-link";
+        more.href = "/c/tsuzuri-note/products#" + encodeURIComponent("product-" + String(item.id));
+        more.textContent = "商品を見る →";
+        div.appendChild(more);
+      }
 
       menuList.appendChild(
         div
@@ -1955,3 +1964,39 @@ function safeNaturalImageUrl(value) {
 }
 
 })();
+
+
+// Presentation only. Company membership, service checks and RLS stay authoritative.
+function applyTsuzuriShopPresentation(company) {
+  if (company.slug !== "tsuzuri-note") return;
+  const products = "/c/tsuzuri-note/products";
+  const order = "/c/tsuzuri-note/order";
+  for (const id of ["company", "access"]) {
+    const section = document.getElementById(id);
+    if (section) section.hidden = true;
+  }
+  document.getElementById("siteMap")?.removeAttribute("src");
+  for (const id of ["siteAddress", "footerAddress", "footerHours", "footerClosedDays"]) {
+    const element = document.getElementById(id);
+    if (element) { element.hidden = true; element.textContent = ""; }
+  }
+  document.querySelectorAll('a[href="#access"]').forEach(a => {a.hidden=true;});
+  const navProduct = document.getElementById("navServiceLink");
+  if (navProduct) {navProduct.href=products;navProduct.textContent="商品一覧";}
+  const navOrder = document.getElementById("navCompanyLink");
+  if (navOrder) {navOrder.href=order;navOrder.textContent="ご注文について";}
+  const heroLink = document.querySelector(".hero-link");
+  if (heroLink) {heroLink.href=products;heroLink.textContent="商品一覧を見る ↗";}
+  const more = document.getElementById("menuMoreLink");
+  if (more) {more.href=products;more.textContent="すべての商品を見る →";}
+  const wrap = document.getElementById("menuMoreWrap");
+  if (wrap) wrap.hidden=false;
+  const contact = document.getElementById("contact");
+  if (contact) contact.hidden = !Array.from(contact.querySelectorAll(".contact-button")).some(a =>
+    !a.hidden && a.style.display !== "none" && /^(?:mailto:|tel:|https:\/\/)/.test(a.getAttribute("href") || ""));
+  const footer = document.querySelector(".footer-links");
+  if (footer && !footer.querySelector(".tsuzuri-order-link")) {
+    const link=document.createElement("a");link.className="tsuzuri-order-link";
+    link.href=order;link.textContent="ご注文について";footer.appendChild(link);
+  }
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://cshieomhxpuaclggicle.supabase.co wss://cshieomhxpuaclggicle.supabase.co; img-src 'self' data: blob: https://cshieomhxpuaclggicle.supabase.co; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+  <title>ご注文について | tsuzuri-note</title>
+  <link rel="stylesheet" href="/tsuzuri-shop.css?v=tsuzuri-shop-2">
+  <link rel="stylesheet" href="/service-access.css?v=1">
+  <script src="/service-access.js?v=1"></script>
+  <script src="/site-palette.js?v=1"></script>
+</head>
+<body data-shop-page="order" data-palette-page="natural">
+  <a class="skip-link" href="#main">本文へ進む</a>
+  <header class="shop-header">
+    <a class="shop-logo" href="/c/tsuzuri-note">tsuzuri-note</a>
+    <nav aria-label="ページ案内">
+      <a href="/c/tsuzuri-note">ホーム</a>
+      <a href="/c/tsuzuri-note/products" >商品一覧</a>
+      <a href="/c/tsuzuri-note/order" aria-current="page">ご注文について</a>
+    </nav>
+  </header>
+  <main id="main" tabindex="-1">
+    <p class="eyebrow">HOW TO ORDER</p>
+    <h1>ご注文について</h1>
+    <p id="shopLoadStatus" class="load-status" role="status">読み込んでいます…</p>
+    <button type="button" class="button secondary" id="shopRetry" hidden>もう一度読み込む</button>
+    <div id="shopPageContent" hidden>
+
+      <p class="page-lead">minne・Creemaから、お好きな販売サイトをお選びいただけます。<br>各販売ページで作品の内容をご確認ください。</p>
+      <section id="selectedProduct" class="selected-product" aria-label="選んだ作品" hidden></section>
+      <section class="order-steps" aria-labelledby="orderStepsTitle"><h2 id="orderStepsTitle">ご購入までの流れ</h2>
+        <ol><li><span>01</span><div><h3>お気に入りを選ぶ</h3><p>作品の柄や、ご希望のサイズを確認します。</p></div></li><li><span>02</span><div><h3>販売サイトを選ぶ</h3><p>minne・Creemaの販売ページで、価格・送料・発送予定・名入れや写真の対応内容をご確認ください。</p></div></li><li><span>03</span><div><h3>販売サイトで注文・お支払い</h3><p>お選びの販売ページの案内に沿って、ご注文手続きを進めます。</p></div></li></ol>
+      </section>
+      <section class="checkout-guide" aria-labelledby="checkoutTitle"><p class="eyebrow">SHOPPING</p><h2 id="checkoutTitle">販売サイトを選ぶ</h2><p>ご注文とお支払いはminne・Creemaの各販売サイトで行います。このページで注文は確定しません。</p><div class="marketplace-choices"><article class="marketplace-card"><h3>minne</h3><p id="minnePending" class="pending-note">minneショップへのリンクは準備中です。</p><a id="minneShopLink" class="button primary" target="_blank" rel="noopener noreferrer" hidden>minneで作品を見る ↗</a></article><article class="marketplace-card"><h3>Creema</h3><p id="creemaPending" class="pending-note">Creemaショップへのリンクは準備中です。</p><a id="creemaShopLink" class="button primary" target="_blank" rel="noopener noreferrer" hidden>Creemaで作品を見る ↗</a></article></div><p id="shopSelectionNote" hidden>選んだ作品を販売サイトのショップで探して、サイズやオプションをご確認ください。</p></section>
+      <section class="purchase-notes" aria-labelledby="purchaseNotesTitle"><p class="eyebrow">PLEASE READ</p><h2 id="purchaseNotesTitle">ご購入前のご案内</h2>
+        <details><summary>サイズ・クリアケースについて</summary><div><p>母子手帳のサイズは自治体によって異なります。A6・B6の表記だけでなく、お手元の手帳の実寸をご確認ください。</p><p>クリアケースは既製品です。手帳やカバーとのサイズが合うかをご確認ください。単品・カバーとのセットで販売予定です。</p></div></details>
+        <details><summary>素材・仕上がりについて</summary><div><p>フォトマット紙（厚さ0.23mm）に家庭用プリンターで印刷し、一つずつ手作業でカットしています。</p><p>画面上の色と実物の色には多少の違いがあり、仕上がりにも個体差があります。</p><p>紙製品のため、水濡れや強い摩擦にご注意ください。</p></div></details>
+        <details><summary>デザイン・名入れ・写真について</summary><div><p>デザインにはAIも活用しています。名入れ・写真入りのご注文は、Canvaで一つずつ手作業で仕上げています。</p><p>お預かりしたお写真をAIに読み込ませることはありません。ご注文品の制作にのみ使用し、取引完了後に制作データを削除します。</p></div></details>
+        <details><summary>価格・送料・発送について</summary><div><p>各販売サイトの作品ページで、価格・送料・発送までの目安をご案内します。名入れや写真などのオプション、キャンセル・返品の条件も、注文前に販売ページでご確認ください。</p></div></details>
+      </section>
+      <p class="back-products"><a class="button secondary" href="/c/tsuzuri-note/products">商品一覧へ戻る</a></p>
+
+    </div>
+  </main>
+  <footer class="shop-footer"><a href="/c/tsuzuri-note">tsuzuri-note</a><p>家族の大切な記録に、やさしい彩りを。</p></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/company-urls.js?v=2"></script>
+  <script src="/company-settings.js?v=2"></script>
+  <script src="/tsuzuri-shop.js?v=tsuzuri-shop-2"></script>
+  <noscript><p class="load-status">作品を表示するにはJavaScriptを有効にしてください。</p></noscript>
+</body>
+</html>

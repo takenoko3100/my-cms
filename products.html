@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://cshieomhxpuaclggicle.supabase.co wss://cshieomhxpuaclggicle.supabase.co; img-src 'self' data: blob: https://cshieomhxpuaclggicle.supabase.co; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+  <title>商品一覧 | tsuzuri-note</title>
+  <link rel="stylesheet" href="/tsuzuri-shop.css?v=tsuzuri-shop-2">
+  <link rel="stylesheet" href="/service-access.css?v=1">
+  <script src="/service-access.js?v=1"></script>
+  <script src="/site-palette.js?v=1"></script>
+</head>
+<body data-shop-page="products" data-palette-page="natural">
+  <a class="skip-link" href="#main">本文へ進む</a>
+  <header class="shop-header">
+    <a class="shop-logo" href="/c/tsuzuri-note">tsuzuri-note</a>
+    <nav aria-label="ページ案内">
+      <a href="/c/tsuzuri-note">ホーム</a>
+      <a href="/c/tsuzuri-note/products" aria-current="page">商品一覧</a>
+      <a href="/c/tsuzuri-note/order" >ご注文について</a>
+    </nav>
+  </header>
+  <main id="main" tabindex="-1">
+    <p class="eyebrow">COLLECTION</p>
+    <h1>商品一覧</h1>
+    <p id="shopLoadStatus" class="load-status" role="status">読み込んでいます…</p>
+    <button type="button" class="button secondary" id="shopRetry" hidden>もう一度読み込む</button>
+    <div id="shopPageContent" hidden>
+
+      <p class="page-lead">毎日手に取るものに、お気に入りのデザインを。<br>母子手帳カバー・お薬手帳カバーの作品をご紹介します。</p>
+      <div class="catalog-tools"><label for="productSearch">作品を探す<input type="search" id="productSearch" placeholder="作品名・柄など" autocomplete="off"></label><p id="productCount" role="status"></p></div>
+      <nav id="productFilters" class="product-filters" aria-label="商品のカテゴリ"></nav>
+      <div id="productGrid" class="product-grid"></div>
+      <p id="productEmpty" class="empty-state" hidden></p>
+      <aside class="catalog-guide"><h2>ご購入の前に</h2><p>サイズや素材、お写真のお取り扱いについては、ご注文の案内をご覧ください。</p><a class="button secondary" href="/c/tsuzuri-note/order">ご注文について見る →</a></aside>
+
+    </div>
+  </main>
+  <footer class="shop-footer"><a href="/c/tsuzuri-note">tsuzuri-note</a><p>家族の大切な記録に、やさしい彩りを。</p></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/company-urls.js?v=2"></script>
+  <script src="/company-settings.js?v=2"></script>
+  <script src="/tsuzuri-shop.js?v=tsuzuri-shop-2"></script>
+  <noscript><p class="load-status">作品を表示するにはJavaScriptを有効にしてください。</p></noscript>
+</body>
+</html>

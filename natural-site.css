@@ -18,3 +18,16 @@ body[data-company-slug="tsuzuri-note"] #about > .about-content {
 body[data-company-slug="tsuzuri-note"] #about .about-heading h2 {
   margin-bottom: 28px;
 }
+
+body[data-company-slug="tsuzuri-note"] .menu-card img {
+  object-fit: contain;
+  background: var(--surface, #f0e8da);
+}
+body[data-company-slug="tsuzuri-note"] .tsuzuri-item-link {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 12px; color: var(--accent); border-bottom: 1px solid var(--line);
+}
+body[data-company-slug="tsuzuri-note"] .menu-more-link {
+  font-family: inherit; font-style: normal; font-size: 13px;
+}
+body[data-company-slug="tsuzuri-note"] .tsuzuri-order-link {margin-right: 20px;}
