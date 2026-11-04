@@ -1,0 +1,6 @@
+# Crawl policy is unchanged: public URLs are not blocked here.
+# Per-page indexing rules and application authentication remain separate.
+User-agent: *
+Disallow:
+
+Sitemap: https://sasulie.pages.dev/sitemap.xml
