@@ -45,3 +45,42 @@
 .bc-calendar .bc-status{min-height:28px;font-size:13px}
 .bc-calendar .bc-error{color:#a53524!important}
 @media(max-width:400px){.bc-calendar{width:calc(100% - 20px);padding:14px}.bc-calendar .bc-day{min-height:58px}.bc-calendar .bc-number{font-size:14px}.bc-calendar .bc-actions>button{flex:1 1 100%}}
+
+/* Public calendar: use the site's own colors, with no separate white card. */
+#businessCalendar.bc-public{
+ --bc-ink:var(--ink,#2f2924);--bc-muted:var(--muted,#756e64);
+ --bc-line:var(--line,#ded8cf);--bc-paper:var(--paper,#f6f4ef);--bc-accent:var(--accent,#746752);
+ background:transparent;border:0;border-top:1px solid var(--bc-line);border-radius:0;
+ box-shadow:none;width:100%;max-width:none;margin:0;padding:clamp(42px,6vw,76px) 0;
+ color:var(--bc-ink);font-family:inherit;
+}
+body[data-theme="visual-dark"] #businessCalendar.bc-public{
+ --bc-ink:var(--ink,#f4f4f0);--bc-muted:var(--muted,#b7b7b1);
+ --bc-line:var(--line,#404344);--bc-paper:var(--paper,#101111);--bc-accent:var(--accent,#cac7b9);
+}
+#businessCalendar h2{
+ font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-weight:500;
+ font-size:clamp(26px,3.4vw,38px);line-height:1.5;letter-spacing:.03em;margin:0 0 32px;
+}
+body:is([data-design="pop"],[data-design="minimal"],[data-design="clean"],[data-design="bold"],[data-design="magazine"],[data-design="split"],[data-design="gallery"]) #businessCalendar h2{font-family:inherit}
+#businessCalendar .bc-eyebrow{font-size:10px;font-weight:500;letter-spacing:.2em;margin:0 0 18px}
+#businessCalendar>div:not(.bc-exceptions),#businessCalendar>.bc-today-note,#businessCalendar>.bc-exceptions,#businessCalendar>.bc-help{max-width:640px;margin-left:auto;margin-right:auto}
+#businessCalendar .bc-today-note{background:transparent;border-radius:0;padding:0 0 18px;border-bottom:1px solid var(--bc-line);font-weight:500;font-size:14px}
+#businessCalendar .bc-month{margin:24px 0 16px}
+#businessCalendar .bc-month strong{font-weight:500;font-size:16px}
+#businessCalendar .bc-month button{color:var(--bc-ink);background:transparent;border-color:var(--bc-line);border-radius:50%;width:44px;padding:0}
+#businessCalendar .bc-grid{gap:4px}
+#businessCalendar .bc-weekday{color:var(--bc-muted)!important;font-size:11px;padding-bottom:10px}
+#businessCalendar .bc-day{background:transparent;border:0;border-bottom:1px solid var(--bc-line);border-radius:0;min-height:70px;padding:9px 1px;box-shadow:none}
+#businessCalendar .bc-number{font-size:16px;font-weight:500;font-variant-numeric:tabular-nums}
+#businessCalendar .bc-day-label{font-size:10px;color:var(--bc-muted)!important}
+#businessCalendar .bc-closed{
+ background:color-mix(in srgb,var(--bc-accent) 11%,transparent);
+ border-bottom-color:var(--bc-accent);
+}
+#businessCalendar .bc-closed :is(.bc-number,.bc-day-label){color:var(--bc-accent)!important}
+#businessCalendar .bc-today .bc-number{outline:1px solid var(--bc-accent);outline-offset:4px;border-radius:50%;min-width:20px;text-align:center}
+#businessCalendar .bc-hours-dot{color:var(--bc-accent)!important}
+#businessCalendar .bc-help{font-size:11px;margin-top:20px}
+#businessCalendar .bc-exceptions p{font-size:13px;border-bottom:1px solid var(--bc-line);padding:8px 0}
+@media(max-width:400px){#businessCalendar.bc-public{width:100%;padding:38px 0}#businessCalendar .bc-day{min-height:56px}#businessCalendar .bc-number{font-size:14px}#businessCalendar .bc-grid{gap:2px}#businessCalendar .bc-today-note{font-size:13px}}
