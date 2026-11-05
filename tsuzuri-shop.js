@@ -1,9 +1,9 @@
 /* Public product catalog and purchase guide. No order/payment storage. */
 (() => {
   "use strict";
-  // Set the verified public shop URL when sales are ready. Never use /account/products.
-  const MINNE_SHOP_URL = "";
-  const CREEMA_SHOP_URL = "";
+  // Public shop URLs supplied by the shop owner. Never use private account pages.
+  const MINNE_SHOP_URL = "https://minne.com/@tsuzuri-note";
+  const CREEMA_SHOP_URL = "https://www.creema.jp/c/tsuzuripaper/item/onsale";
   const COMPANY_SLUG = "tsuzuri-note";
   const SUPABASE_URL = "https://cshieomhxpuaclggicle.supabase.co";
   const KEY = "sb_publishable_6mt_8wZcBX9aKPR04NzNBQ_StAq2Qbe";
@@ -39,7 +39,7 @@
     try {
       const u=new URL(value);
       if(!["https://www.creema.jp","https://creema.jp"].includes(u.origin)||u.username||u.password)return null;
-      if(!/^\/(?:c\/[A-Za-z0-9_-]+|creator\/[1-9]\d*(?:\/item\/onsale)?|item\/[1-9]\d*\/detail)\/?$/.test(u.pathname))return null;
+      if(!/^\/(?:c\/[A-Za-z0-9_-]+(?:\/item\/onsale)?|creator\/[1-9]\d*(?:\/item\/onsale)?|item\/[1-9]\d*\/detail)\/?$/.test(u.pathname))return null;
       return u.href;
     } catch{return null;}
   }
