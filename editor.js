@@ -385,6 +385,7 @@ async function loadCompanyInfo() {
     return;
   }
   currentCompany = data;
+  window.sasulieCalendarEditor.mount({company:data,client:supabaseClient});
   renderCompanyInfo();
 }
 function renderCompanyInfo() {
@@ -582,6 +583,7 @@ async function saveCompanyInfo() {
     return;
   }
   currentCompany = data;
+  window.sasulieCalendarEditor.mount({company:data,client:supabaseClient});
   renderCompanyInfo();
   closeModal("companyModal");
   showToast("店舗情報を保存しました");

@@ -228,6 +228,7 @@ async function loadCompanyInfo() {
   renderCompanyInfo(
     data
   );
+  void window.sasuliePublicCalendar.mount({company:data,client:supabaseClient});
 
 
   return true;
