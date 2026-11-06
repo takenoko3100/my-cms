@@ -1,0 +1,27 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self';script-src 'self' https://cdn.jsdelivr.net https://challenges.cloudflare.com;style-src 'self';connect-src 'self' https://cshieomhxpuaclggicle.supabase.co https://challenges.cloudflare.com;frame-src https://challenges.cloudflare.com;img-src 'self' data:;object-src 'none';base-uri 'self';form-action 'self';upgrade-insecure-requests;">
+<meta name="robots" content="noindex,nofollow"><title>予約リクエスト</title><link rel="stylesheet" href="/reservations.css?v=1"><script src="/site-palette.js?v=1"></script>
+</head><body class="rb-page"><header><div><a id="rbBrand" class="rb-brand" href="/">予約リクエスト</a><a id="rbBack" href="/">お店に戻る ↗</a></div></header><main class="rb">
+<p class="rb-eyebrow">RESERVATION REQUEST</p><h1>予約リクエスト</h1>
+<p id="rbLoad" role="status">受付状況を確認しています…</p>
+<div id="rbContent" hidden>
+<p class="rb-important">このフォームの送信だけでは予約は確定しません。お店からの返信をお待ちください。</p>
+<p id="rbContact"></p><p class="rb-muted">日時は日本時間です。表示される日時は受付可能な希望日時で、空席・空き枠の保証ではありません。</p>
+<p id="rbStep" class="rb-steps" aria-label="予約リクエストの手順">ステップ1/3：入力</p>
+<form id="rbForm"><fieldset id="rbFields"><div class="rb-fields">
+<label>希望日（必須）<select id="rbDate" required><option value="">日付を選んでください</option></select></label>
+<label>希望時間（必須）<select id="rbTime" required><option value="">先に日付を選んでください</option></select></label>
+<label>人数（必須）<input id="rbParty" type="number" inputmode="numeric" min="1" max="30" value="1" required></label>
+<label>お名前（必須）<input id="rbName" type="text" autocomplete="name" maxlength="80" required></label>
+<label class="rb-wide">メールアドレス（必須）<input id="rbEmail" type="email" autocomplete="email" maxlength="254" required></label>
+<label class="rb-wide">メールアドレスの確認（必須）<input id="rbEmailConfirm" type="email" autocomplete="off" maxlength="254" required></label>
+<label class="rb-wide">ご連絡事項（任意）<textarea id="rbNote" maxlength="1000" placeholder="ご要望などがあればご記入ください。健康情報やカード番号などは入力しないでください。"></textarea></label>
+<label class="rb-honey" aria-hidden="true">ウェブサイト<input id="rbWebsite" type="text" tabindex="-1" autocomplete="off"></label>
+</div><div class="rb-privacy"><p>入力内容は、ご利用店舗での予約受付・連絡・対応履歴の管理に使用します。不要になった予約情報は店舗で削除します。</p><p>迷惑送信の防止にCloudflare Turnstileを利用します。</p><a id="rbPrivacyLink" target="_blank" rel="noopener noreferrer" hidden>お店のプライバシーポリシーを見る ↗</a></div>
+<label class="rb-checkbox"><input id="rbConsent" type="checkbox" required><span>上記の個人情報の取り扱いと、返信後に予約確定となることを確認しました。</span></label>
+<div class="rb-actions rb-form-actions"><button class="rb-primary" type="submit">内容を確認する</button></div></fieldset></form>
+<section id="rbConfirm" aria-labelledby="rbConfirmTitle" hidden><h2 id="rbConfirmTitle" tabindex="-1">送信内容の確認</h2><dl id="rbSummary" class="rb-confirm-list"></dl><p class="rb-muted">この内容で店舗へ予約リクエストを送ります。</p><div id="rbWidget" class="rb-widget"></div><div class="rb-actions"><button id="rbEdit" type="button">入力に戻る</button><button id="rbSend" type="button" class="rb-primary" disabled>予約リクエストを送信</button></div></section>
+<section id="rbSuccess" class="rb-success" hidden><h2 id="rbSuccessTitle" tabindex="-1">予約リクエストを受け付けました</h2><p class="rb-important">まだ予約は確定していません。お店からの返信をお待ちください。</p><p id="rbReceipt"></p><p>迷惑メールフォルダもご確認ください。返信が届かない場合は、お店へ直接お問い合わせください。</p></section>
+<p id="rbStatus" class="rb-status" role="status" aria-live="polite"></p>
+</div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/reserve.js?v=1"></script></body></html>

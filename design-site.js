@@ -256,6 +256,7 @@ async function loadCompanyInfo() {
     data
   );
   void window.sasuliePublicCalendar.mount({company:data,client:supabaseClient});
+  void window.sasuliePublicReservations.mount({company:data,client:supabaseClient});
 
 
   return true;
